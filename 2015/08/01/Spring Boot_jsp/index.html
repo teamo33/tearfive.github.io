@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="title: Spring Boot 添加JSP支持创建Maven web project使用Eclipse新建一个Maven Web Project ，项目取名为：spring-boot-jsp 在pom.xml文件添加依赖&amp;lt;parent&amp;gt;     &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;     &amp;lt;arti">
+<meta name="description" content="创建Maven web project使用Eclipse新建一个Maven Web Project ，项目取名为：spring-boot-jsp 在pom.xml文件添加依赖&amp;lt;parent&amp;gt;     &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;     &amp;lt;artifactId&amp;gt;spring-boot-star">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring Boot 静态资源处理">
+<meta property="og:title" content="Spring Boot 添加JSP支持">
 <meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/2015/08/01/Spring Boot_jsp/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="title: Spring Boot 添加JSP支持创建Maven web project使用Eclipse新建一个Maven Web Project ，项目取名为：spring-boot-jsp 在pom.xml文件添加依赖&amp;lt;parent&amp;gt;     &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;     &amp;lt;arti">
+<meta property="og:description" content="创建Maven web project使用Eclipse新建一个Maven Web Project ，项目取名为：spring-boot-jsp 在pom.xml文件添加依赖&amp;lt;parent&amp;gt;     &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;     &amp;lt;artifactId&amp;gt;spring-boot-star">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-10T13:19:42.778Z">
+<meta property="og:updated_time" content="2018-01-10T13:28:20.514Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Spring Boot 静态资源处理">
-<meta name="twitter:description" content="title: Spring Boot 添加JSP支持创建Maven web project使用Eclipse新建一个Maven Web Project ，项目取名为：spring-boot-jsp 在pom.xml文件添加依赖&amp;lt;parent&amp;gt;     &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;     &amp;lt;arti">
+<meta name="twitter:title" content="Spring Boot 添加JSP支持">
+<meta name="twitter:description" content="创建Maven web project使用Eclipse新建一个Maven Web Project ，项目取名为：spring-boot-jsp 在pom.xml文件添加依赖&amp;lt;parent&amp;gt;     &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;     &amp;lt;artifactId&amp;gt;spring-boot-star">
 
 
 
@@ -125,7 +125,7 @@
 
 
 
-  <title>Spring Boot 静态资源处理 | 我的博客</title>
+  <title>Spring Boot 添加JSP支持 | 我的博客</title>
   
 
 
@@ -249,7 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Spring Boot 静态资源处理</h1>
+          <h1 class="post-title" itemprop="name headline">Spring Boot 添加JSP支持</h1>
         
 
         <div class="post-meta">
@@ -285,7 +285,7 @@
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/Spring-Boot/" itemprop="url" rel="index">
-                    <span itemprop="name">-Spring Boot</span>
+                    <span itemprop="name">Spring Boot</span>
                   </a>
                 </span>
 
@@ -321,7 +321,7 @@
       
 
       
-        <h2 id="title-Spring-Boot-添加JSP支持"><a href="#title-Spring-Boot-添加JSP支持" class="headerlink" title="title: Spring Boot 添加JSP支持"></a>title: Spring Boot 添加JSP支持</h2><h4 id="创建Maven-web-project"><a href="#创建Maven-web-project" class="headerlink" title="创建Maven web project"></a>创建Maven web project</h4><p>使用Eclipse新建一个Maven Web Project ，项目取名为：spring-boot-jsp</p>
+        <h4 id="创建Maven-web-project"><a href="#创建Maven-web-project" class="headerlink" title="创建Maven web project"></a>创建Maven web project</h4><p>使用Eclipse新建一个Maven Web Project ，项目取名为：spring-boot-jsp</p>
 <h4 id="在pom-xml文件添加依赖"><a href="#在pom-xml文件添加依赖" class="headerlink" title="在pom.xml文件添加依赖"></a>在pom.xml文件添加依赖</h4><pre><code>&lt;parent&gt;
     &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
     &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
@@ -375,16 +375,14 @@
              &lt;/plugin&gt;
       &lt;/plugins&gt;
 &lt;/build&gt;
-</code></pre><p>####application.properties配置</p>
-<p>上面说了spring-boot 不推荐JSP，想使用JSP需要配置application.properties。<br>添加src/main/resources/application.properties内容：</p>
+</code></pre><h4 id="application-properties配置"><a href="#application-properties配置" class="headerlink" title="application.properties配置"></a>application.properties配置</h4><p>上面说了spring-boot 不推荐JSP，想使用JSP需要配置application.properties。<br>添加src/main/resources/application.properties内容：</p>
 <pre><code>#页面默认前缀目录
 spring.mvc.view.prefix=/WEB-INF/jsp/
 #响应页面默认后缀
 spring.mvc.view.suffix=.jsp
 #自定义属性，可以在Controller中读取
 application.hello=HelloAngel From application
-</code></pre><p>####编写测试Controller</p>
-<p>编写类：com.kfit.jsp.controller.HelloController：</p>
+</code></pre><h4 id="编写测试Controller"><a href="#编写测试Controller" class="headerlink" title="编写测试Controller"></a>编写测试Controller</h4><p>编写类：com.kfit.jsp.controller.HelloController：</p>
 <pre><code>package com.kfit.jsp.controller;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
@@ -407,8 +405,7 @@ public class HelloController {
         return&quot;helloJsp&quot;;
     }
 }
-</code></pre><p>####编写JSP页面</p>
-<p>在 src/main 下面创建 webapp/WEB-INF/jsp 目录用来存放我们的jsp页面：helloJsp.jsp</p>
+</code></pre><h4 id="编写JSP页面"><a href="#编写JSP页面" class="headerlink" title="编写JSP页面"></a>编写JSP页面</h4><p>在 src/main 下面创建 webapp/WEB-INF/jsp 目录用来存放我们的jsp页面：helloJsp.jsp</p>
 <pre><code>&lt;%@page language=&quot;java&quot;contentType=&quot;text/html;charset=UTF-8&quot;pageEncoding=&quot;UTF-8&quot;%&gt;
 &lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -422,8 +419,7 @@ public class HelloController {
         ${hello}
     &lt;/body&gt;
 &lt;/html&gt;
-</code></pre><p>####编写启动类</p>
-<p>编写App.java启动类：</p>
+</code></pre><h4 id="编写启动类"><a href="#编写启动类" class="headerlink" title="编写启动类"></a>编写启动类</h4><p>编写App.java启动类：</p>
 <pre><code>package com.kfit.jsp;
 import org.springframework.boot.SpringApplication;
 importorg.springframework.boot.autoconfigure.SpringBootApplication;
@@ -598,7 +594,7 @@ public class App extends SpringBootServletInitializer {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#title-Spring-Boot-添加JSP支持"><span class="nav-number">1.</span> <span class="nav-text">title: Spring Boot 添加JSP支持</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建Maven-web-project"><span class="nav-number">1.0.1.</span> <span class="nav-text">创建Maven web project</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在pom-xml文件添加依赖"><span class="nav-number">1.0.2.</span> <span class="nav-text">在pom.xml文件添加依赖</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建Maven-web-project"><span class="nav-number">1.</span> <span class="nav-text">创建Maven web project</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在pom-xml文件添加依赖"><span class="nav-number">2.</span> <span class="nav-text">在pom.xml文件添加依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#application-properties配置"><span class="nav-number">3.</span> <span class="nav-text">application.properties配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编写测试Controller"><span class="nav-number">4.</span> <span class="nav-text">编写测试Controller</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编写JSP页面"><span class="nav-number">5.</span> <span class="nav-text">编写JSP页面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编写启动类"><span class="nav-number">6.</span> <span class="nav-text">编写启动类</span></a></li></ol></div>
             
 
           </div>
