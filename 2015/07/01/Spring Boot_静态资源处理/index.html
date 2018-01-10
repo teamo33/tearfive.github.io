@@ -79,16 +79,17 @@
 
 
 
-<meta name="description" content="记录生活点滴">
-<meta property="og:type" content="website">
-<meta property="og:title" content="我的博客">
-<meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/index.html">
+<meta name="description" content="#静态资源处理 Spring Boot 默认的处理方式就已经足够了，默认情况下Spring Boot 使用WebMvcAutoConfiguration中配置的各种属性。 建议使用Spring Boot 默认处理方式，需要自己配置的地方可以通过配置文件修改。 但是如果你想完全控制Spring MVC，你可以在@Configuration注解的配置类上增加@EnableWebMvc，增加该注解以后W">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Boot 静态资源处理">
+<meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/2015/07/01/Spring Boot_静态资源处理/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="记录生活点滴">
+<meta property="og:description" content="#静态资源处理 Spring Boot 默认的处理方式就已经足够了，默认情况下Spring Boot 使用WebMvcAutoConfiguration中配置的各种属性。 建议使用Spring Boot 默认处理方式，需要自己配置的地方可以通过配置文件修改。 但是如果你想完全控制Spring MVC，你可以在@Configuration注解的配置类上增加@EnableWebMvc，增加该注解以后W">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-10T13:19:41.486Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="我的博客">
-<meta name="twitter:description" content="记录生活点滴">
+<meta name="twitter:title" content="Spring Boot 静态资源处理">
+<meta name="twitter:description" content="#静态资源处理 Spring Boot 默认的处理方式就已经足够了，默认情况下Spring Boot 使用WebMvcAutoConfiguration中配置的各种属性。 建议使用Spring Boot 默认处理方式，需要自己配置的地方可以通过配置文件修改。 但是如果你想完全控制Spring MVC，你可以在@Configuration注解的配置类上增加@EnableWebMvc，增加该注解以后W">
 
 
 
@@ -118,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="https://github.com/tearfive/tearfive.github.io/"/>
+  <link rel="canonical" href="https://github.com/tearfive/tearfive.github.io/2015/07/01/Spring Boot_静态资源处理/"/>
 
 
 
 
 
-  <title>我的博客</title>
+  <title>Spring Boot 静态资源处理 | 我的博客</title>
   
 
 
@@ -143,8 +144,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -217,272 +217,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/tearfive/tearfive.github.io/2015/08/01/Spring Boot_jsp/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="tearfive">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="我的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2015/08/01/Spring Boot_jsp/" itemprop="url">Spring Boot 静态资源处理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-08-01T21:19:23+08:00">
-                2015-08-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring-Boot/" itemprop="url" rel="index">
-                    <span itemprop="name">-Spring Boot</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="title-Spring-Boot-添加JSP支持"><a href="#title-Spring-Boot-添加JSP支持" class="headerlink" title="title: Spring Boot 添加JSP支持"></a>title: Spring Boot 添加JSP支持</h2><h4 id="创建Maven-web-project"><a href="#创建Maven-web-project" class="headerlink" title="创建Maven web project"></a>创建Maven web project</h4><p>使用Eclipse新建一个Maven Web Project ，项目取名为：spring-boot-jsp</p>
-<h4 id="在pom-xml文件添加依赖"><a href="#在pom-xml文件添加依赖" class="headerlink" title="在pom.xml文件添加依赖"></a>在pom.xml文件添加依赖</h4><pre><code>&lt;parent&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
-    &lt;version&gt;1.3.3.RELEASE&lt;/version&gt;
-&lt;/parent&gt;
-</code></pre><p>依赖包：</p>
-<pre><code>&lt;!-- web支持: 1、webmvc; 2、restful; 3、jackjson支持; 4、aop ........ --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
-&lt;/dependency&gt;
-&lt;!-- servlet依赖. --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
-    &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
-    &lt;scope&gt;provided&lt;/scope&gt;
-&lt;/dependency&gt;
-&lt;!--JSTL（JSP Standard TagLibrary，JSP标准标签库)是一个不断完善的开放源代码的JSP标签库，
-    是由apache的jakarta小组来维护的。JSTL只能运行在支持JSP1.2和Servlet2.3规范的容器上，
-    如tomcat 4.x。在JSP2.0中也是作为标准支持的。不然报异常信息：
-    javax.servlet.ServletException:Circular view path [/helloJsp]: 
-    would dispatch back to the current handler URL[/helloJsp] again.
-    Check your ViewResolver setup!
-    (Hint: This may be the resultof an unspecified view, 
-    due to default view name generation.)
- --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
-    &lt;artifactId&gt;jstl&lt;/artifactId&gt;
-&lt;/dependency&gt;
-&lt;!-- tomcat的支持.--&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
-&lt;scope&gt;provided&lt;/scope&gt;
-&lt;/dependency&gt;
-    &lt;groupId&gt;org.apache.tomcat.embed&lt;/groupId&gt;
-    &lt;artifactId&gt;tomcat-embed-jasper&lt;/artifactId&gt;
-    &lt;scope&gt;provided&lt;/scope&gt;
-&lt;/dependency&gt;
-</code></pre><p>Jdk编译版本：</p>
-<pre><code>&lt;build&gt;
-      &lt;finalName&gt;spring-boot-jsp&lt;/finalName&gt;
-      &lt;plugins&gt;
-             &lt;plugin&gt;
-                    &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
-                    &lt;configuration&gt;
-                          &lt;source&gt;1.7&lt;/source&gt;
-                          &lt;target&gt;1.7&lt;/target&gt;
-                    &lt;/configuration&gt;
-             &lt;/plugin&gt;
-      &lt;/plugins&gt;
-&lt;/build&gt;
-</code></pre><p>####application.properties配置</p>
-<p>上面说了spring-boot 不推荐JSP，想使用JSP需要配置application.properties。<br>添加src/main/resources/application.properties内容：</p>
-<pre><code>#页面默认前缀目录
-spring.mvc.view.prefix=/WEB-INF/jsp/
-#响应页面默认后缀
-spring.mvc.view.suffix=.jsp
-#自定义属性，可以在Controller中读取
-application.hello=HelloAngel From application
-</code></pre><p>####编写测试Controller</p>
-<p>编写类：com.kfit.jsp.controller.HelloController：</p>
-<pre><code>package com.kfit.jsp.controller;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-/**
- *测试
- * @tearfive(QQ:415896243)
- * @version v.0.1
- */
-@Controller
-public class HelloController {
-    //从 application.properties 中读取配置，如取不到默认值为HelloShanhy
-    @Value(&quot;${application.hello:Hello Angel}&quot;)
-    private String hello;
-    @RequestMapping(&quot;/helloJsp&quot;)
-    public StringhelloJsp(Map&lt;String,Object&gt; map){
-        System.out.println(&quot;HelloController.helloJsp().hello=&quot;+hello);
-        map.put(&quot;hello&quot;,hello);
-        return&quot;helloJsp&quot;;
-    }
-}
-</code></pre><p>####编写JSP页面</p>
-<p>在 src/main 下面创建 webapp/WEB-INF/jsp 目录用来存放我们的jsp页面：helloJsp.jsp</p>
-<pre><code>&lt;%@page language=&quot;java&quot;contentType=&quot;text/html;charset=UTF-8&quot;pageEncoding=&quot;UTF-8&quot;%&gt;
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;metahttp-equiv=&quot;Content-Type&quot;content=&quot;text/html; charset=UTF-8&quot;&gt;
-        &lt;title&gt;Insert title here&lt;/title&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        helloJsp
-        &lt;hr/&gt;
-        ${hello}
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre><p>####编写启动类</p>
-<p>编写App.java启动类：</p>
-<pre><code>package com.kfit.jsp;
-import org.springframework.boot.SpringApplication;
-importorg.springframework.boot.autoconfigure.SpringBootApplication;
-importorg.springframework.boot.context.web.SpringBootServletInitializer;
-@SpringBootApplication
-public class App extends SpringBootServletInitializer {
-    //@Override
-    //protectedSpringApplicationBuilder configure(SpringApplicationBuilder application){
-        //returnapplication.sources(App.class);
-    //}
-    public static voidmain(String[] args) {
-        SpringApplication.run(App.class,args);
-    }
-}
-</code></pre><p>右键Run As  Java Application访问：<a href="http://127.0.0.1:8080/helloJsp" target="_blank" rel="noopener">http://127.0.0.1:8080/helloJsp</a> 可以访问到：</p>
-<pre><code>helloJsp
-</code></pre><hr>
-<pre><code>Hello Angel Fromapplication
-</code></pre><p>特别说明：针对el表达式，类似${hello}这个对于servlet的版本是有限制的，2.4版本版本以下是不支持的，是无法进行识别的，请注意。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
 
   
 
@@ -512,9 +249,7 @@ public class App extends SpringBootServletInitializer {
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2015/07/01/Spring Boot_静态资源处理/" itemprop="url">Spring Boot 静态资源处理</a></h1>
+          <h1 class="post-title" itemprop="name headline">Spring Boot 静态资源处理</h1>
         
 
         <div class="post-meta">
@@ -586,9 +321,7 @@ public class App extends SpringBootServletInitializer {
       
 
       
-        
-          
-            <p>#静态资源处理</p>
+        <p>#静态资源处理</p>
 <p>Spring Boot 默认的处理方式就已经足够了，默认情况下Spring Boot 使用WebMvcAutoConfiguration中配置的各种属性。</p>
 <p>建议使用Spring Boot 默认处理方式，需要自己配置的地方可以通过配置文件修改。</p>
 <p>但是如果你想完全控制Spring MVC，你可以在@Configuration注解的配置类上增加@EnableWebMvc，增加该注解以后WebMvcAutoConfiguration中配置就不会生效，你需要自己来配置需要的每一项。这种情况下的配置方法建议参考WebMvcAutoConfiguration类。</p>
@@ -714,8 +447,6 @@ spring.resources.chain.strategy.fixed.version=v1.0.0
 <p>如果我们paths中没有配置/v1.0.0，那么上面这个请求地址就不会按版本方式来处理，因此会找不到上面的资源。</p>
 <p>如果配置了/v1.0.0，Spring 就会将/v1.0.0去掉再去找/js/index.js，最终会在/static/下面找到。</p>
 
-          
-        
       
     </div>
     
@@ -732,12 +463,28 @@ spring.resources.chain.strategy.fixed.version=v1.0.0
       
 
       
+      
+      
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/08/01/Spring Boot_jsp/" rel="prev" title="Spring Boot 静态资源处理">
+                Spring Boot 静态资源处理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
 
       
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -747,10 +494,11 @@ spring.resources.chain.strategy.fixed.version=v1.0.0
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -758,6 +506,10 @@ spring.resources.chain.strategy.fixed.version=v1.0.0
 
 
           
+
+  
+
+
 
         </div>
         
@@ -963,6 +715,10 @@ spring.resources.chain.strategy.fixed.version=v1.0.0
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
