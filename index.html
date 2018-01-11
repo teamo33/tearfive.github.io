@@ -339,7 +339,7 @@ public Object testCurrentUser(@CurrentUser User user) {
     return user;
 }
 </code></pre><p>不要忘了添加 @LoginRequired 这个注解（上节添加的），要获取当前登录用户嘛，肯定得要求用户登录。重启项目访问 /api/user/test测试下。</p>
-<p><img src="C:\Users\huayu\Desktop\3907956-5d831a4f4501a5b8.png" alt=""></p>
+<p><img src="img\3907956-5d831a4f4501a5b8.png" alt=""></p>
 <p>记得填写 token（访问登录接口获取）。全是null，很遗憾现在还不能返回我们想要的用户信息。</p>
 <h1 id="添加参数解析器"><a href="#添加参数解析器" class="headerlink" title="添加参数解析器"></a>添加参数解析器</h1><p>要想 @CurrentUser 起作用，需要编写一个配套解析器，做法是实现 spring 提供的 HandlerMethodArgumentResolver 接口。<br>新增 CurrentUserMethodArgumentResolver.java</p>
 <pre><code>/**
@@ -372,7 +372,7 @@ public CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver() {
     return new CurrentUserMethodArgumentResolver();
 }
 </code></pre><h1 id="再次测试"><a href="#再次测试" class="headerlink" title="再次测试"></a>再次测试</h1><p>我是用 “张三” 这个用户登录获取的 token，正确地返回了张三的信息。</p>
-<p><img src="C:\Users\huayu\Desktop\3907956-1dda70c8a9342adf.png" alt=""></p>
+<p><img src="img\3907956-1dda70c8a9342adf.png" alt=""></p>
 
           
         
