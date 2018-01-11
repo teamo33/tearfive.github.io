@@ -79,17 +79,20 @@
 
 
 
-<meta name="description" content="创建Maven web project使用Eclipse新建一个Maven Web Project ，项目取名为：spring-boot-jsp 在pom.xml文件添加依赖&amp;lt;parent&amp;gt;     &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;     &amp;lt;artifactId&amp;gt;spring-boot-star">
+<meta name="description" content="定义 @CurrenUser注解/**  * 在Controller的方法参数中使用此注解，该方法在映射时会注入当前登录的User对象  */ @Target(ElementType.PARAMETER)//可用在方法的参数上 @Retention(RetentionPolicy.RUNTIME)//运行时有效 public @interface CurrentUser { } 添加测试方法在 u">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring Boot 添加JSP支持">
-<meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/2015/08/01/Spring Boot_jsp/index.html">
+<meta property="og:title" content="自定义@CurrentUser获取当前登录用户">
+<meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/2016/08/01/自定义@CurrentUser获取当前登录用户/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="创建Maven web project使用Eclipse新建一个Maven Web Project ，项目取名为：spring-boot-jsp 在pom.xml文件添加依赖&amp;lt;parent&amp;gt;     &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;     &amp;lt;artifactId&amp;gt;spring-boot-star">
+<meta property="og:description" content="定义 @CurrenUser注解/**  * 在Controller的方法参数中使用此注解，该方法在映射时会注入当前登录的User对象  */ @Target(ElementType.PARAMETER)//可用在方法的参数上 @Retention(RetentionPolicy.RUNTIME)//运行时有效 public @interface CurrentUser { } 添加测试方法在 u">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-11T06:51:24.865Z">
+<meta property="og:image" content="c:/Users/huayu/Desktop/3907956-5d831a4f4501a5b8.png">
+<meta property="og:image" content="c:/Users/huayu/Desktop/3907956-1dda70c8a9342adf.png">
+<meta property="og:updated_time" content="2018-01-11T12:30:27.836Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Spring Boot 添加JSP支持">
-<meta name="twitter:description" content="创建Maven web project使用Eclipse新建一个Maven Web Project ，项目取名为：spring-boot-jsp 在pom.xml文件添加依赖&amp;lt;parent&amp;gt;     &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;     &amp;lt;artifactId&amp;gt;spring-boot-star">
+<meta name="twitter:title" content="自定义@CurrentUser获取当前登录用户">
+<meta name="twitter:description" content="定义 @CurrenUser注解/**  * 在Controller的方法参数中使用此注解，该方法在映射时会注入当前登录的User对象  */ @Target(ElementType.PARAMETER)//可用在方法的参数上 @Retention(RetentionPolicy.RUNTIME)//运行时有效 public @interface CurrentUser { } 添加测试方法在 u">
+<meta name="twitter:image" content="c:/Users/huayu/Desktop/3907956-5d831a4f4501a5b8.png">
 
 
 
@@ -119,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://github.com/tearfive/tearfive.github.io/2015/08/01/Spring Boot_jsp/"/>
+  <link rel="canonical" href="https://github.com/tearfive/tearfive.github.io/2016/08/01/自定义@CurrentUser获取当前登录用户/"/>
 
 
 
 
 
-  <title>Spring Boot 添加JSP支持 | 我的博客</title>
+  <title>自定义@CurrentUser获取当前登录用户 | 我的博客</title>
   
 
 
@@ -232,7 +235,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/tearfive/tearfive.github.io/2015/08/01/Spring Boot_jsp/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/tearfive/tearfive.github.io/2016/08/01/自定义@CurrentUser获取当前登录用户/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="tearfive">
@@ -249,7 +252,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Spring Boot 添加JSP支持</h1>
+          <h1 class="post-title" itemprop="name headline">自定义@CurrentUser获取当前登录用户</h1>
         
 
         <div class="post-meta">
@@ -261,8 +264,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-08-01T21:19:23+08:00">
-                2015-08-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-01T20:23:43+08:00">
+                2016-08-01
               </time>
             
 
@@ -284,8 +287,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Spring-Boot/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring Boot</span>
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
                   </a>
                 </span>
 
@@ -321,124 +324,54 @@
       
 
       
-        <h4 id="创建Maven-web-project"><a href="#创建Maven-web-project" class="headerlink" title="创建Maven web project"></a>创建Maven web project</h4><p>使用Eclipse新建一个Maven Web Project ，项目取名为：spring-boot-jsp</p>
-<h4 id="在pom-xml文件添加依赖"><a href="#在pom-xml文件添加依赖" class="headerlink" title="在pom.xml文件添加依赖"></a>在pom.xml文件添加依赖</h4><pre><code>&lt;parent&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
-    &lt;version&gt;1.3.3.RELEASE&lt;/version&gt;
-&lt;/parent&gt;
-</code></pre><p>依赖包：</p>
-<pre><code>&lt;!-- web支持: 1、webmvc; 2、restful; 3、jackjson支持; 4、aop ........ --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
-&lt;/dependency&gt;
-&lt;!-- servlet依赖. --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
-    &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
-    &lt;scope&gt;provided&lt;/scope&gt;
-&lt;/dependency&gt;
-&lt;!--JSTL（JSP Standard TagLibrary，JSP标准标签库)是一个不断完善的开放源代码的JSP标签库，
-    是由apache的jakarta小组来维护的。JSTL只能运行在支持JSP1.2和Servlet2.3规范的容器上，
-    如tomcat 4.x。在JSP2.0中也是作为标准支持的。不然报异常信息：
-    javax.servlet.ServletException:Circular view path [/helloJsp]: 
-    would dispatch back to the current handler URL[/helloJsp] again.
-    Check your ViewResolver setup!
-    (Hint: This may be the resultof an unspecified view, 
-    due to default view name generation.)
- --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
-    &lt;artifactId&gt;jstl&lt;/artifactId&gt;
-&lt;/dependency&gt;
-&lt;!-- tomcat的支持.--&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
-&lt;scope&gt;provided&lt;/scope&gt;
-&lt;/dependency&gt;
-    &lt;groupId&gt;org.apache.tomcat.embed&lt;/groupId&gt;
-    &lt;artifactId&gt;tomcat-embed-jasper&lt;/artifactId&gt;
-    &lt;scope&gt;provided&lt;/scope&gt;
-&lt;/dependency&gt;
-</code></pre><p>Jdk编译版本：</p>
-<pre><code>&lt;build&gt;
-      &lt;finalName&gt;spring-boot-jsp&lt;/finalName&gt;
-      &lt;plugins&gt;
-             &lt;plugin&gt;
-                    &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
-                    &lt;configuration&gt;
-                          &lt;source&gt;1.7&lt;/source&gt;
-                          &lt;target&gt;1.7&lt;/target&gt;
-                    &lt;/configuration&gt;
-             &lt;/plugin&gt;
-      &lt;/plugins&gt;
-&lt;/build&gt;
-</code></pre><h4 id="application-properties配置"><a href="#application-properties配置" class="headerlink" title="application.properties配置"></a>application.properties配置</h4><p>上面说了spring-boot 不推荐JSP，想使用JSP需要配置application.properties。<br>添加src/main/resources/application.properties内容：</p>
-<pre><code>#页面默认前缀目录
-spring.mvc.view.prefix=/WEB-INF/jsp/
-#响应页面默认后缀
-spring.mvc.view.suffix=.jsp
-#自定义属性，可以在Controller中读取
-application.hello=HelloAngel From application
-</code></pre><h4 id="编写测试Controller"><a href="#编写测试Controller" class="headerlink" title="编写测试Controller"></a>编写测试Controller</h4><p>编写类：com.kfit.jsp.controller.HelloController：</p>
-<pre><code>package com.kfit.jsp.controller;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-/**
- *测试
- * @tearfive(QQ:415896243)
- * @version v.0.1
+        <h1 id="定义-CurrenUser注解"><a href="#定义-CurrenUser注解" class="headerlink" title="定义 @CurrenUser注解"></a>定义 @CurrenUser注解</h1><pre><code>/**
+ * 在Controller的方法参数中使用此注解，该方法在映射时会注入当前登录的User对象
  */
-@Controller
-public class HelloController {
-    //从 application.properties 中读取配置，如取不到默认值为HelloShanhy
-    @Value(&quot;${application.hello:Hello Angel}&quot;)
-    private String hello;
-    @RequestMapping(&quot;/helloJsp&quot;)
-    public StringhelloJsp(Map&lt;String,Object&gt; map){
-        System.out.println(&quot;HelloController.helloJsp().hello=&quot;+hello);
-        map.put(&quot;hello&quot;,hello);
-        return&quot;helloJsp&quot;;
+@Target(ElementType.PARAMETER)//可用在方法的参数上
+@Retention(RetentionPolicy.RUNTIME)//运行时有效
+public @interface CurrentUser {
+}
+</code></pre><h1 id="添加测试方法"><a href="#添加测试方法" class="headerlink" title="添加测试方法"></a>添加测试方法</h1><p>在 userApi.java 中添加临时测试用的，测试完记得删掉。</p>
+<pre><code>@GetMapping(&quot;/test&quot;)
+@LoginRequired
+public Object testCurrentUser(@CurrentUser User user) {
+    return user;
+}
+</code></pre><p>不要忘了添加 @LoginRequired 这个注解（上节添加的），要获取当前登录用户嘛，肯定得要求用户登录。重启项目访问 /api/user/test测试下。</p>
+<p><img src="C:\Users\huayu\Desktop\3907956-5d831a4f4501a5b8.png" alt=""></p>
+<p>记得填写 token（访问登录接口获取）。全是null，很遗憾现在还不能返回我们想要的用户信息。</p>
+<h1 id="添加参数解析器"><a href="#添加参数解析器" class="headerlink" title="添加参数解析器"></a>添加参数解析器</h1><p>要想 @CurrentUser 起作用，需要编写一个配套解析器，做法是实现 spring 提供的 HandlerMethodArgumentResolver 接口。<br>新增 CurrentUserMethodArgumentResolver.java</p>
+<pre><code>/**
+ *  增加方法注入，将含有 @CurrentUser 注解的方法参数注入当前登录用户
+ */
+public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentResolver {
+    @Override
+    public boolean supportsParameter(MethodParameter parameter) {
+        return parameter.getParameterType().isAssignableFrom(User.class)
+                &amp;&amp; parameter.hasParameterAnnotation(CurrentUser.class);
+    }
+    @Override
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+        User user = (User) webRequest.getAttribute(&quot;currentUser&quot;, RequestAttributes.SCOPE_REQUEST);
+        if (user != null) {
+            return user;
+        }
+        throw new MissingServletRequestPartException(&quot;currentUser&quot;);
     }
 }
-</code></pre><h4 id="编写JSP页面"><a href="#编写JSP页面" class="headerlink" title="编写JSP页面"></a>编写JSP页面</h4><p>在 src/main 下面创建 webapp/WEB-INF/jsp 目录用来存放我们的jsp页面：helloJsp.jsp</p>
-<pre><code>&lt;%@page language=&quot;java&quot;contentType=&quot;text/html;charset=UTF-8&quot;pageEncoding=&quot;UTF-8&quot;%&gt;
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;metahttp-equiv=&quot;Content-Type&quot;content=&quot;text/html; charset=UTF-8&quot;&gt;
-        &lt;title&gt;Insert title here&lt;/title&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        helloJsp
-        &lt;hr/&gt;
-        ${hello}
-    &lt;/body&gt;
-&lt;/html&gt;
-</code></pre><h4 id="编写启动类"><a href="#编写启动类" class="headerlink" title="编写启动类"></a>编写启动类</h4><p>编写App.java启动类：</p>
-<pre><code>package com.kfit.jsp;
-import org.springframework.boot.SpringApplication;
-importorg.springframework.boot.autoconfigure.SpringBootApplication;
-importorg.springframework.boot.context.web.SpringBootServletInitializer;
-@SpringBootApplication
-public class App extends SpringBootServletInitializer {
-    //@Override
-    //protectedSpringApplicationBuilder configure(SpringApplicationBuilder application){
-        //returnapplication.sources(App.class);
-    //}
-    public static voidmain(String[] args) {
-        SpringApplication.run(App.class,args);
-    }
+</code></pre><p>User user = (User) webRequest.getAttribute(“currentUser”, RequestAttributes.SCOPE_REQUEST) 这一句是从 request 作用域中取出名为 currentUser 的属性。currentUser 是什么呢？在上节编写的登录拦截器中，最后有这么一句 request.setAttribute(“currentUser”, user)，所以 currentUser 是 token 验证通过之后查询到的当前用户。</p>
+<h1 id="配置参数解析器"><a href="#配置参数解析器" class="headerlink" title="配置参数解析器"></a>配置参数解析器</h1><p>在 WebMvcConfigurer.java 中 Override addArgumentResolvers 方法</p>
+<pre><code>@Override
+public void addArgumentResolvers(List&lt;HandlerMethodArgumentResolver&gt; argumentResolvers) {
+    argumentResolvers.add(currentUserMethodArgumentResolver());
+    super.addArgumentResolvers(argumentResolvers);
 }
-</code></pre><p>右键Run As  Java Application访问：<a href="http://127.0.0.1:8080/helloJsp" target="_blank" rel="noopener">http://127.0.0.1:8080/helloJsp</a> 可以访问到：</p>
-<pre><code>helloJsp
-</code></pre><hr>
-<pre><code>Hello Angel Fromapplication
-</code></pre><p>特别说明：针对el表达式，类似${hello}这个对于servlet的版本是有限制的，2.4版本版本以下是不支持的，是无法进行识别的，请注意。</p>
+@Bean
+public CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver() {
+    return new CurrentUserMethodArgumentResolver();
+}
+</code></pre><h1 id="再次测试"><a href="#再次测试" class="headerlink" title="再次测试"></a>再次测试</h1><p>我是用 “张三” 这个用户登录获取的 token，正确地返回了张三的信息。</p>
+<p><img src="C:\Users\huayu\Desktop\3907956-1dda70c8a9342adf.png" alt=""></p>
 
       
     </div>
@@ -463,8 +396,8 @@ public class App extends SpringBootServletInitializer {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/07/01/Spring Boot_静态资源处理/" rel="next" title="Spring Boot 静态资源处理">
-                <i class="fa fa-chevron-left"></i> Spring Boot 静态资源处理
+              <a href="/2016/01/11/使用JWT保护你的spring boot应用/" rel="next" title="使用JWT保护你的springboot应用">
+                <i class="fa fa-chevron-left"></i> 使用JWT保护你的springboot应用
               </a>
             
           </div>
@@ -472,10 +405,6 @@ public class App extends SpringBootServletInitializer {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/01/11/使用JWT保护你的spring boot应用/" rel="prev" title="使用JWT保护你的springboot应用">
-                使用JWT保护你的springboot应用 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -607,7 +536,7 @@ public class App extends SpringBootServletInitializer {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建Maven-web-project"><span class="nav-number">1.</span> <span class="nav-text">创建Maven web project</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在pom-xml文件添加依赖"><span class="nav-number">2.</span> <span class="nav-text">在pom.xml文件添加依赖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#application-properties配置"><span class="nav-number">3.</span> <span class="nav-text">application.properties配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编写测试Controller"><span class="nav-number">4.</span> <span class="nav-text">编写测试Controller</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编写JSP页面"><span class="nav-number">5.</span> <span class="nav-text">编写JSP页面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编写启动类"><span class="nav-number">6.</span> <span class="nav-text">编写启动类</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#定义-CurrenUser注解"><span class="nav-number">1.</span> <span class="nav-text">定义 @CurrenUser注解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加测试方法"><span class="nav-number">2.</span> <span class="nav-text">添加测试方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加参数解析器"><span class="nav-number">3.</span> <span class="nav-text">添加参数解析器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置参数解析器"><span class="nav-number">4.</span> <span class="nav-text">配置参数解析器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#再次测试"><span class="nav-number">5.</span> <span class="nav-text">再次测试</span></a></li></ol></div>
             
 
           </div>
