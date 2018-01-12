@@ -175,7 +175,7 @@
 <h1 id="默认日志Logback"><a href="#默认日志Logback" class="headerlink" title="默认日志Logback"></a>默认日志Logback</h1><p><a href="http://www.slf4j.org/" target="_blank" rel="noopener">SLF4J</a>——Simple Logging Facade For Java，它是一个针对于各类Java日志框架的统一Facade抽象。Java日志框架众多——常用的有java.util.logging, log4j, logback，commons-logging, Spring框架使用的是Jakarta Commons Logging API (JCL)。而SLF4J定义了统一的日志抽象接口，而真正的日志实现则是在运行时决定的——它提供了各类日志框架的binding。</p>
 <p><a href="https://logback.qos.ch/" target="_blank" rel="noopener">Logback</a>是log4j框架的作者开发的新一代日志框架，它效率更高、能够适应诸多的运行环境，同时天然支持SLF4J。</p>
 <p>默认情况下，Spring Boot会用Logback来记录日志，并用INFO级别输出到控制台。在运行应用程序和其他例子时，你应该已经看到很多INFO级别的日志了。</p>
-<p><img src="img\sringboot7-1.png" alt=""></p>
+<p><img src="\img\sringboot7-1.png" alt=""></p>
 <p>从上图可以看到，日志输出内容元素具体如下：</p>
 <blockquote>
 <p>时间日期：精确到毫秒<br>日志级别：ERROR, WARN, INFO, DEBUG or TRACE<br>进程ID<br>分隔符：— 标识实际日志的开始<br>线程名：方括号括起来（可能会截断控制台输出）<br>Logger名：通常使用源代码的类名<br>日志内容</p>
@@ -192,7 +192,7 @@
     &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
 &lt;/dependency&gt;
 </code></pre><p>具体可以看该图</p>
-<p><img src="img\sringboot7-1.png" alt=""></p>
+<p><img src="\img\sringboot7-1.png" alt=""></p>
 <h3 id="默认配置属性支持"><a href="#默认配置属性支持" class="headerlink" title="默认配置属性支持"></a>默认配置属性支持</h3><p>Spring Boot为我们提供了很多默认的日志配置，所以，只要将spring-boot-starter-logging作为依赖加入到当前应用的classpath，则“开箱即用”。<br>下面介绍几种在application.properties就可以配置的日志相关属性。</p>
 <h3 id="控制台输出"><a href="#控制台输出" class="headerlink" title="控制台输出"></a>控制台输出</h3><p>日志级别从低到高分为TRACE &lt; DEBUG &lt; INFO &lt; WARN &lt; ERROR &lt; FATAL，如果设置为WARN，则低于WARN的信息都不会输出。<br>Spring Boot中默认配置ERROR、WARN和INFO级别的日志输出到控制台。您还可以通过启动您的应用程序–debug标志来启用“调试”模式（开发的时候推荐开启）,以下两种方式皆可：</p>
 <p>在运行命令后加入–debug标志，如：$ java -jar springTest.jar –debug<br>在application.properties中配置debug=true，该属性置为true的时候，核心Logger（包含嵌入式容器、hibernate、spring）会输出更多内容，但是你自己应用的日志并不会输出为DEBUG级别。</p>
@@ -458,7 +458,7 @@ public Object testCurrentUser(@CurrentUser User user) {
     return user;
 }
 </code></pre><p>不要忘了添加 @LoginRequired 这个注解（上节添加的），要获取当前登录用户嘛，肯定得要求用户登录。重启项目访问 /api/user/test测试下。</p>
-<p><img src="img\3907956-5d831a4f4501a5b8.png" alt=""></p>
+<p><img src="\img\3907956-5d831a4f4501a5b8.png" alt=""></p>
 <p>记得填写 token（访问登录接口获取）。全是null，很遗憾现在还不能返回我们想要的用户信息。</p>
 <h1 id="添加参数解析器"><a href="#添加参数解析器" class="headerlink" title="添加参数解析器"></a>添加参数解析器</h1><p>要想 @CurrentUser 起作用，需要编写一个配套解析器，做法是实现 spring 提供的 HandlerMethodArgumentResolver 接口。<br>新增 CurrentUserMethodArgumentResolver.java</p>
 <pre><code>/**
@@ -491,7 +491,7 @@ public CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver() {
     return new CurrentUserMethodArgumentResolver();
 }
 </code></pre><h1 id="再次测试"><a href="#再次测试" class="headerlink" title="再次测试"></a>再次测试</h1><p>我是用 “张三” 这个用户登录获取的 token，正确地返回了张三的信息。</p>
-<p><img src="img\3907956-1dda70c8a9342adf.png" alt=""></p>
+<p><img src="\img\3907956-1dda70c8a9342adf.png" alt=""></p>
 
       
 
