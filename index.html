@@ -605,7 +605,7 @@ public class DemoApplication {
 </code></pre><p>这里我尽量的写清楚，让不了解Spring Security的人通过这个例子可以了解这个东西，很多人都觉得它很复杂，而投向了Apache Shiro，其实这个并不难懂。知道主要的处理流程，和这个流程中哪些类都起了哪些作用就好了。</p>
 <p>Spring Boot对于开发人员最大的好处在于可以对Spring应用进行自动配置。Spring Boot会根据应用中声明的第三方依赖来自动配置Spring框架，而不需要进行显式的声明。Spring Boot推荐采用基于Java注解的配置方式，而不是传统的XML。只需要在主配置 Java 类上添加@EnableAutoConfiguration注解就可以启用自动配置。Spring Boot的自动配置功能是没有侵入性的，只是作为一种基本的默认实现。</p>
 <p>这个入口类我们添加@RestController和@EnableAutoConfiguration两个注解。<br>@RestController注解相当于@ResponseBody和@Controller合在一起的作用。</p>
-<p>run整个项目。访问’<a href="http://localhost:8080/&#39;就能看到这个JSON的输出。使用Chrome浏览器可以装JSON" target="_blank" rel="noopener">http://localhost:8080/&#39;就能看到这个JSON的输出。使用Chrome浏览器可以装JSON</a> Formatter这个插件，显示更PL一些。</p>
+<p>run整个项目。访问<a href="#">http://localhost:8080/</a>就能看到这个JSON的输出。使用Chrome浏览器可以装JSON Formatter这个插件，显示更PL一些。</p>
 <pre><code>{
   &quot;content&quot;: &quot;hello freewolf~&quot;
 }
@@ -653,7 +653,7 @@ class UserController {
         return JSONResult.fillResultString(0, &quot;&quot;, users);
     }
 }
-</code></pre><p>重新run这个文件，访问’<a href="http://localhost:8080/users&#39;就看到了下面的结果" target="_blank" rel="noopener">http://localhost:8080/users&#39;就看到了下面的结果</a>:</p>
+</code></pre><p>重新run这个文件，访问<a href="#">http://localhost:8080/users</a>就看到了下面的结果:</p>
 <pre><code>{
   &quot;result&quot;: [
     &quot;freewolf&quot;,
@@ -835,7 +835,9 @@ class CustomAuthenticationProvider implements AuthenticationProvider {
     }
 }
 </code></pre><p>下面实现JWTLoginFilter 这个Filter比较简单，除了构造函数需要重写三个方法。</p>
+<blockquote>
 <p>attemptAuthentication - 登录时需要验证时候调用<br><br>successfulAuthentication - 验证成功后调用<br><br>unsuccessfulAuthentication - 验证失败后调用，这里直接灌入500错误返回，由于同一JSON返回，HTTP就都返回200了</p>
+</blockquote>
 <hr>
 <pre><code>class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     public JWTLoginFilter(String url, AuthenticationManager authManager) {
@@ -1105,7 +1107,7 @@ public class App extends SpringBootServletInitializer {
         SpringApplication.run(App.class,args);
     }
 }
-</code></pre><p>右键Run As  Java Application访问：’<a href="http://127.0.0.1:8080/helloJsp&#39;可以访问到：" target="_blank" rel="noopener">http://127.0.0.1:8080/helloJsp&#39;可以访问到：</a></p>
+</code></pre><p>右键Run As  Java Application访问：<a href="#">http://127.0.0.1:8080/helloJsp</a>可以访问到：</p>
 <pre><code>helloJsp
 </code></pre><hr>
 <pre><code>Hello Angel Fromapplication
