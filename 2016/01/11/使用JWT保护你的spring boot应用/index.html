@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="我的博客">
 <meta property="og:description" content="使用JWT保护你的Spring Boot应用Spring Boot有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-11T09:41:18.215Z">
+<meta property="og:updated_time" content="2018-01-12T05:32:30.302Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用JWT保护你的springboot应用">
 <meta name="twitter:description" content="使用JWT保护你的Spring Boot应用Spring Boot有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题">
@@ -621,7 +621,9 @@ class CustomAuthenticationProvider implements AuthenticationProvider {
 }
 </code></pre><p>现在代码就写完了，整个Spring Security结合JWT基本就差不多了，下面我们来测试下，并说下整体流程。</p>
 <p>开始测试，先运行整个项目，这里介绍下过程：</p>
-<p>先程序启动 - main函数<br><br>注册验证组件 - WebSecurityConfig 类 configure(AuthenticationManagerBuilder auth)方法，这里我们注册了自定义验证组件<br><br>设置验证规则 - WebSecurityConfig 类 configure(HttpSecurity http)方法，这里设置了各种路由访问规则<br><br>初始化过滤组件 - JWTLoginFilter 和 JWTAuthenticationFilter 类会初始化</p>
+<blockquote>
+<p>先程序启动 - main函数<br><br>注册验证组件 - WebSecurityConfig 类 configure(AuthenticationManagerBuilder auth)方法，这里我们注册了自定义验证组件<br><br>设置验证规则 - WebSecurityConfig 类 configure(HttpSecurity http)方法，这里设置了各种路由访问规则<br><br>初始化过滤组件 - JWTLoginFilter 和 JWTAuthenticationFilter 类会初始化<br></p>
+</blockquote>
 <p>首先测试获取Token，这里使用CURL命令行工具来测试。</p>
 <pre><code>curl -H &quot;Content-Type: application/json&quot; -X POST -d &apos;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;123456&quot;}&apos; 
 http://127.0.0.1:8080/login
@@ -635,7 +637,9 @@ http://127.0.0.1:8080/login
 <pre><code>{&quot;alg&quot;:&quot;HS512&quot;}{&quot;authorities&quot;:&quot;ROLE_ADMIN,AUTH_WRITE&quot;,&quot;sub&quot;:&quot;admin&quot;,&quot;exp&quot;:1493782240}ͽ]BS`pS6~hCVH%
 ܬ)֝ଖoE5р
 </code></pre><p>整个过程如下：</p>
+<blockquote>
 <p>拿到传入JSON，解析用户名密码 - JWTLoginFilter 类 attemptAuthentication 方法<br><br>自定义身份认证验证组件，进行身份认证 - CustomAuthenticationProvider 类 authenticate 方法<br><br>验证成功 - JWTLoginFilter 类 successfulAuthentication 方法<br><br>生成JWT - TokenAuthenticationService 类 addAuthentication方法<br></p>
+</blockquote>
 <p>再测试一个访问资源的：</p>
 <pre><code>curl -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4sQVVUSF9XUklURSIsInN1YiI6ImFkbWluIiwiZXhwIjoxNDkzNzgyMjQwfQ.HNfV1CU2CdAnBTH682C5-KOfr2P71xr9PYLaLpDVhOw8KWWSJ0lBo0BCq4LoNwsK_Y3-W3avgbJb0jW9FNYDRQ&quot; 
 http://127.0.0.1:8080/users
@@ -646,7 +650,9 @@ http://127.0.0.1:8080/users
   &quot;status&quot;:0
 }
 </code></pre><p>说明我们的Token生效可以正常访问。其他的结果您可以自己去测试。再回到处理流程：</p>
+<blockquote>
 <p>接到请求进行拦截 - JWTAuthenticationFilter 中的方法<br><br>验证JWT - TokenAuthenticationService 类 getAuthentication 方法<br><br>访问Controller<br></p>
+</blockquote>
 <p>这样本文的主要流程就结束了，本文主要介绍了，如何用Spring Security结合JWT保护你的Spring Boot应用。如何使用Role和Authority，这里多说一句其实在Spring Security中，对于GrantedAuthority接口实现类来说是不区分是Role还是Authority，二者区别就是如果是hasAuthority判断，就是判断整个字符串，判断hasRole时，系统自动加上ROLE_到判断的Role字符串上，也就是说hasRole(“CREATE”)和hasAuthority(‘ROLE_CREATE’)是相同的。利用这些可以搭建完整的RBAC体系。本文到此，你已经会用了本文介绍的知识点。</p>
 
       
