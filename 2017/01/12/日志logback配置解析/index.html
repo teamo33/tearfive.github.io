@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="正文Spring Boot在所有内部日志中使用Commons Logging，但是默认配置也提供了对常用日志的支持，如：Java Util Logging，Log4J, Log4J2和Logback。每种Logger都可以通过配置使用控制台或者文件输出日志内容。 默认日志LogbackSLF4J——Simple Logging Facade For Java，它是一个针对于各类Java日志框架的统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="日志logback配置解析">
+<meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/2017/01/12/日志logback配置解析/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="正文Spring Boot在所有内部日志中使用Commons Logging，但是默认配置也提供了对常用日志的支持，如：Java Util Logging，Log4J, Log4J2和Logback。每种Logger都可以通过配置使用控制台或者文件输出日志内容。 默认日志LogbackSLF4J——Simple Logging Facade For Java，它是一个针对于各类Java日志框架的统">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://github.com/tearfive/tearfive.github.io/2017/01/12/日志logback配置解析/img/sringboot7-1.png">
+<meta property="og:image" content="https://github.com/tearfive/tearfive.github.io/2017/01/12/日志logback配置解析/img/sringboot7-1.png">
+<meta property="og:updated_time" content="2018-01-12T05:11:16.186Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="日志logback配置解析">
+<meta name="twitter:description" content="正文Spring Boot在所有内部日志中使用Commons Logging，但是默认配置也提供了对常用日志的支持，如：Java Util Logging，Log4J, Log4J2和Logback。每种Logger都可以通过配置使用控制台或者文件输出日志内容。 默认日志LogbackSLF4J——Simple Logging Facade For Java，它是一个针对于各类Java日志框架的统">
+<meta name="twitter:image" content="https://github.com/tearfive/tearfive.github.io/2017/01/12/日志logback配置解析/img/sringboot7-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/tearfive/tearfive.github.io/2017/01/12/日志logback配置解析/"/>
+
+
+
+
+
+  <title>日志logback配置解析 | 我的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">我的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">一天进步一点</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/tearfive/tearfive.github.io/2017/01/12/日志logback配置解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="tearfive">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="我的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">日志logback配置解析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-12T10:41:43+08:00">
+                2017-01-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring-Boot/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring Boot</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>Spring Boot在所有内部日志中使用<a href="http://commons.apache.org/proper/commons-logging/" target="_blank" rel="noopener">Commons Logging</a>，但是默认配置也提供了对常用日志的支持，如：<a href="http://docs.oracle.com/javase/7/docs/api/java/util/logging/package-summary.html" target="_blank" rel="noopener">Java Util Logging</a>，<a href="http://logging.apache.org/log4j/" target="_blank" rel="noopener">Log4J</a>, <a href="https://logging.apache.org/log4j/2.x/" target="_blank" rel="noopener">Log4J2</a>和<a href="http://logback.qos.ch/" target="_blank" rel="noopener">Logback</a>。每种Logger都可以通过配置使用控制台或者文件输出日志内容。</p>
+<h1 id="默认日志Logback"><a href="#默认日志Logback" class="headerlink" title="默认日志Logback"></a>默认日志Logback</h1><p><a href="http://www.slf4j.org/" target="_blank" rel="noopener">SLF4J</a>——Simple Logging Facade For Java，它是一个针对于各类Java日志框架的统一Facade抽象。Java日志框架众多——常用的有java.util.logging, log4j, logback，commons-logging, Spring框架使用的是Jakarta Commons Logging API (JCL)。而SLF4J定义了统一的日志抽象接口，而真正的日志实现则是在运行时决定的——它提供了各类日志框架的binding。</p>
+<p><a href="https://logback.qos.ch/" target="_blank" rel="noopener">Logback</a>是log4j框架的作者开发的新一代日志框架，它效率更高、能够适应诸多的运行环境，同时天然支持SLF4J。</p>
+<p>默认情况下，Spring Boot会用Logback来记录日志，并用INFO级别输出到控制台。在运行应用程序和其他例子时，你应该已经看到很多INFO级别的日志了。</p>
+<p><img src="img\sringboot7-1.png" alt=""></p>
+<p>从上图可以看到，日志输出内容元素具体如下：</p>
+<p>时间日期：精确到毫秒<br><br>日志级别：ERROR, WARN, INFO, DEBUG or TRACE<br><br>进程ID<br><br>分隔符：— 标识实际日志的开始<br><br>线程名：方括号括起来（可能会截断控制台输出）<br><br>Logger名：通常使用源代码的类名<br><br>日志内容<br></p>
+<h3 id="添加日志依赖"><a href="#添加日志依赖" class="headerlink" title="添加日志依赖"></a>添加日志依赖</h3><p>假如maven依赖中添加了spring-boot-starter-logging：</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-logging&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre><p>那么，我们的Spring Boot应用将自动使用logback作为应用日志框架，Spring Boot启动的时候，由org.springframework.boot.logging.Logging-Application-Listener根据情况初始化并使用。</p>
+<p>但是呢，实际开发中我们不需要直接添加该依赖，你会发现spring-boot-starter其中包含了 spring-boot-starter-logging，该依赖内容就是 Spring Boot 默认的日志框架 logback。而博主这次项目的例子是基于上一篇的，工程中有用到了Thymeleaf，而Thymeleaf依赖包含了spring-boot-starter，最终我只要引入Thymeleaf即可。</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre><p>具体可以看该图</p>
+<p><img src="img\sringboot7-1.png" alt=""></p>
+<h3 id="默认配置属性支持"><a href="#默认配置属性支持" class="headerlink" title="默认配置属性支持"></a>默认配置属性支持</h3><p>Spring Boot为我们提供了很多默认的日志配置，所以，只要将spring-boot-starter-logging作为依赖加入到当前应用的classpath，则“开箱即用”。<br>下面介绍几种在application.properties就可以配置的日志相关属性。</p>
+<h3 id="控制台输出"><a href="#控制台输出" class="headerlink" title="控制台输出"></a>控制台输出</h3><p>日志级别从低到高分为TRACE &lt; DEBUG &lt; INFO &lt; WARN &lt; ERROR &lt; FATAL，如果设置为WARN，则低于WARN的信息都不会输出。<br>Spring Boot中默认配置ERROR、WARN和INFO级别的日志输出到控制台。您还可以通过启动您的应用程序–debug标志来启用“调试”模式（开发的时候推荐开启）,以下两种方式皆可：</p>
+<p>在运行命令后加入–debug标志，如：$ java -jar springTest.jar –debug<br><br>在application.properties中配置debug=true，该属性置为true的时候，核心Logger（包含嵌入式容器、hibernate、spring）会输出更多内容，但是你自己应用的日志并不会输出为DEBUG级别。<br></p>
+<h3 id="文件输出"><a href="#文件输出" class="headerlink" title="文件输出"></a>文件输出</h3><p>默认情况下，Spring Boot将日志输出到控制台，不会写到日志文件。如果要编写除控制台输出之外的日志文件，则需在application.properties中设置logging.file或logging.path属性。</p>
+<p>logging.file，设置文件，可以是绝对路径，也可以是相对路径。如：logging.file=my.log<br><br>logging.path，设置目录，会在该目录下创建spring.log文件，并写入日志内容，如：logging.path=/var/log<br></p>
+<p>如果只配置 logging.file，会在项目的当前路径下生成一个 xxx.log 日志文件。<br>如果只配置 logging.path，在 /var/log文件夹生成一个日志文件为 spring.log</p>
+<h4 id="注：二者不能同时使用，如若同时使用，则只有logging-file生效"><a href="#注：二者不能同时使用，如若同时使用，则只有logging-file生效" class="headerlink" title="注：二者不能同时使用，如若同时使用，则只有logging.file生效"></a>注：二者不能同时使用，如若同时使用，则只有logging.file生效</h4><p><strong>默认情况下，日志文件的大小达到10MB时会切分一次，产生新的日志文件，默认级别为：ERROR、WARN、INFO</strong></p>
+<h3 id="级别控制"><a href="#级别控制" class="headerlink" title="级别控制"></a>级别控制</h3><p>所有支持的日志记录系统都可以在Spring环境中设置记录级别（例如在application.properties中）<br>格式为：’logging.level.* = LEVEL’</p>
+<p>logging.level：日志级别控制前缀，*为包名或Logger名<br><br>LEVEL：选项TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF<br></p>
+<p>举例：</p>
+<p>logging.level.com.dudu=DEBUG：com.dudu包下所有class以DEBUG级别输出<br><br>logging.level.root=WARN：root日志以WARN级别输出<br></p>
+<h3 id="自定义日志配置"><a href="#自定义日志配置" class="headerlink" title="自定义日志配置"></a>自定义日志配置</h3><p>由于日志服务一般都在ApplicationContext创建前就初始化了，它并不是必须通过Spring的配置文件控制。因此通过系统属性和传统的Spring Boot外部配置文件依然可以很好的支持日志控制和管理。</p>
+<p>根据不同的日志系统，你可以按如下规则组织配置文件名，就能被正确加载：</p>
+<p>Logback：logback-spring.xml, logback-spring.groovy, logback.xml, logback.groovy<br><br>Log4j：log4j-spring.properties, log4j-spring.xml, log4j.properties, log4j.xml<br><br>Log4j2：log4j2-spring.xml, log4j2.xml<br><br>JDK (Java Util Logging)：logging.properties<br></p>
+<p><strong>Spring Boot官方推荐优先使用带有-spring的文件名作为你的日志配置（如使用logback-spring.xml，而不是logback.xml），命名为logback-spring.xml的日志配置文件，spring boot可以为它添加一些spring boot特有的配置项（下面会提到）。</strong></p>
+<p>上面是默认的命名规则，并且放在src/main/resources下面即可。</p>
+<p>如果你即想完全掌控日志配置，但又不想用logback.xml作为Logback配置的名字，可以在application.properties配置文件里面通过logging.config属性指定自定义的名字：</p>
+<pre><code>logging.config=classpath:logging-config.xml
+</code></pre><p>虽然一般并不需要改变配置文件的名字，但是如果你想针对不同运行时Profile使用不同的日<br>志配置，这个功能会很有用。</p>
+<p>下面我们来看看一个普通的logback-spring.xml例子</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;configuration  scan=&quot;true&quot; scanPeriod=&quot;60 seconds&quot; debug=&quot;false&quot;&gt;
+    &lt;contextName&gt;logback&lt;/contextName&gt;
+    &lt;property name=&quot;log.path&quot; value=&quot;/Users/tengjun/Documents/log&quot; /&gt;
+    &lt;!--输出到控制台--&gt;
+    &lt;appender name=&quot;console&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;
+       &lt;!-- &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
+            &lt;level&gt;ERROR&lt;/level&gt;
+        &lt;/filter&gt;--&gt;
+        &lt;encoder&gt;
+            &lt;pattern&gt;%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+    &lt;!--输出到文件--&gt;
+    &lt;appender name=&quot;file&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;
+        &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;
+            &lt;fileNamePattern&gt;${log.path}/logback.%d{yyyy-MM-dd}.log&lt;/fileNamePattern&gt;
+        &lt;/rollingPolicy&gt;
+        &lt;encoder&gt;
+            &lt;pattern&gt;%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+    &lt;root level=&quot;info&quot;&gt;
+        &lt;appender-ref ref=&quot;console&quot; /&gt;
+        &lt;appender-ref ref=&quot;file&quot; /&gt;
+    &lt;/root&gt;
+
+    &lt;!-- logback为java中的包 --&gt;
+    &lt;logger name=&quot;com.dudu.controller&quot;/&gt;
+    &lt;!--logback.LogbackDemo：类的全路径 --&gt;
+    &lt;logger name=&quot;com.dudu.controller.LearnController&quot; level=&quot;WARN&quot; additivity=&quot;false&quot;&gt;
+        &lt;appender-ref ref=&quot;console&quot;/&gt;
+    &lt;/logger&gt;
+&lt;/configuration&gt;
+</code></pre><h4 id="根节点包含的属性"><a href="#根节点包含的属性" class="headerlink" title="根节点包含的属性"></a>根节点<configuration>包含的属性</configuration></h4><hr>
+<p>scan:当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。<br><br>scanPeriod:设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。<br><br>debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。<br><br>根节点<configuration>的子节点：</configuration></p>
+<p><configuration>下面一共有2个属性，3个子节点，分别是：</configuration></p>
+<h4 id="属性一：设置上下文名称"><a href="#属性一：设置上下文名称" class="headerlink" title="属性一：设置上下文名称"></a>属性一：设置上下文名称<contextname></contextname></h4><hr>
+<p>每个logger都关联到logger上下文，默认上下文名称为“default”。但可以使用设置成其他名字，用于区分不同应用程序的记录。一旦设置，不能修改,可以通过%contextName来打印日志上下文名称。</p>
+<pre><code>&lt;contextName&gt;logback&lt;/contextName&gt;
+</code></pre><h4 id="属性二：设置变量"><a href="#属性二：设置变量" class="headerlink" title="属性二：设置变量"></a>属性二：设置变量<property></property></h4><hr>
+<p>用来定义变量值的标签， 有两个属性，name和value；其中name的值是变量的名称，value的值时变量定义的值。通过定义的值会被插入到logger上下文中。定义变量后，可以使“${}”来使用变量。</p>
+<pre><code>&lt;property name=&quot;log.path&quot; value=&quot;/Users/tengjun/Documents/log&quot; /&gt;
+</code></pre><h4 id="子节点一"><a href="#子节点一" class="headerlink" title="子节点一"></a>子节点一<appender></appender></h4><p>appender用来格式化日志输出节点，有俩个属性name和class，class用来指定哪种输出策略，常用就是控制台输出策略和文件输出策略。</p>
+<h5 id="控制台输出ConsoleAppender："><a href="#控制台输出ConsoleAppender：" class="headerlink" title="控制台输出ConsoleAppender："></a>控制台输出ConsoleAppender：</h5><pre><code>&lt;!--输出到控制台--&gt;
+&lt;appender name=&quot;console&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;
+    &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
+        &lt;level&gt;ERROR&lt;/level&gt;
+    &lt;/filter&gt;
+    &lt;encoder&gt;
+        &lt;pattern&gt;%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+    &lt;/encoder&gt;
+&lt;/appender&gt;
+</code></pre><p><encoder>表示对日志进行编码：</encoder></p>
+<p>%d{HH: mm:ss.SSS}——日志输出时间<br><br>%thread——输出日志的进程名字，这在Web应用以及异步任务处理中很有用<br><br>%-5level——日志级别，并且使用5个字符靠左对齐<br><br>%logger{36}——日志输出者的名字<br><br>%msg——日志消息<br><br>%n——平台的换行符<br></p>
+<p>ThresholdFilter为系统定义的拦截器，例如我们用ThresholdFilter来过滤掉ERROR级别以下的日志不输出到文件中。如果不用记得注释掉，不然你控制台会发现没日志~</p>
+<h5 id="输出到文件RollingFileAppender"><a href="#输出到文件RollingFileAppender" class="headerlink" title="输出到文件RollingFileAppender"></a>输出到文件RollingFileAppender</h5><p>另一种常见的日志输出到文件，随着应用的运行时间越来越长，日志也会增长的越来越多，将他们输出到同一个文件并非一个好办法。RollingFileAppender用于切分文件日志：</p>
+<pre><code>&lt;!--输出到文件--&gt;
+&lt;appender name=&quot;file&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;
+    &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;
+        &lt;fileNamePattern&gt;${log.path}/logback.%d{yyyy-MM-dd}.log&lt;/fileNamePattern&gt;
+        &lt;maxHistory&gt;30&lt;/maxHistory&gt;
+        &lt;totalSizeCap&gt;1GB&lt;/totalSizeCap&gt;
+    &lt;/rollingPolicy&gt;
+    &lt;encoder&gt;
+        &lt;pattern&gt;%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+    &lt;/encoder&gt;
+&lt;/appender&gt;
+</code></pre><p>其中重要的是rollingPolicy的定义，上例中<filenamepattern>${log.path}/logback.%d{yyyy-MM-dd}.log</filenamepattern>定义了日志的切分方式——把每一天的日志归档到一个文件中，<maxhistory>30</maxhistory>表示只保留最近30天的日志，以防止日志填满整个磁盘空间。同理，可以使用%d{yyyy-MM-dd_HH-mm}来定义精确到分的日志切分方式。<totalsizecap>1GB</totalsizecap>用来指定日志文件的上限大小，例如设置为1GB的话，那么到了这个值，就会删除旧的日志。</p>
+<p>补:如果你想把日志直接放到当前项目下，把${log.path}/去掉即可。</p>
+<h4 id="子节点二"><a href="#子节点二" class="headerlink" title="子节点二"></a>子节点二<root></root></h4><p>root节点是必选节点，用来指定最基础的日志输出级别，只有一个level属性。</p>
+<p>level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，不能设置为INHERITED或者同义词NULL。<br>默认是DEBUG。<br></p>
+<p>可以包含零个或多个元素，标识这个appender将会添加到这个logger。</p>
+<pre><code>&lt;root level=&quot;debug&quot;&gt;
+    &lt;appender-ref ref=&quot;console&quot; /&gt;
+    &lt;appender-ref ref=&quot;file&quot; /&gt;
+&lt;/root&gt;
+</code></pre><h4 id="子节点三"><a href="#子节点三" class="headerlink" title="子节点三"></a>子节点三<logger></logger></h4><logger>用来设置某一个包或者具体的某一个类的日志打印级别、以及指定<appender>。<logger>仅有一个name属性，一个可选的level和一个可选的addtivity属性。<br><br>name:用来指定受此logger约束的某一个包或者具体的某一个类。<br><br>level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，还有一个特俗值INHERITED或者同义词NULL，代表强制执行上级的级别。如果未设置此属性，那么当前logger将会继承上级的级别。<br><br>addtivity:是否向上级logger传递打印信息。默认是true。<br><br><br>logger在实际使用的时候有两种情况<br>先来看一看代码中如何使用<br><br>    package com.dudu.controller;<br>    @Controller<br>    public class LearnController {<br>        private Logger logger = LoggerFactory.getLogger(this.getClass());<br>        @RequestMapping(value = “/login”,method = RequestMethod.POST)<br>        @ResponseBody<br>        public Map<string,object> login(HttpServletRequest request, HttpServletResponse response){<br>            //日志级别从低到高分为TRACE &lt; DEBUG &lt; INFO &lt; WARN &lt; ERROR &lt; FATAL，如果设置为WARN，则低于WARN的信息都不会输出。<br>            logger.trace(“日志输出 trace”);<br>            logger.debug(“日志输出 debug”);<br>            logger.info(“日志输出 info”);<br>            logger.warn(“日志输出 warn”);<br>            logger.error(“日志输出 error”);<br>            Map<string,object> map =new HashMap<string,object>();<br>            String userName=request.getParameter(“userName”);<br>            String password=request.getParameter(“password”);<br>            if(!userName.equals(“”) &amp;&amp; password!=””){<br>                User user =new User(userName,password);<br>                request.getSession().setAttribute(“user”,user);<br>                map.put(“result”,”1”);<br>            }else{<br>                map.put(“result”,”0”);<br>            }<br>            return map;<br>        }<br>    }<br><br>这是一个登录的判断的方法，我们引入日志，并且打印不同级别的日志，然后根据logback-spring.xml中的配置来看看打印了哪几种级别日志。<br><br>##### 第一种：带有logger的配置，不指定级别，不指定appender<br><br>    <logger name="com.dudu.controller"><br><br><logger name="com.dudu.controller">将控制controller包下的所有类的日志的打印，但是并没用设置打印级别，所以继承他的上级的日志级别“info”；<br>没有设置addtivity，默认为true，将此logger的打印信息向上级传递；<br>没有设置appender，此logger本身不打印任何信息。<br><root level="info">将root的打印级别设置为“info”，指定了名字为“console”的appender。<br><br>当执行com.dudu.controller.LearnController类的login方法时，LearnController 在包com.dudu.controller中，所以首先执行<logger name="com.dudu.controller">，将级别为“info”及大于“info”的日志信息传递给root，本身并不打印；<br>root接到下级传递的信息，交给已经配置好的名为“console”的appender处理，“console”appender将信息打印到控制台；<br><br>打印结果如下：<br><br>    16:00:17.407 logback [http-nio-8080-exec-8] INFO  com.dudu.controller.LearnController - 日志输出 info<br>    16:00:17.408 logback [http-nio-8080-exec-8] WARN  com.dudu.controller.LearnController - 日志输出 warn<br>    16:00:17.408 logback [http-nio-8080-exec-8] ERROR com.dudu.controller.LearnController - 日志输出 error<br><br>第二种：带有多个logger的配置，指定级别，指定appender<br><br>    <!--logback.LogbackDemo：类的全路径 --><br>    <logger name="com.dudu.controller.LearnController" level="WARN" additivity="false"><br>        <appender-ref ref="console"><br>    </appender-ref></logger>
+
+<p>控制com.dudu.controller.LearnController类的日志打印，打印级别为“WARN”;<br>additivity属性为false，表示此logger的打印信息不再向上级传递;<br>指定了名字为“console”的appender;</p>
+<p>这时候执行com.dudu.controller.LearnController类的login方法时，先执行<logger name="com.dudu.controller.LearnController" level="WARN" additivity="false">,<br>将级别为“WARN”及大于“WARN”的日志信息交给此logger指定的名为“console”的appender处理，在控制台中打出日志，不再向上级root传递打印信息。<br>打印结果如下：</logger></p>
+<pre><code>16:00:17.408 logback [http-nio-8080-exec-8] WARN  com.dudu.controller.LearnController - 日志输出 warn
+16:00:17.408 logback [http-nio-8080-exec-8] ERROR com.dudu.controller.LearnController - 日志输出 error
+</code></pre><p>当然如果你把additivity=”false”改成additivity=”true”的话，就会打印两次，因为打印信息向上级传递，logger本身打印一次，root接到后又打印一次。</p>
+<p>注：使用mybatis的时候，sql语句是debug下才会打印，而这里我们只配置了info，所以想要查看sql语句的话，有以下两种操作：</p>
+<p>第一种把<root level="info">改成<root level="DEBUG">这样就会打印sql，不过这样日志那边会出现很多其他消息。<br><br>第二种就是单独给dao下目录配置debug模式，代码如下，这样配置sql语句会打印，其他还是正常info级别：<br></root></root></p>
+<pre><code>&lt;logger name=&quot;com.dudu.dao&quot; level=&quot;DEBUG&quot; additivity=&quot;false&quot;&gt;
+    &lt;appender-ref ref=&quot;console&quot; /&gt;
+&lt;/logger&gt;
+</code></pre><h3 id="多环境日志输出"><a href="#多环境日志输出" class="headerlink" title="多环境日志输出"></a>多环境日志输出</h3><p>据不同环境（prod:生产环境，test:测试环境，dev:开发环境）来定义不同的日志输出，在 logback-spring.xml中使用 springProfile 节点来定义，方法如下：</p>
+<pre><code>文件名称不是logback.xml，想使用spring扩展profile支持，要以logback-spring.xml命名
+</code></pre><hr>
+<pre><code>&lt;!-- 测试环境+开发环境. 多个使用逗号隔开. --&gt;
+&lt;springProfile name=&quot;test,dev&quot;&gt;
+    &lt;logger name=&quot;com.dudu.controller&quot; level=&quot;info&quot; /&gt;
+&lt;/springProfile&gt;
+&lt;!-- 生产环境. --&gt;
+&lt;springProfile name=&quot;prod&quot;&gt;
+    &lt;logger name=&quot;com.dudu.controller&quot; level=&quot;ERROR&quot; /&gt;
+&lt;/springProfile&gt;
+</code></pre><p>可以启动服务的时候指定 profile （如不指定使用默认），如指定prod 的方式为：<br>java -jar xxx.jar –spring.profiles.active=prod</p>
+<p>总结<br>到此为止终于介绍完日志框架了，平时使用的时候推荐用自定义logback-spring.xml来配置，代码中使用日志也很简单，类里面添加private Logger logger = LoggerFactory.getLogger(this.getClass());即可。</p>
+</logger></root></logger></logger></string,object></string,object></string,object></logger></appender></logger>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/01/自定义@CurrentUser获取当前登录用户/" rel="next" title="自定义@CurrentUser获取当前登录用户">
+                <i class="fa fa-chevron-left"></i> 自定义@CurrentUser获取当前登录用户
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">tearfive</p>
+              <p class="site-description motion-element" itemprop="description">记录生活点滴</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#正文"><span class="nav-number">1.</span> <span class="nav-text">正文</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#默认日志Logback"><span class="nav-number">2.</span> <span class="nav-text">默认日志Logback</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加日志依赖"><span class="nav-number">2.0.1.</span> <span class="nav-text">添加日志依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#默认配置属性支持"><span class="nav-number">2.0.2.</span> <span class="nav-text">默认配置属性支持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制台输出"><span class="nav-number">2.0.3.</span> <span class="nav-text">控制台输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件输出"><span class="nav-number">2.0.4.</span> <span class="nav-text">文件输出</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注：二者不能同时使用，如若同时使用，则只有logging-file生效"><span class="nav-number">2.0.4.1.</span> <span class="nav-text">注：二者不能同时使用，如若同时使用，则只有logging.file生效</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#级别控制"><span class="nav-number">2.0.5.</span> <span class="nav-text">级别控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义日志配置"><span class="nav-number">2.0.6.</span> <span class="nav-text">自定义日志配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#根节点包含的属性"><span class="nav-number">2.0.6.1.</span> <span class="nav-text">根节点包含的属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#属性一：设置上下文名称"><span class="nav-number">2.0.6.2.</span> <span class="nav-text">属性一：设置上下文名称</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#属性二：设置变量"><span class="nav-number">2.0.6.3.</span> <span class="nav-text">属性二：设置变量</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#子节点一"><span class="nav-number">2.0.6.4.</span> <span class="nav-text">子节点一</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#控制台输出ConsoleAppender："><span class="nav-number">2.0.6.4.1.</span> <span class="nav-text">控制台输出ConsoleAppender：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#输出到文件RollingFileAppender"><span class="nav-number">2.0.6.4.2.</span> <span class="nav-text">输出到文件RollingFileAppender</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#子节点二"><span class="nav-number">2.0.6.5.</span> <span class="nav-text">子节点二</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#子节点三"><span class="nav-number">2.0.6.6.</span> <span class="nav-text">子节点三</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多环境日志输出"><span class="nav-number">2.0.7.</span> <span class="nav-text">多环境日志输出</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">tearfive</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
