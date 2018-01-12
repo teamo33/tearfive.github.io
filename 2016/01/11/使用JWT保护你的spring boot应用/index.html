@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="https://github.com/tearfive/tearfive.github.io">
   <title>使用JWT保护你的springboot应用 | 我的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="使用JWT保护你的Spring Boot应用Spring Boot有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题">
+  <meta name="description" content="Spring Boot有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题，这当然是个好事儿，部署简单了很多。 创建S">
 <meta name="keywords" content="Spring Security">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用JWT保护你的springboot应用">
 <meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/2016/01/11/使用JWT保护你的spring boot应用/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="使用JWT保护你的Spring Boot应用Spring Boot有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题">
+<meta property="og:description" content="Spring Boot有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题，这当然是个好事儿，部署简单了很多。 创建S">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-12T05:32:30.302Z">
+<meta property="og:updated_time" content="2018-01-12T06:18:35.009Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用JWT保护你的springboot应用">
-<meta name="twitter:description" content="使用JWT保护你的Spring Boot应用Spring Boot有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题">
+<meta name="twitter:description" content="Spring Boot有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题，这当然是个好事儿，部署简单了很多。 创建S">
   
     <link rel="alternative" href="/atom.xml" title="我的博客" type="application/atom+xml">
   
@@ -48,7 +48,7 @@
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
-			<img src="/source/img/微信图片_20180112134156.jpg" class="js-avatar">
+			<img src="/img/微信图片_20180112134156.jpg" class="js-avatar">
 		</a>
 		<hgroup>
 		  <h1 class="header-author"><a href="/">tearfive</a></h1>
@@ -62,7 +62,11 @@
 			
 				<li><a href="/">主页</a></li>
 	        
-				<li><a href="/tags/随笔/">随笔</a></li>
+				<li><a href="/categories/java/">java</a></li>
+	        
+				<li><a href="/tags/Spring-Security/">Spring-Security</a></li>
+	        
+				<li><a href="/categories/Spring-Boot/">Spring-Boot</a></li>
 	        
 			</ul>
 		</nav>
@@ -73,10 +77,6 @@
     			
             
     			
-    			<a q-on="click: openSlider(e, 'friends')" href="javascript:void(0)">友链</a>
-    			
-            
-    			
     			<a q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
     			
             
@@ -84,14 +84,6 @@
 		<nav class="header-nav">
 			<div class="social">
 				
-					<a class="github" target="_blank" href="#" title="github"><i class="icon-github"></i></a>
-		        
-					<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
-		        
-					<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
-		        
-					<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
-		        
 			</div>
 		</nav>
 	</header>		
@@ -108,7 +100,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<div class="profilepic">
-				<img src="/source/img/微信图片_20180112134156.jpg" class="js-avatar">
+				<img src="/img/微信图片_20180112134156.jpg" class="js-avatar">
 			</div>
 			<hgroup>
 			  <h1 class="header-author js-header-author">tearfive</h1>
@@ -122,29 +114,29 @@
 			
 				
 			
+				
+			
+				
+			
 			
 			
 			<nav class="header-nav">
 				<div class="social">
 					
-						<a class="github" target="_blank" href="#" title="github"><i class="icon-github"></i></a>
-			        
-						<a class="weibo" target="_blank" href="#" title="weibo"><i class="icon-weibo"></i></a>
-			        
-						<a class="rss" target="_blank" href="#" title="rss"><i class="icon-rss"></i></a>
-			        
-						<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
-			        
 				</div>
 			</nav>
 
 			<nav class="header-menu js-header-menu">
-				<ul style="width: 50%">
+				<ul style="width: 70%">
 				
 				
-					<li style="width: 50%"><a href="/">主页</a></li>
+					<li style="width: 25%"><a href="/">主页</a></li>
 		        
-					<li style="width: 50%"><a href="/tags/随笔/">随笔</a></li>
+					<li style="width: 25%"><a href="/categories/java/">java</a></li>
+		        
+					<li style="width: 25%"><a href="/tags/Spring-Security/">Spring-Security</a></li>
+		        
+					<li style="width: 25%"><a href="/categories/Spring-Boot/">Spring-Boot</a></li>
 		        
 				</ul>
 			</nav>
@@ -179,7 +171,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="使用JWT保护你的Spring-Boot应用"><a href="#使用JWT保护你的Spring-Boot应用" class="headerlink" title="使用JWT保护你的Spring Boot应用"></a>使用JWT保护你的Spring Boot应用</h1><h2 id="Spring-Boot"><a href="#Spring-Boot" class="headerlink" title="Spring Boot"></a>Spring Boot</h2><p>有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题，这当然是个好事儿，部署简单了很多。</p>
+        <h2 id="Spring-Boot"><a href="#Spring-Boot" class="headerlink" title="Spring Boot"></a>Spring Boot</h2><p>有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题，这当然是个好事儿，部署简单了很多。</p>
 <h2 id="创建Spring-Boot应用"><a href="#创建Spring-Boot应用" class="headerlink" title="创建Spring Boot应用"></a>创建Spring Boot应用</h2><p>有很多方法去创建Spring Boot项目，官方也推荐用：</p>
 <p><a href="http://start.spring.io/" target="_blank" rel="noopener">Spring Boot在线项目创建</a><br><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/cli-using-the-cli.html" target="_blank" rel="noopener">CLI 工具</a></p>
 <p>start.spring.io可以方便选择你要用的组件，命令行工具当然也可以。目前Spring Boot已经到了1.53，我是懒得去更新依赖，继续用1.52版本。虽然阿里也有了中央库的国内版本不知道是否稳定。如果你感兴趣，可以自己尝试下。你可以选Maven或者Gradle成为你项目的构建工具，Gradle优雅一些，使用了Groovy语言进行描述。</p>
@@ -219,7 +211,7 @@ public class DemoApplication {
 </code></pre><p>这里我尽量的写清楚，让不了解Spring Security的人通过这个例子可以了解这个东西，很多人都觉得它很复杂，而投向了Apache Shiro，其实这个并不难懂。知道主要的处理流程，和这个流程中哪些类都起了哪些作用就好了。</p>
 <p>Spring Boot对于开发人员最大的好处在于可以对Spring应用进行自动配置。Spring Boot会根据应用中声明的第三方依赖来自动配置Spring框架，而不需要进行显式的声明。Spring Boot推荐采用基于Java注解的配置方式，而不是传统的XML。只需要在主配置 Java 类上添加@EnableAutoConfiguration注解就可以启用自动配置。Spring Boot的自动配置功能是没有侵入性的，只是作为一种基本的默认实现。</p>
 <p>这个入口类我们添加@RestController和@EnableAutoConfiguration两个注解。<br>@RestController注解相当于@ResponseBody和@Controller合在一起的作用。</p>
-<p>run整个项目。访问<a href="http://localhost:8080/就能看到这个JSON的输出。使用Chrome浏览器可以装JSON" target="_blank" rel="noopener">http://localhost:8080/就能看到这个JSON的输出。使用Chrome浏览器可以装JSON</a> Formatter这个插件，显示更PL一些。</p>
+<p>run整个项目。访问’<a href="http://localhost:8080/&#39;就能看到这个JSON的输出。使用Chrome浏览器可以装JSON" target="_blank" rel="noopener">http://localhost:8080/&#39;就能看到这个JSON的输出。使用Chrome浏览器可以装JSON</a> Formatter这个插件，显示更PL一些。</p>
 <pre><code>{
   &quot;content&quot;: &quot;hello freewolf~&quot;
 }
@@ -267,7 +259,7 @@ class UserController {
         return JSONResult.fillResultString(0, &quot;&quot;, users);
     }
 }
-</code></pre><p>重新run这个文件，访问<a href="http://localhost:8080/users就看到了下面的结果" target="_blank" rel="noopener">http://localhost:8080/users就看到了下面的结果</a>:</p>
+</code></pre><p>重新run这个文件，访问’<a href="http://localhost:8080/users&#39;就看到了下面的结果" target="_blank" rel="noopener">http://localhost:8080/users&#39;就看到了下面的结果</a>:</p>
 <pre><code>{
   &quot;result&quot;: [
     &quot;freewolf&quot;,
@@ -287,7 +279,7 @@ curl -I http://127.0.0.1:8080/users
 </code></pre><p>那怎么才能让它变成JSON呢，其实也很简单只需要补充一下相关注解：</p>
 <pre><code>@RequestMapping(value = &quot;/users&quot;, produces=&quot;application/json;charset=UTF-8&quot;)
 </code></pre><p>这样就好了。</p>
-<h1 id="使用JWT保护你的Spring-Boot应用-1"><a href="#使用JWT保护你的Spring-Boot应用-1" class="headerlink" title="使用JWT保护你的Spring Boot应用"></a>使用JWT保护你的Spring Boot应用</h1><p>终于我们开始介绍正题，这里我们会对/users进行访问控制，先通过申请一个JWT(JSON Web Token读jot)，然后通过这个访问/users，才能拿到数据。</p>
+<h1 id="使用JWT保护你的Spring-Boot应用"><a href="#使用JWT保护你的Spring-Boot应用" class="headerlink" title="使用JWT保护你的Spring Boot应用"></a>使用JWT保护你的Spring Boot应用</h1><p>终于我们开始介绍正题，这里我们会对/users进行访问控制，先通过申请一个JWT(JSON Web Token读jot)，然后通过这个访问/users，才能拿到数据。</p>
 <p>关于JWT,出门奔向以下内容，这些不在本文讨论范围内:</p>
 <p><a href="https://tools.ietf.org/html/rfc7519" target="_blank" rel="noopener">RFC7519</a><br><br><a href="https://jwt.io/" target="_blank" rel="noopener">JWT</a></p>
 <p>JWT很大程度上还是个新技术，通过使用HMAC(Hash-based Message Authentication Code)计算信息摘要，也可以用RSA公私钥中的私钥进行签名。这个根据业务场景进行选择。</p>
@@ -537,32 +529,6 @@ http://127.0.0.1:8080/users
       
 
       
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                    <div class="reward-box-item">
-                      <img class="reward-img" src="/source/img/微信图片_20180112134626.jpg">
-                      <span class="reward-type">微信</span>
-                    </div>
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
-      
     </div>
     <div class="article-info article-info-index">
       
@@ -681,17 +647,6 @@ http://127.0.0.1:8080/users
   
   
   
-  <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
-<script>
-  var cloudTieConfig = {
-    url: "https://github.com/tearfive/tearfive.github.io/2016/01/11/使用JWT保护你的spring boot应用/", 
-    sourceId: "使用JWT保护你的spring boot应用",
-    productKey: "true",
-    target: "cloud-tie-wrapper"
-  };
-</script>
-<script src="//img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
-  
 
   
 
@@ -751,25 +706,17 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
       
       
     
-      
-      
-      
-    
     
 
     <ul style="width: 70%">
     
     
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
+      <li style="width: 50%" q-on="click: openSlider(e, 'innerArchive')"><a href="javascript:void(0)" q-class="active:innerArchive">所有文章</a></li>
       
         
       
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'friends')"><a href="javascript:void(0)" q-class="active:friends">友链</a></li>
-      
-        
-      
-      <li style="width: 33.333333333333336%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
+      <li style="width: 50%" q-on="click: openSlider(e, 'aboutme')"><a href="javascript:void(0)" q-class="active:aboutme">关于我</a></li>
       
         
     </ul>
@@ -836,38 +783,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     	</section>
     
 
-    
-    	<section class="tools-section tools-section-friends" q-show="friends">
-  		
-        <ul class="search-ul">
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接1</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接2</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接3</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接4</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接5</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接6</a>
-            </li>
-          
-        </ul>
-  		
-    	</section>
     
 
     
