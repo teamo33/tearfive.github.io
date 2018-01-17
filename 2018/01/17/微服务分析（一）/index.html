@@ -6,18 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://github.com/tearfive/tearfive.github.io">
-  <title>Archives: 2015 | 我的博客</title>
+  <title>微服务分析（一） | 我的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录生活点滴">
-<meta property="og:type" content="website">
-<meta property="og:title" content="我的博客">
-<meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/archives/2015/index.html">
+  <meta name="description" content="微服务架构的优势和不足一个应用系统里面的模块没有办法做到彻底解耦，要实现按组件单独部署是不可能的，相互之间仍有大量内部不可见的依赖导致模块间无法拆分 单体应用本身带来的问题主要有哪些1.系统复杂：内部多个模块紧耦合，关联依赖复杂，牵一发而动全身2.运维复杂：变更或升级的影响分析困难，任何一个小修改都可能导致单体应用整体运行出现故障3.无法扩展：无法拆分部署，出现性能瓶颈后往往只能增加服务器或增加集">
+<meta name="keywords" content="SOA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务分析（一）">
+<meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/2018/01/17/微服务分析（一）/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="记录生活点滴">
+<meta property="og:description" content="微服务架构的优势和不足一个应用系统里面的模块没有办法做到彻底解耦，要实现按组件单独部署是不可能的，相互之间仍有大量内部不可见的依赖导致模块间无法拆分 单体应用本身带来的问题主要有哪些1.系统复杂：内部多个模块紧耦合，关联依赖复杂，牵一发而动全身2.运维复杂：变更或升级的影响分析困难，任何一个小修改都可能导致单体应用整体运行出现故障3.无法扩展：无法拆分部署，出现性能瓶颈后往往只能增加服务器或增加集">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-17T05:42:47.424Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="我的博客">
-<meta name="twitter:description" content="记录生活点滴">
+<meta name="twitter:title" content="微服务分析（一）">
+<meta name="twitter:description" content="微服务架构的优势和不足一个应用系统里面的模块没有办法做到彻底解耦，要实现按组件单独部署是不可能的，相互之间仍有大量内部不可见的依赖导致模块间无法拆分 单体应用本身带来的问题主要有哪些1.系统复杂：内部多个模块紧耦合，关联依赖复杂，牵一发而动全身2.运维复杂：变更或升级的影响分析困难，任何一个小修改都可能导致单体应用整体运行出现故障3.无法扩展：无法拆分部署，出现性能瓶颈后往往只能增加服务器或增加集">
   
     <link rel="alternative" href="/atom.xml" title="我的博客" type="application/atom+xml">
   
@@ -149,98 +151,161 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-微服务分析（一）" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/08/01/Spring Boot_jsp/" class="archive-article-date">
-  	<time datetime="2015-08-01T13:19:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-08-01</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/08/01/Spring Boot_jsp/">Spring Boot 添加JSP支持</a>
+    <h1 class="article-title" itemprop="name">
+      微服务分析（一）
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
+        
+        <a href="/2018/01/17/微服务分析（一）/" class="archive-article-date">
+  	<time datetime="2018-01-17T05:12:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="微服务架构的优势和不足"><a href="#微服务架构的优势和不足" class="headerlink" title="微服务架构的优势和不足"></a>微服务架构的优势和不足</h2><p><strong>一个应用系统里面的模块没有办法做到彻底解耦，要实现按组件单独部署是不可能的，相互之间仍有大量内部不可见的依赖导致模块间无法拆分</strong></p>
+<h4 id="单体应用本身带来的问题主要有哪些"><a href="#单体应用本身带来的问题主要有哪些" class="headerlink" title="单体应用本身带来的问题主要有哪些"></a>单体应用本身带来的问题主要有哪些</h4><p><strong>1.系统复杂：</strong>内部多个模块紧耦合，关联依赖复杂，牵一发而动全身<br><strong>2.运维复杂：</strong>变更或升级的影响分析困难，任何一个小修改都可能导致单体应用整体运行出现故障<br><strong>3.无法扩展：</strong>无法拆分部署，出现性能瓶颈后往往只能增加服务器或增加集群节点，但是DB问题难以解决</p>
+<h4 id="正是由于这些原因需要考虑引入微服务架构（实质仍然是单个应用本身的组件化和服务化）"><a href="#正是由于这些原因需要考虑引入微服务架构（实质仍然是单个应用本身的组件化和服务化）" class="headerlink" title="正是由于这些原因需要考虑引入微服务架构（实质仍然是单个应用本身的组件化和服务化）"></a>正是由于这些原因需要考虑引入微服务架构（实质仍然是单个应用本身的组件化和服务化）</h4><p><strong>一个微服务一般完成某个特定的功能，比如订单管理，客户管理。</strong><br><strong>每个微服务都是一个微型应用，有着自己的六边形架构，</strong>包括商业逻辑和各种接口，有的微服务通过暴露API被别的微服务或者应用客户端所用，有的微服务通过网页UI实现<br><strong>在运行时，每个实例通常是一个云虚拟机或者Docker容器</strong></p>
+<h4 id="微服务核心"><a href="#微服务核心" class="headerlink" title="微服务核心"></a>微服务核心</h4><h5 id="其一足够构成一个独立小应用（从DB到UI）"><a href="#其一足够构成一个独立小应用（从DB到UI）" class="headerlink" title="其一足够构成一个独立小应用（从DB到UI）"></a>其一足够构成一个独立小应用（从DB到UI）</h5><h5 id="其二微服务应用之间只能通过Service-API进行交互"><a href="#其二微服务应用之间只能通过Service-API进行交互" class="headerlink" title="其二微服务应用之间只能通过Service API进行交互"></a>其二微服务应用之间只能通过Service API进行交互</h5><h5 id="其三一般运行在云虚拟机或更轻的Docker容器上"><a href="#其三一般运行在云虚拟机或更轻的Docker容器上" class="headerlink" title="其三一般运行在云虚拟机或更轻的Docker容器上"></a>其三一般运行在云虚拟机或更轻的Docker容器上</h5><p><strong>API Gateway</strong><br>微服务架构里很重要的内容，其作用类似于传统业务内部的ESB服务总线，只是更加轻量和高性能来解决微服务的管控和治理问题</p>
+<p>而对于<strong>负载均衡，缓存，路由，访问控制，服务代理，监控，日志</strong>等都属于基本的服务管控内容，也是API Gateway需要考虑的核心能力</p>
+<p><strong>Scale Cube的3D模型</strong><br>描述的非常好，即通过微服务架构实施后扩展性的变化<br><strong>1.Y轴：</strong>本质是应用的分解，即将传统的单体应用分解为多个微服务应用<br><strong>2.X轴：</strong>水平弹性扩展能力，即通过负载均衡来实现水平弹性扩展，但DB问题无法解决<br><strong>3.Z轴：</strong>当单个微服务应用引入DB弹性扩展能力需要解决的时候，我们引入对数据库进行拆分和DaaS</p>
+<h4 id="简单总结微服务架构的不足"><a href="#简单总结微服务架构的不足" class="headerlink" title="简单总结微服务架构的不足"></a>简单总结微服务架构的不足</h4><p><strong>1.CAP原则：</strong>由于服务无状态和引入了分布式，较难解决一致性问题<br><strong>2.集成复杂：</strong>任何彻底的分解都将带来集成的复杂度，即模块在集成时候需要外部微服务模块更多的配合<br><strong>3.部署问题：</strong>稍大项目都涉及到上100个服务节点部署，还涉及到部署后的配置，扩展和监控问题</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/Spring-Boot//" class="article-tag-list-link color2">Spring Boot</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SOA</a>
         		</li>
       		
 		</ul>
 	</div>
 
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://github.com/tearfive/tearfive.github.io/2018/01/17/微服务分析（一）/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2015/07/01/Spring Boot_静态资源处理/" class="archive-article-date">
-  	<time datetime="2015-07-01T14:37:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-07-01</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2018/01/17/微服务分析（二）/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          微服务分析（二）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/01/16/SOA与微服务/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">SOA与微服务</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/07/01/Spring Boot_静态资源处理/">Spring Boot 静态资源处理</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spring-Boot//" class="article-tag-list-link color2">Spring Boot</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -263,8 +328,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
