@@ -18,7 +18,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://github.com/img/client.png">
 <meta property="og:image" content="https://github.com/img/server.png">
-<meta property="og:updated_time" content="2018-01-18T11:51:47.767Z">
+<meta property="og:updated_time" content="2018-01-18T11:56:58.208Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="微服务分析（四）">
 <meta name="twitter:description" content="（本文为阅读笔记，具体原文参考https://www.zhihu.com/question/37808426） 服务发现的可行方案以及实践案例看似简单的服务注册和服务目录库管理为何会变得复杂其主要原因还是在结合了云端PaaS和docker容器部署后，对于微服务模块部署完成后提供出来的ip地址是在动态变化的包括模块在进行动态集群扩展的时候也需要动态接入新的服务提供ip地址正是由于这个原因引入了服务管">
@@ -180,7 +180,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426）" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426）</a></p>
+        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426</a>）</p>
 <h2 id="服务发现的可行方案以及实践案例"><a href="#服务发现的可行方案以及实践案例" class="headerlink" title="服务发现的可行方案以及实践案例"></a>服务发现的可行方案以及实践案例</h2><p>看似简单的服务注册和服务目录库管理为何会变得复杂<br><strong>其主要原因还是在结合了云端PaaS和docker容器部署后，对于微服务模块部署完成后提供出来的ip地址是在动态变化的</strong><br>包括模块在进行动态集群扩展的时候也需要动态接入新的服务提供ip地址<br>正是由于这个原因引入了服务管理及管理的困难度</p>
 <h4 id="现分开描述两种服务发现模式，即客户端发现模式和服务端发现模式"><a href="#现分开描述两种服务发现模式，即客户端发现模式和服务端发现模式" class="headerlink" title="现分开描述两种服务发现模式，即客户端发现模式和服务端发现模式"></a>现分开描述两种服务发现模式，即客户端发现模式和服务端发现模式</h4><p><strong>客户端发现模式</strong></p>
 <blockquote>

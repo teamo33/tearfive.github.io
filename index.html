@@ -281,7 +281,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426）" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426）</a></p>
+        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426</a>）</p>
 <h2 id="服务发现的可行方案以及实践案例"><a href="#服务发现的可行方案以及实践案例" class="headerlink" title="服务发现的可行方案以及实践案例"></a>服务发现的可行方案以及实践案例</h2><p>看似简单的服务注册和服务目录库管理为何会变得复杂<br><strong>其主要原因还是在结合了云端PaaS和docker容器部署后，对于微服务模块部署完成后提供出来的ip地址是在动态变化的</strong><br>包括模块在进行动态集群扩展的时候也需要动态接入新的服务提供ip地址<br>正是由于这个原因引入了服务管理及管理的困难度</p>
 <h4 id="现分开描述两种服务发现模式，即客户端发现模式和服务端发现模式"><a href="#现分开描述两种服务发现模式，即客户端发现模式和服务端发现模式" class="headerlink" title="现分开描述两种服务发现模式，即客户端发现模式和服务端发现模式"></a>现分开描述两种服务发现模式，即客户端发现模式和服务端发现模式</h4><p><strong>客户端发现模式</strong></p>
 <blockquote>
@@ -401,7 +401,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426）" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426）</a></p>
+        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426</a>）</p>
 <h2 id="微服务架构中的进程间通信"><a href="#微服务架构中的进程间通信" class="headerlink" title="微服务架构中的进程间通信"></a>微服务架构中的进程间通信</h2><p>基于微服务的分布式应用是运行在多态机器上的，一般来说，每个服务实例都是一个进程，因此，服务之间的交互必须通过进程间通信（IPC）来实现</p>
 <h4 id="对于微服务架构的交互模式有两个维度"><a href="#对于微服务架构的交互模式有两个维度" class="headerlink" title="对于微服务架构的交互模式有两个维度"></a>对于微服务架构的交互模式有两个维度</h4><p><strong>一对一：</strong>每个客户端请求有一个服务实例来响应<br><strong>一对多：</strong>每个客户端请求有多个服务实例来响应</p>
 <p><strong>同步模式：</strong>客户端请求需要服务器即时响应，甚至可能由于等待而阻塞<br><strong>异步模式：</strong>客户端请求不会阻塞进程，服务端的响应可是是非即时的</p>
@@ -496,7 +496,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426）" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426）</a></p>
+        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426</a>）</p>
 <h2 id="使用API网关构建微服务"><a href="#使用API网关构建微服务" class="headerlink" title="使用API网关构建微服务"></a>使用API网关构建微服务</h2><p>引入一个简单的场景，以一个亚马逊购物网站的手机APP订单查看界面来举例<br>如果是一个单体应该，那么所有的界面需要获取信息都通过单体应用统一一个地址提供多个Service API获取，但是转变为微服务架构后可以看到对于会员管理，商品管理，订单管理，财务结算管理等都已经拆分为不同的微服务模块，需要从不同的服务地址调用不同的微服务模块提供的Service API来返回数据</p>
 <h4 id="对于客户端和微服务模块间点对点直接通讯有三个问题"><a href="#对于客户端和微服务模块间点对点直接通讯有三个问题" class="headerlink" title="对于客户端和微服务模块间点对点直接通讯有三个问题"></a>对于客户端和微服务模块间点对点直接通讯有三个问题</h4><p><strong>1. 问题一：</strong>客户端需求和每个微服务暴露的细粒度API不匹配<br><strong>2. 问题二：</strong>部分服务使用的协议对web并不友好，如二进制RPC或AMQP消息等<br><strong>3. 问题三：</strong>使得微服务难以重构，如服务拆分或服务组合的场景</p>
 <h4 id="从传统的ESB能力对上面三个问题作一个说明"><a href="#从传统的ESB能力对上面三个问题作一个说明" class="headerlink" title="从传统的ESB能力对上面三个问题作一个说明"></a>从传统的ESB能力对上面三个问题作一个说明</h4><p><strong>第一可能涉及到细粒度的API组合，类似组合无法做</strong><br><strong>第二可能存在协议转换的问题需要解决</strong><br><strong>第三服务透明的问题，需要对客户端提供一个统一的服务目录以使底层服务透明</strong></p>
@@ -588,7 +588,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426）" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426）</a></p>
+        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426</a>）</p>
 <h2 id="微服务架构的优势和不足"><a href="#微服务架构的优势和不足" class="headerlink" title="微服务架构的优势和不足"></a>微服务架构的优势和不足</h2><p><strong>一个应用系统里面的模块没有办法做到彻底解耦，要实现按组件单独部署是不可能的，相互之间仍有大量内部不可见的依赖导致模块间无法拆分</strong></p>
 <h4 id="单体应用本身带来的问题主要有哪些"><a href="#单体应用本身带来的问题主要有哪些" class="headerlink" title="单体应用本身带来的问题主要有哪些"></a>单体应用本身带来的问题主要有哪些</h4><p><strong>1.系统复杂：</strong>内部多个模块紧耦合，关联依赖复杂，牵一发而动全身<br><strong>2.运维复杂：</strong>变更或升级的影响分析困难，任何一个小修改都可能导致单体应用整体运行出现故障<br><strong>3.无法扩展：</strong>无法拆分部署，出现性能瓶颈后往往只能增加服务器或增加集群节点，但是DB问题难以解决</p>
 <h4 id="正是由于这些原因需要考虑引入微服务架构（实质仍然是单个应用本身的组件化和服务化）"><a href="#正是由于这些原因需要考虑引入微服务架构（实质仍然是单个应用本身的组件化和服务化）" class="headerlink" title="正是由于这些原因需要考虑引入微服务架构（实质仍然是单个应用本身的组件化和服务化）"></a>正是由于这些原因需要考虑引入微服务架构（实质仍然是单个应用本身的组件化和服务化）</h4><p><strong>一个微服务一般完成某个特定的功能，比如订单管理，客户管理。</strong><br><strong>每个微服务都是一个微型应用，有着自己的六边形架构，</strong>包括商业逻辑和各种接口，有的微服务通过暴露API被别的微服务或者应用客户端所用，有的微服务通过网页UI实现<br><strong>在运行时，每个实例通常是一个云虚拟机或者Docker容器</strong></p>
