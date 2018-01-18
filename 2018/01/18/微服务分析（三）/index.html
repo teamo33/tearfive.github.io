@@ -6,18 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://github.com/tearfive/tearfive.github.io">
-  <title>Archives: 2018/1 | 我的博客</title>
+  <title>微服务（三） | 我的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录生活点滴">
-<meta property="og:type" content="website">
-<meta property="og:title" content="我的博客">
-<meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/archives/2018/01/index.html">
+  <meta name="description" content="微服务架构中的进程间通信基于微服务的分布式应用是运行在多态机器上的，一般来说，每个服务实例都是一个进程，因此，服务之间的交互必须通过进程间通信（IPC）来实现 对于微服务架构的交互模式有两个维度一对一：每个客户端请求有一个服务实例来响应一对多：每个客户端请求有多个服务实例来响应 同步模式：客户端请求需要服务器即时响应，甚至可能由于等待而阻塞异步模式：客户端请求不会阻塞进程，服务端的响应可是是非即时">
+<meta name="keywords" content="SOA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务（三）">
+<meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/2018/01/18/微服务分析（三）/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="记录生活点滴">
+<meta property="og:description" content="微服务架构中的进程间通信基于微服务的分布式应用是运行在多态机器上的，一般来说，每个服务实例都是一个进程，因此，服务之间的交互必须通过进程间通信（IPC）来实现 对于微服务架构的交互模式有两个维度一对一：每个客户端请求有一个服务实例来响应一对多：每个客户端请求有多个服务实例来响应 同步模式：客户端请求需要服务器即时响应，甚至可能由于等待而阻塞异步模式：客户端请求不会阻塞进程，服务端的响应可是是非即时">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-18T07:04:45.679Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="我的博客">
-<meta name="twitter:description" content="记录生活点滴">
+<meta name="twitter:title" content="微服务（三）">
+<meta name="twitter:description" content="微服务架构中的进程间通信基于微服务的分布式应用是运行在多态机器上的，一般来说，每个服务实例都是一个进程，因此，服务之间的交互必须通过进程间通信（IPC）来实现 对于微服务架构的交互模式有两个维度一对一：每个客户端请求有一个服务实例来响应一对多：每个客户端请求有多个服务实例来响应 同步模式：客户端请求需要服务器即时响应，甚至可能由于等待而阻塞异步模式：客户端请求不会阻塞进程，服务端的响应可是是非即时">
   
     <link rel="alternative" href="/atom.xml" title="我的博客" type="application/atom+xml">
   
@@ -155,74 +157,55 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-微服务分析（三）" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/18/微服务分析（四）/" class="archive-article-date">
-  	<time datetime="2018-01-18T06:34:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-18</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/18/微服务分析（四）/">微服务分析（四）</a>
+    <h1 class="article-title" itemprop="name">
+      微服务（三）
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SOA</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/18/微服务分析（三）/" class="archive-article-date">
+        
+        <a href="/2018/01/18/微服务分析（三）/" class="archive-article-date">
   	<time datetime="2018-01-18T03:12:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-18</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/18/微服务分析（三）/">微服务（三）</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="微服务架构中的进程间通信"><a href="#微服务架构中的进程间通信" class="headerlink" title="微服务架构中的进程间通信"></a>微服务架构中的进程间通信</h2><p>基于微服务的分布式应用是运行在多态机器上的，一般来说，每个服务实例都是一个进程，因此，服务之间的交互必须通过进程间通信（IPC）来实现</p>
+<h4 id="对于微服务架构的交互模式有两个维度"><a href="#对于微服务架构的交互模式有两个维度" class="headerlink" title="对于微服务架构的交互模式有两个维度"></a>对于微服务架构的交互模式有两个维度</h4><p><strong>一对一：</strong>每个客户端请求有一个服务实例来响应<br><strong>一对多：</strong>每个客户端请求有多个服务实例来响应</p>
+<p><strong>同步模式：</strong>客户端请求需要服务器即时响应，甚至可能由于等待而阻塞<br><strong>异步模式：</strong>客户端请求不会阻塞进程，服务端的响应可是是非即时的</p>
+<p>对于同步模式往往只能是一对一，而且还需要等待同步引起阻塞，而对于异步模块往往采用消息机制来实现，同时配合消息中间件可以进一步实现消息的发布订阅。<strong>而对于EDA事件驱动架构要看到其本质也是异步消息中间件和消息的发布订阅</strong></p>
+<p>异步消息机制可以做到最大化的解耦，对于数据CURD的场景可以看到是比较容易通过异步消息机制实现的，但是会进一步引入事务一致性问题，即在采用异步消息机制后往往通过<strong>BASE事务最终一致性</strong>来解决事务层面的问题。而对于查询功能可以看到是比较难通过异步消息API实现的，可以考虑两方面的问题来解决</p>
+<p><strong>其一是服务网关需要具有数据缓存能力，已解决无法从源端获取数据的场景。</strong><br><strong>其二是前端开发框架本身需要支持异步调用和数据装载模式，</strong>特别是对于数据查功能在用户来看在前端的感受仍然需要实时同步的，即通过异步方式返回了查询数据后可以动态刷新前端展示页面</p>
+<p><strong>服务版本的问题：</strong>这是不可避免要遇到的问题，特别是对于RestAPI调用，由于json格式本身无schema返回更加容易忽视了对服务版本的管理和控制。要知道对于json数据格式变化仍然会导致restAPI调用后处理失败。因此服务版本仍然采用大小版本控制比较好</p>
+<blockquote>
+<p>对于小版本变更则直接对原有服务进行覆盖的同时对所有受影响的服务消费端进行升级；<br>对于大版本升级则本质是增加一个新服务，而对旧版本服务逐步迁移和替代</p>
+</blockquote>
+<p><strong>处理局部失败：</strong>之前提到netflix的服务解决方案，对于失败问题的解决要注意常用的仍然是<strong>服务超时设置，断路器机制，流量控制，缓存数据或默认值返回等，</strong>不论采用哪种失败处理策略，都需要考虑应该尽量减少服务调用失败或超时对最终用户造成的影响</p>
+<h4 id="基于请求-响应的同步IPC"><a href="#基于请求-响应的同步IPC" class="headerlink" title="基于请求/响应的同步IPC"></a>基于请求/响应的同步IPC</h4><blockquote>
+<p>使用同步的，基于请求/响应的IPC机制的时候，客户端向服务端发送请求，服务端处理请求并返回响应。一些客户端会由于等待服务端响应而阻塞<br>而另外一些客户端可能使用异步的基于事件驱动的客户端代码，这些代码可能通过future或者rx observeable封装<br>然而，与消息机制不同，客户端需要响应及时返回</p>
+</blockquote>
+<p>这个模式有很多可选的协议，<strong>但是常见的两个协议是rest和thrift</strong></p>
+<p>thrift能够选择传输协议，包括tcp和HTTP，原始tcp比http更高效，然而http对于防火墙，浏览器和使用者来说更友好。</p>
+<p><strong>由此可见互联网openAPI平台和微服务架构实现中仍然是大量以采用restAPI接口为主</strong></p>
+<p><strong>对于消息格式的选择</strong></p>
+<blockquote>
+<p>在使用restAPI接口的的时候，更多的是采用了json消息格式而非项目里<br>对于soap web则更多的采用xml消息格式<br>如果采用thrift还可以采用二进制消息格式以提升性能</p>
+</blockquote>
 
-        <div class="article-info info-on-right">
-          
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -234,182 +217,115 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://github.com/tearfive/tearfive.github.io/2018/01/18/微服务分析（三）/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/17/微服务分析（二）/" class="archive-article-date">
-  	<time datetime="2018-01-17T05:43:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-17</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2018/01/18/微服务分析（四）/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          微服务分析（四）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/01/17/微服务分析（二）/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">微服务分析（二）</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/17/微服务分析（二）/">微服务分析（二）</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SOA</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/17/微服务分析（一）/" class="archive-article-date">
-  	<time datetime="2018-01-17T05:12:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-17</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/17/微服务分析（一）/">微服务分析（一）</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SOA</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/16/SOA与微服务/" class="archive-article-date">
-  	<time datetime="2018-01-16T09:35:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-16</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/16/SOA与微服务/">SOA与微服务</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SOA</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/01/12/springcloud eureka 服务注册与发现/" class="archive-article-date">
-  	<time datetime="2018-01-12T08:32:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-12</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/01/12/springcloud eureka 服务注册与发现/">springcloud eureka 服务注册与发现</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">springcloud</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spring-Boot//" class="article-tag-list-link color2">Spring Boot</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+
   
   
-    </div></section>
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -432,8 +348,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
