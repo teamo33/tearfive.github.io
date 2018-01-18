@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="https://github.com/tearfive/tearfive.github.io">
   <title>使用JWT保护你的springboot应用 | 我的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Spring Boot有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题，这当然是个好事儿，部署简单了很多。 创建S">
+  <meta name="description" content="Spring Boot（本文为阅读笔记，具体原文参考https://segmentfault.com/a/1190000009231329）有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用">
 <meta name="keywords" content="Spring Security">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用JWT保护你的springboot应用">
 <meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/2016/01/11/使用JWT保护你的spring boot应用/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="Spring Boot有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题，这当然是个好事儿，部署简单了很多。 创建S">
+<meta property="og:description" content="Spring Boot（本文为阅读笔记，具体原文参考https://segmentfault.com/a/1190000009231329）有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-12T07:06:07.714Z">
+<meta property="og:updated_time" content="2018-01-18T11:41:14.192Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用JWT保护你的springboot应用">
-<meta name="twitter:description" content="Spring Boot有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题，这当然是个好事儿，部署简单了很多。 创建S">
+<meta name="twitter:description" content="Spring Boot（本文为阅读笔记，具体原文参考https://segmentfault.com/a/1190000009231329）有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用">
   
     <link rel="alternative" href="/atom.xml" title="我的博客" type="application/atom+xml">
   
@@ -177,7 +177,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="Spring-Boot"><a href="#Spring-Boot" class="headerlink" title="Spring Boot"></a>Spring Boot</h2><p>有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题，这当然是个好事儿，部署简单了很多。</p>
+        <h2 id="Spring-Boot"><a href="#Spring-Boot" class="headerlink" title="Spring Boot"></a>Spring Boot</h2><p>（本文为阅读笔记，具体原文参考<a href="https://segmentfault.com/a/1190000009231329）" target="_blank" rel="noopener">https://segmentfault.com/a/1190000009231329）</a><br>有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题，这当然是个好事儿，部署简单了很多。</p>
 <h2 id="创建Spring-Boot应用"><a href="#创建Spring-Boot应用" class="headerlink" title="创建Spring Boot应用"></a>创建Spring Boot应用</h2><p>有很多方法去创建Spring Boot项目，官方也推荐用：</p>
 <p><a href="http://start.spring.io/" target="_blank" rel="noopener">Spring Boot在线项目创建</a><br><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/cli-using-the-cli.html" target="_blank" rel="noopener">CLI 工具</a></p>
 <p>start.spring.io可以方便选择你要用的组件，命令行工具当然也可以。目前Spring Boot已经到了1.53，我是懒得去更新依赖，继续用1.52版本。虽然阿里也有了中央库的国内版本不知道是否稳定。如果你感兴趣，可以自己尝试下。你可以选Maven或者Gradle成为你项目的构建工具，Gradle优雅一些，使用了Groovy语言进行描述。</p>
@@ -766,19 +766,19 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SOA</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">springcloud</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">JAVA</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SOA</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Spring Security</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">springcloud</a>
               </li>
             
             <div class="clearfix"></div>

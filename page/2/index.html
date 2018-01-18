@@ -177,7 +177,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="微服务架构重点"><a href="#微服务架构重点" class="headerlink" title="微服务架构重点"></a>微服务架构重点</h3><p><strong>业务系统需要彻底的组件化和服务化</strong></p>
+        <h3 id="微服务架构重点"><a href="#微服务架构重点" class="headerlink" title="微服务架构重点"></a>微服务架构重点</h3><p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426）" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426）</a></p>
+<p><strong>业务系统需要彻底的组件化和服务化</strong></p>
 <p>原有的单个业务系统会拆分为多个可以独立开发，设计，运行和运维的小应用<br>这些小应用通过服务完成交互和集成，每个小应用从前端web UI，控制层，逻辑层，数据库访问，数据库都完全是独立的一套<br>每个小应用除了完成自身本身的业务功能外，重点就是还需要消费外部其他应用暴露的服务，同时也将自身的能力朝外部发布为服务</p>
 <h3 id="一句话区别SOA和微服务"><a href="#一句话区别SOA和微服务" class="headerlink" title="一句话区别SOA和微服务"></a>一句话区别SOA和微服务</h3><p><strong>即微服务不再强调传统SOA架构里面比较重的ESB企业服务总线，同时SOA的思想进入到耽搁业务系统内部实现真正的组件化</strong></p>
 <h3 id="对微服务架构的一些定义和阐述"><a href="#对微服务架构的一些定义和阐述" class="headerlink" title="对微服务架构的一些定义和阐述"></a>对微服务架构的一些定义和阐述</h3><blockquote>
@@ -263,7 +264,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="spring-cloud-eureka"><a href="#spring-cloud-eureka" class="headerlink" title="spring cloud eureka"></a>spring cloud eureka</h1><p>eureka 用以服务发现、服务注册，比较流行的有consul</p>
+        <h1 id="spring-cloud-eureka"><a href="#spring-cloud-eureka" class="headerlink" title="spring cloud eureka"></a>spring cloud eureka</h1><p>（本文为阅读笔记，具体原文参考<a href="http://blog.csdn.net/liaokailin/article/details/51314001）" target="_blank" rel="noopener">http://blog.csdn.net/liaokailin/article/details/51314001）</a><br>eureka 用以服务发现、服务注册，比较流行的有consul</p>
 <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>eureka为netflix开源软件，分为三个部分：</p>
 <blockquote>
 <p>eureka服务:用以提供服务注册、发现，已一个war的形式提供<br><a href="http://search.maven.org/#search%7Cga%7C1%7Ceureka-server" target="_blank" rel="noopener">http://search.maven.org/#search%7Cga%7C1%7Ceureka-server</a><br>或者编译源码，将war拷贝进tomcat即可提供服务</p>
@@ -551,7 +552,7 @@ public class DiscoveryService {
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>Spring Boot在所有内部日志中使用<a href="http://commons.apache.org/proper/commons-logging/" target="_blank" rel="noopener">Commons Logging</a>，但是默认配置也提供了对常用日志的支持，如：<a href="http://docs.oracle.com/javase/7/docs/api/java/util/logging/package-summary.html" target="_blank" rel="noopener">Java Util Logging</a>，<a href="http://logging.apache.org/log4j/" target="_blank" rel="noopener">Log4J</a>, <a href="https://logging.apache.org/log4j/2.x/" target="_blank" rel="noopener">Log4J2</a>和<a href="http://logback.qos.ch/" target="_blank" rel="noopener">Logback</a>。每种Logger都可以通过配置使用控制台或者文件输出日志内容。</p>
+        <h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>（本文为阅读笔记，具体原文参考<a href="http://blog.csdn.net/gebitan505/article/details/70142155?locationNum=1&amp;fps=1）" target="_blank" rel="noopener">http://blog.csdn.net/gebitan505/article/details/70142155?locationNum=1&amp;fps=1）</a><br>Spring Boot在所有内部日志中使用<a href="http://commons.apache.org/proper/commons-logging/" target="_blank" rel="noopener">Commons Logging</a>，但是默认配置也提供了对常用日志的支持，如：<a href="http://docs.oracle.com/javase/7/docs/api/java/util/logging/package-summary.html" target="_blank" rel="noopener">Java Util Logging</a>，<a href="http://logging.apache.org/log4j/" target="_blank" rel="noopener">Log4J</a>, <a href="https://logging.apache.org/log4j/2.x/" target="_blank" rel="noopener">Log4J2</a>和<a href="http://logback.qos.ch/" target="_blank" rel="noopener">Logback</a>。每种Logger都可以通过配置使用控制台或者文件输出日志内容。</p>
 <h1 id="默认日志Logback"><a href="#默认日志Logback" class="headerlink" title="默认日志Logback"></a>默认日志Logback</h1><p><a href="http://www.slf4j.org/" target="_blank" rel="noopener">SLF4J</a>——Simple Logging Facade For Java，它是一个针对于各类Java日志框架的统一Facade抽象。Java日志框架众多——常用的有java.util.logging, log4j, logback，commons-logging, Spring框架使用的是Jakarta Commons Logging API (JCL)。而SLF4J定义了统一的日志抽象接口，而真正的日志实现则是在运行时决定的——它提供了各类日志框架的binding。</p>
 <p><a href="https://logback.qos.ch/" target="_blank" rel="noopener">Logback</a>是log4j框架的作者开发的新一代日志框架，它效率更高、能够适应诸多的运行环境，同时天然支持SLF4J。</p>
 <p>默认情况下，Spring Boot会用Logback来记录日志，并用INFO级别输出到控制台。在运行应用程序和其他例子时，你应该已经看到很多INFO级别的日志了。</p>
@@ -824,7 +825,8 @@ public class LearnController {
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="定义-CurrenUser注解"><a href="#定义-CurrenUser注解" class="headerlink" title="定义 @CurrenUser注解"></a>定义 @CurrenUser注解</h1><pre><code>/**
+        <h1 id="定义-CurrenUser注解"><a href="#定义-CurrenUser注解" class="headerlink" title="定义 @CurrenUser注解"></a>定义 @CurrenUser注解</h1><p>（本文为阅读笔记，具体原文参考<a href="https://www.jianshu.com/p/01a6a61d9e02）" target="_blank" rel="noopener">https://www.jianshu.com/p/01a6a61d9e02）</a></p>
+<pre><code>/**
  * 在Controller的方法参数中使用此注解，该方法在映射时会注入当前登录的User对象
  */
 @Target(ElementType.PARAMETER)//可用在方法的参数上
@@ -945,7 +947,7 @@ public CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver() {
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="Spring-Boot"><a href="#Spring-Boot" class="headerlink" title="Spring Boot"></a>Spring Boot</h2><p>有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题，这当然是个好事儿，部署简单了很多。</p>
+        <h2 id="Spring-Boot"><a href="#Spring-Boot" class="headerlink" title="Spring Boot"></a>Spring Boot</h2><p>（本文为阅读笔记，具体原文参考<a href="https://segmentfault.com/a/1190000009231329）" target="_blank" rel="noopener">https://segmentfault.com/a/1190000009231329）</a><br>有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题，这当然是个好事儿，部署简单了很多。</p>
 <h2 id="创建Spring-Boot应用"><a href="#创建Spring-Boot应用" class="headerlink" title="创建Spring Boot应用"></a>创建Spring Boot应用</h2><p>有很多方法去创建Spring Boot项目，官方也推荐用：</p>
 <p><a href="http://start.spring.io/" target="_blank" rel="noopener">Spring Boot在线项目创建</a><br><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/cli-using-the-cli.html" target="_blank" rel="noopener">CLI 工具</a></p>
 <p>start.spring.io可以方便选择你要用的组件，命令行工具当然也可以。目前Spring Boot已经到了1.53，我是懒得去更新依赖，继续用1.52版本。虽然阿里也有了中央库的国内版本不知道是否稳定。如果你感兴趣，可以自己尝试下。你可以选Maven或者Gradle成为你项目的构建工具，Gradle优雅一些，使用了Groovy语言进行描述。</p>
@@ -1464,19 +1466,19 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SOA</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">springcloud</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">JAVA</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SOA</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Spring Security</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">springcloud</a>
               </li>
             
             <div class="clearfix"></div>
