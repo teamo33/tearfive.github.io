@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="https://github.com/tearfive/tearfive.github.io">
   <title>微服务分析（二） | 我的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="使用API网关构建微服务（本文为阅读笔记，具体原文参考https://www.zhihu.com/question/37808426） 引入一个简单的场景，以一个亚马逊购物网站的手机APP订单查看界面来举例如果是一个单体应该，那么所有的界面需要获取信息都通过单体应用统一一个地址提供多个Service API获取，但是转变为微服务架构后可以看到对于会员管理，商品管理，订单管理，财务结算管理等都已经拆">
+  <meta name="description" content="（本文为阅读笔记，具体原文参考https://www.zhihu.com/question/37808426） 使用API网关构建微服务引入一个简单的场景，以一个亚马逊购物网站的手机APP订单查看界面来举例如果是一个单体应该，那么所有的界面需要获取信息都通过单体应用统一一个地址提供多个Service API获取，但是转变为微服务架构后可以看到对于会员管理，商品管理，订单管理，财务结算管理等都已经拆">
 <meta name="keywords" content="SOA">
 <meta property="og:type" content="article">
 <meta property="og:title" content="微服务分析（二）">
 <meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/2018/01/17/微服务分析（二）/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="使用API网关构建微服务（本文为阅读笔记，具体原文参考https://www.zhihu.com/question/37808426） 引入一个简单的场景，以一个亚马逊购物网站的手机APP订单查看界面来举例如果是一个单体应该，那么所有的界面需要获取信息都通过单体应用统一一个地址提供多个Service API获取，但是转变为微服务架构后可以看到对于会员管理，商品管理，订单管理，财务结算管理等都已经拆">
+<meta property="og:description" content="（本文为阅读笔记，具体原文参考https://www.zhihu.com/question/37808426） 使用API网关构建微服务引入一个简单的场景，以一个亚马逊购物网站的手机APP订单查看界面来举例如果是一个单体应该，那么所有的界面需要获取信息都通过单体应用统一一个地址提供多个Service API获取，但是转变为微服务架构后可以看到对于会员管理，商品管理，订单管理，财务结算管理等都已经拆">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-18T11:31:05.716Z">
+<meta property="og:updated_time" content="2018-01-18T11:51:37.838Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="微服务分析（二）">
-<meta name="twitter:description" content="使用API网关构建微服务（本文为阅读笔记，具体原文参考https://www.zhihu.com/question/37808426） 引入一个简单的场景，以一个亚马逊购物网站的手机APP订单查看界面来举例如果是一个单体应该，那么所有的界面需要获取信息都通过单体应用统一一个地址提供多个Service API获取，但是转变为微服务架构后可以看到对于会员管理，商品管理，订单管理，财务结算管理等都已经拆">
+<meta name="twitter:description" content="（本文为阅读笔记，具体原文参考https://www.zhihu.com/question/37808426） 使用API网关构建微服务引入一个简单的场景，以一个亚马逊购物网站的手机APP订单查看界面来举例如果是一个单体应该，那么所有的界面需要获取信息都通过单体应用统一一个地址提供多个Service API获取，但是转变为微服务架构后可以看到对于会员管理，商品管理，订单管理，财务结算管理等都已经拆">
   
     <link rel="alternative" href="/atom.xml" title="我的博客" type="application/atom+xml">
   
@@ -177,8 +177,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="使用API网关构建微服务"><a href="#使用API网关构建微服务" class="headerlink" title="使用API网关构建微服务"></a>使用API网关构建微服务</h2><p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426）" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426）</a></p>
-<p>引入一个简单的场景，以一个亚马逊购物网站的手机APP订单查看界面来举例<br>如果是一个单体应该，那么所有的界面需要获取信息都通过单体应用统一一个地址提供多个Service API获取，但是转变为微服务架构后可以看到对于会员管理，商品管理，订单管理，财务结算管理等都已经拆分为不同的微服务模块，需要从不同的服务地址调用不同的微服务模块提供的Service API来返回数据</p>
+        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426）" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426）</a></p>
+<h2 id="使用API网关构建微服务"><a href="#使用API网关构建微服务" class="headerlink" title="使用API网关构建微服务"></a>使用API网关构建微服务</h2><p>引入一个简单的场景，以一个亚马逊购物网站的手机APP订单查看界面来举例<br>如果是一个单体应该，那么所有的界面需要获取信息都通过单体应用统一一个地址提供多个Service API获取，但是转变为微服务架构后可以看到对于会员管理，商品管理，订单管理，财务结算管理等都已经拆分为不同的微服务模块，需要从不同的服务地址调用不同的微服务模块提供的Service API来返回数据</p>
 <h4 id="对于客户端和微服务模块间点对点直接通讯有三个问题"><a href="#对于客户端和微服务模块间点对点直接通讯有三个问题" class="headerlink" title="对于客户端和微服务模块间点对点直接通讯有三个问题"></a>对于客户端和微服务模块间点对点直接通讯有三个问题</h4><p><strong>1. 问题一：</strong>客户端需求和每个微服务暴露的细粒度API不匹配<br><strong>2. 问题二：</strong>部分服务使用的协议对web并不友好，如二进制RPC或AMQP消息等<br><strong>3. 问题三：</strong>使得微服务难以重构，如服务拆分或服务组合的场景</p>
 <h4 id="从传统的ESB能力对上面三个问题作一个说明"><a href="#从传统的ESB能力对上面三个问题作一个说明" class="headerlink" title="从传统的ESB能力对上面三个问题作一个说明"></a>从传统的ESB能力对上面三个问题作一个说明</h4><p><strong>第一可能涉及到细粒度的API组合，类似组合无法做</strong><br><strong>第二可能存在协议转换的问题需要解决</strong><br><strong>第三服务透明的问题，需要对客户端提供一个统一的服务目录以使底层服务透明</strong></p>
 <p>由于以上问题引入API网关的概念，在此强调<strong>API网关即是微服务架构里面的轻量级服务总线，解决服务监控和治理相关问题</strong></p>
@@ -429,19 +429,15 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">JAVA</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">SOA</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Spring Security</a>
+                <a href="javascript:void(0)" class="js-tag color2">springcloud</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">springcloud</a>
+                <a href="javascript:void(0)" class="js-tag color1">Spring Security</a>
               </li>
             
             <div class="clearfix"></div>

@@ -8,19 +8,18 @@
   <link rel="dns-prefetch" href="https://github.com/tearfive/tearfive.github.io">
   <title>事务一致性 | 我的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="分布式事务-最终一致性&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;转载   CAP定理有一个缺陷，这个缺陷可以帮助我们部分摆脱分布式困境 。总的来说，CAP定理本身是完备的，但它并没有描述一个分布式系统何时产生分区，以及分区会持续多长时间。理论其实只限制：在分区发生的一瞬间 ，系统只能在一致性（C）和可用性（A）之间二选一。因此，分布式系统完全可以在没有出现分区时保证C和A，而在出现分区后，放">
-<meta name="keywords" content="JAVA">
+  <meta name="description" content="转载 分布式事务-最终一致性  CAP定理有一个缺陷，这个缺陷可以帮助我们部分摆脱分布式困境 。总的来说，CAP定理本身是完备的，但它并没有描述一个分布式系统何时产生分区，以及分区会持续多长时间。理论其实只限制：在分区发生的一瞬间 ，系统只能在一致性（C）和可用性（A）之间二选一。因此，分布式系统完全可以在没有出现分区时保证C和A，而在出现分区后，放弃一些A或者C然后通过人工操作消除分区，让系统恢">
 <meta property="og:type" content="article">
 <meta property="og:title" content="事务一致性">
 <meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/2018/01/18/事务一致性/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="分布式事务-最终一致性&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;转载   CAP定理有一个缺陷，这个缺陷可以帮助我们部分摆脱分布式困境 。总的来说，CAP定理本身是完备的，但它并没有描述一个分布式系统何时产生分区，以及分区会持续多长时间。理论其实只限制：在分区发生的一瞬间 ，系统只能在一致性（C）和可用性（A）之间二选一。因此，分布式系统完全可以在没有出现分区时保证C和A，而在出现分区后，放">
+<meta property="og:description" content="转载 分布式事务-最终一致性  CAP定理有一个缺陷，这个缺陷可以帮助我们部分摆脱分布式困境 。总的来说，CAP定理本身是完备的，但它并没有描述一个分布式系统何时产生分区，以及分区会持续多长时间。理论其实只限制：在分区发生的一瞬间 ，系统只能在一致性（C）和可用性（A）之间二选一。因此，分布式系统完全可以在没有出现分区时保证C和A，而在出现分区后，放弃一些A或者C然后通过人工操作消除分区，让系统恢">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://github.com/img/cap.jpg">
-<meta property="og:updated_time" content="2018-01-18T11:38:28.615Z">
+<meta property="og:updated_time" content="2018-01-18T11:50:49.790Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="事务一致性">
-<meta name="twitter:description" content="分布式事务-最终一致性&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;转载   CAP定理有一个缺陷，这个缺陷可以帮助我们部分摆脱分布式困境 。总的来说，CAP定理本身是完备的，但它并没有描述一个分布式系统何时产生分区，以及分区会持续多长时间。理论其实只限制：在分区发生的一瞬间 ，系统只能在一致性（C）和可用性（A）之间二选一。因此，分布式系统完全可以在没有出现分区时保证C和A，而在出现分区后，放">
+<meta name="twitter:description" content="转载 分布式事务-最终一致性  CAP定理有一个缺陷，这个缺陷可以帮助我们部分摆脱分布式困境 。总的来说，CAP定理本身是完备的，但它并没有描述一个分布式系统何时产生分区，以及分区会持续多长时间。理论其实只限制：在分区发生的一瞬间 ，系统只能在一致性（C）和可用性（A）之间二选一。因此，分布式系统完全可以在没有出现分区时保证C和A，而在出现分区后，放弃一些A或者C然后通过人工操作消除分区，让系统恢">
 <meta name="twitter:image" content="https://github.com/img/cap.jpg">
   
     <link rel="alternative" href="/atom.xml" title="我的博客" type="application/atom+xml">
@@ -179,8 +178,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="分布式事务-最终一致性"><a href="#分布式事务-最终一致性" class="headerlink" title="分布式事务-最终一致性"></a>分布式事务-最终一致性</h1><p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">转载</a></p>
-<div align="center"><img width="45%" src="\img\cap.jpg"></div>
+        <p><a href="#">转载</a></p>
+<h1 id="分布式事务-最终一致性"><a href="#分布式事务-最终一致性" class="headerlink" title="分布式事务-最终一致性"></a>分布式事务-最终一致性</h1><div align="center"><img width="45%" src="\img\cap.jpg"></div>
 
 <p>CAP定理有一个缺陷，这个缺陷可以帮助我们部分摆脱<strong>分布式困境</strong> 。<br>总的来说，CAP定理本身是完备的，但它并没有描述一个分布式系统何时产生分区，以及分区会持续多长时间。<br>理论其实只限制：在分区发生的一瞬间 ，<strong>系统只能在一致性（C）和可用性（A）之间二选一。</strong><br>因此，<strong>分布式系统完全可以在没有出现分区时保证C和A，</strong>而在出现分区后，放弃一些A或者C然后通过人工操作消除分区，让系统恢复到分区前的状况。<br>这样说太复杂了。用说人话的方式就是：</p>
 <pre><code>※ 当没有故障时，系统正常处理请求并且返回一致的结果。
@@ -218,18 +217,18 @@
     <div class="article-info article-info-index">
       
       
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">JAVA</a>
+        			<a href="/categories/java//" class="article-tag-list-link color5">java</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
 
       
 
@@ -434,19 +433,15 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">JAVA</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">SOA</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Spring Security</a>
+                <a href="javascript:void(0)" class="js-tag color2">springcloud</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">springcloud</a>
+                <a href="javascript:void(0)" class="js-tag color1">Spring Security</a>
               </li>
             
             <div class="clearfix"></div>

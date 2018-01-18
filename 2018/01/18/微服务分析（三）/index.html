@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="https://github.com/tearfive/tearfive.github.io">
   <title>微服务分析（三） | 我的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="微服务架构中的进程间通信（本文为阅读笔记，具体原文参考https://www.zhihu.com/question/37808426） 基于微服务的分布式应用是运行在多态机器上的，一般来说，每个服务实例都是一个进程，因此，服务之间的交互必须通过进程间通信（IPC）来实现 对于微服务架构的交互模式有两个维度一对一：每个客户端请求有一个服务实例来响应一对多：每个客户端请求有多个服务实例来响应 同步模式">
+  <meta name="description" content="（本文为阅读笔记，具体原文参考https://www.zhihu.com/question/37808426） 微服务架构中的进程间通信基于微服务的分布式应用是运行在多态机器上的，一般来说，每个服务实例都是一个进程，因此，服务之间的交互必须通过进程间通信（IPC）来实现 对于微服务架构的交互模式有两个维度一对一：每个客户端请求有一个服务实例来响应一对多：每个客户端请求有多个服务实例来响应 同步模式">
 <meta name="keywords" content="SOA">
 <meta property="og:type" content="article">
 <meta property="og:title" content="微服务分析（三）">
 <meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/2018/01/18/微服务分析（三）/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="微服务架构中的进程间通信（本文为阅读笔记，具体原文参考https://www.zhihu.com/question/37808426） 基于微服务的分布式应用是运行在多态机器上的，一般来说，每个服务实例都是一个进程，因此，服务之间的交互必须通过进程间通信（IPC）来实现 对于微服务架构的交互模式有两个维度一对一：每个客户端请求有一个服务实例来响应一对多：每个客户端请求有多个服务实例来响应 同步模式">
+<meta property="og:description" content="（本文为阅读笔记，具体原文参考https://www.zhihu.com/question/37808426） 微服务架构中的进程间通信基于微服务的分布式应用是运行在多态机器上的，一般来说，每个服务实例都是一个进程，因此，服务之间的交互必须通过进程间通信（IPC）来实现 对于微服务架构的交互模式有两个维度一对一：每个客户端请求有一个服务实例来响应一对多：每个客户端请求有多个服务实例来响应 同步模式">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-18T11:31:05.716Z">
+<meta property="og:updated_time" content="2018-01-18T11:51:42.957Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="微服务分析（三）">
-<meta name="twitter:description" content="微服务架构中的进程间通信（本文为阅读笔记，具体原文参考https://www.zhihu.com/question/37808426） 基于微服务的分布式应用是运行在多态机器上的，一般来说，每个服务实例都是一个进程，因此，服务之间的交互必须通过进程间通信（IPC）来实现 对于微服务架构的交互模式有两个维度一对一：每个客户端请求有一个服务实例来响应一对多：每个客户端请求有多个服务实例来响应 同步模式">
+<meta name="twitter:description" content="（本文为阅读笔记，具体原文参考https://www.zhihu.com/question/37808426） 微服务架构中的进程间通信基于微服务的分布式应用是运行在多态机器上的，一般来说，每个服务实例都是一个进程，因此，服务之间的交互必须通过进程间通信（IPC）来实现 对于微服务架构的交互模式有两个维度一对一：每个客户端请求有一个服务实例来响应一对多：每个客户端请求有多个服务实例来响应 同步模式">
   
     <link rel="alternative" href="/atom.xml" title="我的博客" type="application/atom+xml">
   
@@ -177,8 +177,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="微服务架构中的进程间通信"><a href="#微服务架构中的进程间通信" class="headerlink" title="微服务架构中的进程间通信"></a>微服务架构中的进程间通信</h2><p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426）" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426）</a></p>
-<p>基于微服务的分布式应用是运行在多态机器上的，一般来说，每个服务实例都是一个进程，因此，服务之间的交互必须通过进程间通信（IPC）来实现</p>
+        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426）" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426）</a></p>
+<h2 id="微服务架构中的进程间通信"><a href="#微服务架构中的进程间通信" class="headerlink" title="微服务架构中的进程间通信"></a>微服务架构中的进程间通信</h2><p>基于微服务的分布式应用是运行在多态机器上的，一般来说，每个服务实例都是一个进程，因此，服务之间的交互必须通过进程间通信（IPC）来实现</p>
 <h4 id="对于微服务架构的交互模式有两个维度"><a href="#对于微服务架构的交互模式有两个维度" class="headerlink" title="对于微服务架构的交互模式有两个维度"></a>对于微服务架构的交互模式有两个维度</h4><p><strong>一对一：</strong>每个客户端请求有一个服务实例来响应<br><strong>一对多：</strong>每个客户端请求有多个服务实例来响应</p>
 <p><strong>同步模式：</strong>客户端请求需要服务器即时响应，甚至可能由于等待而阻塞<br><strong>异步模式：</strong>客户端请求不会阻塞进程，服务端的响应可是是非即时的</p>
 <p>对于同步模式往往只能是一对一，而且还需要等待同步引起阻塞，而对于异步模块往往采用消息机制来实现，同时配合消息中间件可以进一步实现消息的发布订阅。<strong>而对于EDA事件驱动架构要看到其本质也是异步消息中间件和消息的发布订阅</strong></p>
@@ -432,19 +432,15 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">JAVA</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">SOA</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Spring Security</a>
+                <a href="javascript:void(0)" class="js-tag color2">springcloud</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">springcloud</a>
+                <a href="javascript:void(0)" class="js-tag color1">Spring Security</a>
               </li>
             
             <div class="clearfix"></div>

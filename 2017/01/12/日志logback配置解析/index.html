@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href="https://github.com/tearfive/tearfive.github.io">
   <title>日志logback配置解析 | 我的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="正文（本文为阅读笔记，具体原文参考http://blog.csdn.net/gebitan505/article/details/70142155?locationNum=1&amp;amp;fps=1）Spring Boot在所有内部日志中使用Commons Logging，但是默认配置也提供了对常用日志的支持，如：Java Util Logging，Log4J, Log4J2和Logback。每种Lo">
+  <meta name="description" content="（本文为阅读笔记，具体原文参考http://blog.csdn.net/gebitan505/article/details/70142155?locationNum=1&amp;amp;fps=1） 正文Spring Boot在所有内部日志中使用Commons Logging，但是默认配置也提供了对常用日志的支持，如：Java Util Logging，Log4J, Log4J2和Logback。每种L">
 <meta property="og:type" content="article">
 <meta property="og:title" content="日志logback配置解析">
 <meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/2017/01/12/日志logback配置解析/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="正文（本文为阅读笔记，具体原文参考http://blog.csdn.net/gebitan505/article/details/70142155?locationNum=1&amp;amp;fps=1）Spring Boot在所有内部日志中使用Commons Logging，但是默认配置也提供了对常用日志的支持，如：Java Util Logging，Log4J, Log4J2和Logback。每种Lo">
+<meta property="og:description" content="（本文为阅读笔记，具体原文参考http://blog.csdn.net/gebitan505/article/details/70142155?locationNum=1&amp;amp;fps=1） 正文Spring Boot在所有内部日志中使用Commons Logging，但是默认配置也提供了对常用日志的支持，如：Java Util Logging，Log4J, Log4J2和Logback。每种L">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://github.com/img/sringboot7-1.png">
 <meta property="og:image" content="https://github.com/img/sringboot7-1.png">
-<meta property="og:updated_time" content="2018-01-18T11:43:01.986Z">
+<meta property="og:updated_time" content="2018-01-18T11:51:22.290Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="日志logback配置解析">
-<meta name="twitter:description" content="正文（本文为阅读笔记，具体原文参考http://blog.csdn.net/gebitan505/article/details/70142155?locationNum=1&amp;amp;fps=1）Spring Boot在所有内部日志中使用Commons Logging，但是默认配置也提供了对常用日志的支持，如：Java Util Logging，Log4J, Log4J2和Logback。每种Lo">
+<meta name="twitter:description" content="（本文为阅读笔记，具体原文参考http://blog.csdn.net/gebitan505/article/details/70142155?locationNum=1&amp;amp;fps=1） 正文Spring Boot在所有内部日志中使用Commons Logging，但是默认配置也提供了对常用日志的支持，如：Java Util Logging，Log4J, Log4J2和Logback。每种L">
 <meta name="twitter:image" content="https://github.com/img/sringboot7-1.png">
   
     <link rel="alternative" href="/atom.xml" title="我的博客" type="application/atom+xml">
@@ -179,7 +179,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>（本文为阅读笔记，具体原文参考<a href="http://blog.csdn.net/gebitan505/article/details/70142155?locationNum=1&amp;fps=1）" target="_blank" rel="noopener">http://blog.csdn.net/gebitan505/article/details/70142155?locationNum=1&amp;fps=1）</a><br>Spring Boot在所有内部日志中使用<a href="http://commons.apache.org/proper/commons-logging/" target="_blank" rel="noopener">Commons Logging</a>，但是默认配置也提供了对常用日志的支持，如：<a href="http://docs.oracle.com/javase/7/docs/api/java/util/logging/package-summary.html" target="_blank" rel="noopener">Java Util Logging</a>，<a href="http://logging.apache.org/log4j/" target="_blank" rel="noopener">Log4J</a>, <a href="https://logging.apache.org/log4j/2.x/" target="_blank" rel="noopener">Log4J2</a>和<a href="http://logback.qos.ch/" target="_blank" rel="noopener">Logback</a>。每种Logger都可以通过配置使用控制台或者文件输出日志内容。</p>
+        <p>（本文为阅读笔记，具体原文参考<a href="http://blog.csdn.net/gebitan505/article/details/70142155?locationNum=1&amp;fps=1）" target="_blank" rel="noopener">http://blog.csdn.net/gebitan505/article/details/70142155?locationNum=1&amp;fps=1）</a></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>Spring Boot在所有内部日志中使用<a href="http://commons.apache.org/proper/commons-logging/" target="_blank" rel="noopener">Commons Logging</a>，但是默认配置也提供了对常用日志的支持，如：<a href="http://docs.oracle.com/javase/7/docs/api/java/util/logging/package-summary.html" target="_blank" rel="noopener">Java Util Logging</a>，<a href="http://logging.apache.org/log4j/" target="_blank" rel="noopener">Log4J</a>, <a href="https://logging.apache.org/log4j/2.x/" target="_blank" rel="noopener">Log4J2</a>和<a href="http://logback.qos.ch/" target="_blank" rel="noopener">Logback</a>。每种Logger都可以通过配置使用控制台或者文件输出日志内容。</p>
 <h1 id="默认日志Logback"><a href="#默认日志Logback" class="headerlink" title="默认日志Logback"></a>默认日志Logback</h1><p><a href="http://www.slf4j.org/" target="_blank" rel="noopener">SLF4J</a>——Simple Logging Facade For Java，它是一个针对于各类Java日志框架的统一Facade抽象。Java日志框架众多——常用的有java.util.logging, log4j, logback，commons-logging, Spring框架使用的是Jakarta Commons Logging API (JCL)。而SLF4J定义了统一的日志抽象接口，而真正的日志实现则是在运行时决定的——它提供了各类日志框架的binding。</p>
 <p><a href="https://logback.qos.ch/" target="_blank" rel="noopener">Logback</a>是log4j框架的作者开发的新一代日志框架，它效率更高、能够适应诸多的运行环境，同时天然支持SLF4J。</p>
 <p>默认情况下，Spring Boot会用Logback来记录日志，并用INFO级别输出到控制台。在运行应用程序和其他例子时，你应该已经看到很多INFO级别的日志了。</p>
@@ -612,19 +613,15 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">JAVA</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">SOA</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Spring Security</a>
+                <a href="javascript:void(0)" class="js-tag color2">springcloud</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">springcloud</a>
+                <a href="javascript:void(0)" class="js-tag color1">Spring Security</a>
               </li>
             
             <div class="clearfix"></div>
