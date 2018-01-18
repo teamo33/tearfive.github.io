@@ -6,18 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://github.com/tearfive/tearfive.github.io">
-  <title>Tag: Spring Security | 我的博客</title>
+  <title>事务一致性 | 我的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录生活点滴">
-<meta property="og:type" content="website">
-<meta property="og:title" content="我的博客">
-<meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/tags/Spring-Security/index.html">
+  <meta name="description" content="分布式事务-最终一致性 CAP定理有一个缺陷，这个缺陷可以帮助我们部分摆脱分布式困境 。总的来说，CAP定理本身是完备的，但它并没有描述一个分布式系统何时产生分区，以及分区会持续多长时间。理论其实只限制：在分区发生的一瞬间 ，系统只能在一致性（C）和可用性（A）之间二选一。因此，分布式系统完全可以在没有出现分区时保证C和A，而在出现分区后，放弃一些A或者C然后通过人工操作消除分区，让系统恢复到分区">
+<meta name="keywords" content="JAVA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="事务一致性">
+<meta property="og:url" content="https://github.com/tearfive/tearfive.github.io/2018/01/18/事务一致性/index.html">
 <meta property="og:site_name" content="我的博客">
-<meta property="og:description" content="记录生活点滴">
+<meta property="og:description" content="分布式事务-最终一致性 CAP定理有一个缺陷，这个缺陷可以帮助我们部分摆脱分布式困境 。总的来说，CAP定理本身是完备的，但它并没有描述一个分布式系统何时产生分区，以及分区会持续多长时间。理论其实只限制：在分区发生的一瞬间 ，系统只能在一致性（C）和可用性（A）之间二选一。因此，分布式系统完全可以在没有出现分区时保证C和A，而在出现分区后，放弃一些A或者C然后通过人工操作消除分区，让系统恢复到分区">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://github.com/img/cap.jpg">
+<meta property="og:updated_time" content="2018-01-18T09:14:56.914Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="我的博客">
-<meta name="twitter:description" content="记录生活点滴">
+<meta name="twitter:title" content="事务一致性">
+<meta name="twitter:description" content="分布式事务-最终一致性 CAP定理有一个缺陷，这个缺陷可以帮助我们部分摆脱分布式困境 。总的来说，CAP定理本身是完备的，但它并没有描述一个分布式系统何时产生分区，以及分区会持续多长时间。理论其实只限制：在分区发生的一瞬间 ，系统只能在一致性（C）和可用性（A）之间二选一。因此，分布式系统完全可以在没有出现分区时保证C和A，而在出现分区后，放弃一些A或者C然后通过人工操作消除分区，让系统恢复到分区">
+<meta name="twitter:image" content="https://github.com/img/cap.jpg">
   
     <link rel="alternative" href="/atom.xml" title="我的博客" type="application/atom+xml">
   
@@ -155,60 +159,174 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-事务一致性" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2016/01/11/使用JWT保护你的spring boot应用/" class="archive-article-date">
-  	<time datetime="2016-01-11T09:16:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-01-11</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/01/11/使用JWT保护你的spring boot应用/">使用JWT保护你的springboot应用</a>
+    <h1 class="article-title" itemprop="name">
+      事务一致性
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2018/01/18/事务一致性/" class="archive-article-date">
+  	<time datetime="2018-01-18T08:39:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-18</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="分布式事务-最终一致性"><a href="#分布式事务-最终一致性" class="headerlink" title="分布式事务-最终一致性"></a>分布式事务-最终一致性</h1><p><img src="\img\cap.jpg" alt=""></p>
+<p>CAP定理有一个缺陷，这个缺陷可以帮助我们部分摆脱<strong>分布式困境</strong> 。<br>总的来说，CAP定理本身是完备的，但它并没有描述一个分布式系统何时产生分区，以及分区会持续多长时间。<br>理论其实只限制：在分区发生的一瞬间 ，<strong>系统只能在一致性（C）和可用性（A）之间二选一。</strong><br>因此，<strong>分布式系统完全可以在没有出现分区时保证C和A，</strong>而在出现分区后，放弃一些A或者C然后通过人工操作消除分区，让系统恢复到分区前的状况。<br>这样说太复杂了。用说人话的方式就是：</p>
+<pre><code>※ 当没有故障时，系统正常处理请求并且返回一致的结果。
+
+※ 出现故障后，首先把所有请求切换到正常机器，故障机器下线。
+
+※ 接着人工恢复故障机器上的数据，保证数据一致性。
+
+※ 最后让机器重新上线，恢复系统正常容量。
+</code></pre><p>这就是带热备的数据库集群在故障恢复时的做法。</p>
+<p>这里的思路是，既然CAP特性在一个时间点不可能同时满足，那我们可以在这个时间点暂时放弃A或者C，然后在另一个时间点再设法恢复。只要恢复的速度足够快，用户就能够忍受暂时的不一致或者不可用。</p>
+<blockquote>
+<p>“Twitter 只是暂时不可用，最终会恢复可用。”</p>
+</blockquote>
+<p>沿着这个思路，业界产生了一些理论，其中最著名的是BASE。</p>
+<h2 id="BASE-最终一致性"><a href="#BASE-最终一致性" class="headerlink" title="BASE, 最终一致性"></a>BASE, 最终一致性</h2><p>这个理论由<strong>B</strong>asically,<strong>A</strong>vailable,<strong>S</strong>oft state,<strong>E</strong>ventual consistency组成。核心的概念是<strong>Eventual consistency</strong>——最终一致性。它局部的放弃了CAP理论中的“完全”一致性，提供了更好的可用性和分区容忍度。</p>
+<h4 id="Basically-Available"><a href="#Basically-Available" class="headerlink" title="Basically Available"></a>Basically Available</h4><p>基本可用, 或者说部分可用。由于分布式系统的节点故障是常见的，业务必须接受这种不可用，并且做出选择：是访问另一个节点忍受数据的临时不一致，还是等待节点恢复并忍受业务上的部分不可用。</p>
+<h4 id="Soft-state"><a href="#Soft-state" class="headerlink" title="Soft state"></a>Soft state</h4><p>把所有节点的数据 (数据 = 状态) 都看作是缓存（Cache）。适当的调整业务，使业务可以忍受数据的临时不一致，并保证这种不一致是无害的，可以被最终用户理解。</p>
+<h4 id="Eventual-consistency"><a href="#Eventual-consistency" class="headerlink" title="Eventual consistency"></a>Eventual consistency</h4><p>放弃在任何时刻、从任何节点都能读到完全一致的数据。允许数据的临时不一致，并通过异步复制、重试和合并消除数据的临时不一致。</p>
+<p><strong>注意</strong>在分布式系统中，写入和读取可能发生在不同的节点上。最终一致带来的问题是，业务在写入后立即读取，很可能读不到刚刚写入的数据。因此需要一个附加约束：</p>
+<h4 id="RYW-Read-Your-Writes-consistency"><a href="#RYW-Read-Your-Writes-consistency" class="headerlink" title="RYW  ( Read-Your-Writes )  consistency"></a>RYW  ( Read-Your-Writes )  consistency</h4><p>RYW consistency 是最终一致性的补充，它保证业务在会话中一定能读到上一次写入的数据。会话可以看作是一次连接，或者是同一个 HTTP Session。<br>例如：用户刚刚创建了一个订单，在提交后他可以立刻查看这个订单，这就是 RYW 一致性。</p>
+<h2 id="ACID-与-BASE"><a href="#ACID-与-BASE" class="headerlink" title="ACID 与 BASE"></a>ACID 与 BASE</h2><p>BASE这个缩写有些拼凑的痕迹。那是因为作者认为它的含义与ACID恰好相反。</p>
+<p>在英文词典里，ACID 代表<strong>酸</strong>（Acid），而BASE代表<strong>碱</strong>（Base）。就像这两个单词在化学中的含义一样——<strong>ACID与BASE位于CAP理论的两端，</strong>代表了分布式系统的两种选择。</p>
+<p>传统数据库用ACID保护业务数据的一致性。它明确的要求：事务必须保证数据从上一个一致性状态进入下一个一致性状态，事务的结束和数据的一致性之间没有时差。</p>
+<p>从CAP定理我们可以知道：正是ACID要求的这种“<strong>强</strong>”一致性，使得事务系统只能选择C-A或者C-P。第一个选择实际上是单机的传统数据库<br>第二个选择是后面将要介绍的强一致性的数据复制集群。</p>
+<p>而BASE代表了另一种选择：<strong>放弃一致性</strong>来保证分布式系统的高可用。与ACID的做法相反：业务需要接受和处理数据的不一致，并且保证这些不一致不会破坏业务约束——这需要设计者对可能产生的数据不一致和业务约束非常了解，并且带来了更高的复杂度。</p>
+<p>选择<strong>高可用</strong>的价值在于：很多场景下系统不可用就意味着对外停止服务，对用户的影响和商业风险远远比“系统仍然可用但是要过一会才能看到数据”来得严重。在一些场景下，用户或许根本不在乎过一会才能看到数据，例如：银行跨行转账。但是，如果银行告诉用户无法进行跨行转账，那么就会有很多用户质疑或投诉银行的服务了。</p>
+<p>上面的CAP拼图里还剩下一个区域。前面讨论过的ACID理论占据了C-A区域，代表根本无法容忍分区的传统单机数据库。本文介绍的BASE理论位于A-P区域，代表部分放弃一致性、追求高可用的现代业务系统。</p>
+<p>因此在这幅拼图里还剩下C-P：能够在分布式环境下<strong>保证数据一致性</strong>的理论。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Spring Security</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">JAVA</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://github.com/tearfive/tearfive.github.io/2018/01/18/事务一致性/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2018/01/18/微服务分析（四）/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">微服务分析（四）</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -231,9 +349,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

@@ -60,7 +60,7 @@
 			
 				<li><a href="/">主页</a></li>
 	        
-				<li><a href="/categories/java/">java</a></li>
+				<li><a href="/categories/java/">JAVA</a></li>
 	        
 				<li><a href="/tags/SOA/">SOA</a></li>
 	        
@@ -134,7 +134,7 @@
 				
 					<li style="width: 20%"><a href="/">主页</a></li>
 		        
-					<li style="width: 20%"><a href="/categories/java/">java</a></li>
+					<li style="width: 20%"><a href="/categories/java/">JAVA</a></li>
 		        
 					<li style="width: 20%"><a href="/tags/SOA/">SOA</a></li>
 		        
@@ -156,6 +156,197 @@
           </div>
           <div id="js-content" class="content-ll">
             
+  
+    <article id="post-Spring Boot_jsp" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/01/Spring Boot_jsp/">Spring Boot 添加JSP支持</a>
+    </h1>
+  
+
+        
+        <a href="/2015/08/01/Spring Boot_jsp/" class="archive-article-date">
+  	<time datetime="2015-08-01T13:19:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-08-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="创建Maven-web-project"><a href="#创建Maven-web-project" class="headerlink" title="创建Maven web project"></a>创建Maven web project</h4><p>使用Eclipse新建一个Maven Web Project ，项目取名为：spring-boot-jsp</p>
+<h4 id="在pom-xml文件添加依赖"><a href="#在pom-xml文件添加依赖" class="headerlink" title="在pom.xml文件添加依赖"></a>在pom.xml文件添加依赖</h4><pre><code>&lt;parent&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+    &lt;version&gt;1.3.3.RELEASE&lt;/version&gt;
+&lt;/parent&gt;
+</code></pre><p>依赖包：</p>
+<pre><code>&lt;!-- web支持: 1、webmvc; 2、restful; 3、jackjson支持; 4、aop ........ --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;!-- servlet依赖. --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+    &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;!--JSTL（JSP Standard TagLibrary，JSP标准标签库)是一个不断完善的开放源代码的JSP标签库，
+    是由apache的jakarta小组来维护的。JSTL只能运行在支持JSP1.2和Servlet2.3规范的容器上，
+    如tomcat 4.x。在JSP2.0中也是作为标准支持的。不然报异常信息：
+    javax.servlet.ServletException:Circular view path [/helloJsp]: 
+    would dispatch back to the current handler URL[/helloJsp] again.
+    Check your ViewResolver setup!
+    (Hint: This may be the resultof an unspecified view, 
+    due to default view name generation.)
+ --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+    &lt;artifactId&gt;jstl&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;!-- tomcat的支持.--&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
+&lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+    &lt;groupId&gt;org.apache.tomcat.embed&lt;/groupId&gt;
+    &lt;artifactId&gt;tomcat-embed-jasper&lt;/artifactId&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre><p>Jdk编译版本：</p>
+<pre><code>&lt;build&gt;
+      &lt;finalName&gt;spring-boot-jsp&lt;/finalName&gt;
+      &lt;plugins&gt;
+             &lt;plugin&gt;
+                    &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                    &lt;configuration&gt;
+                          &lt;source&gt;1.7&lt;/source&gt;
+                          &lt;target&gt;1.7&lt;/target&gt;
+                    &lt;/configuration&gt;
+             &lt;/plugin&gt;
+      &lt;/plugins&gt;
+&lt;/build&gt;
+</code></pre><h4 id="application-properties配置"><a href="#application-properties配置" class="headerlink" title="application.properties配置"></a>application.properties配置</h4><p>上面说了spring-boot 不推荐JSP，想使用JSP需要配置application.properties。<br>添加src/main/resources/application.properties内容：</p>
+<pre><code>#页面默认前缀目录
+spring.mvc.view.prefix=/WEB-INF/jsp/
+#响应页面默认后缀
+spring.mvc.view.suffix=.jsp
+#自定义属性，可以在Controller中读取
+application.hello=HelloAngel From application
+</code></pre><h4 id="编写测试Controller"><a href="#编写测试Controller" class="headerlink" title="编写测试Controller"></a>编写测试Controller</h4><p>编写类：com.kfit.jsp.controller.HelloController：</p>
+<pre><code>package com.kfit.jsp.controller;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+/**
+ *测试
+ * @tearfive(QQ:415896243)
+ * @version v.0.1
+ */
+@Controller
+public class HelloController {
+    //从 application.properties 中读取配置，如取不到默认值为HelloShanhy
+    @Value(&quot;${application.hello:Hello Angel}&quot;)
+    private String hello;
+    @RequestMapping(&quot;/helloJsp&quot;)
+    public StringhelloJsp(Map&lt;String,Object&gt; map){
+        System.out.println(&quot;HelloController.helloJsp().hello=&quot;+hello);
+        map.put(&quot;hello&quot;,hello);
+        return&quot;helloJsp&quot;;
+    }
+}
+</code></pre><h4 id="编写JSP页面"><a href="#编写JSP页面" class="headerlink" title="编写JSP页面"></a>编写JSP页面</h4><p>在 src/main 下面创建 webapp/WEB-INF/jsp 目录用来存放我们的jsp页面：helloJsp.jsp</p>
+<pre><code>&lt;%@page language=&quot;java&quot;contentType=&quot;text/html;charset=UTF-8&quot;pageEncoding=&quot;UTF-8&quot;%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;metahttp-equiv=&quot;Content-Type&quot;content=&quot;text/html; charset=UTF-8&quot;&gt;
+        &lt;title&gt;Insert title here&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        helloJsp
+        &lt;hr/&gt;
+        ${hello}
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h4 id="编写启动类"><a href="#编写启动类" class="headerlink" title="编写启动类"></a>编写启动类</h4><p>编写App.java启动类：</p>
+<pre><code>package com.kfit.jsp;
+import org.springframework.boot.SpringApplication;
+importorg.springframework.boot.autoconfigure.SpringBootApplication;
+importorg.springframework.boot.context.web.SpringBootServletInitializer;
+@SpringBootApplication
+public class App extends SpringBootServletInitializer {
+    //@Override
+    //protectedSpringApplicationBuilder configure(SpringApplicationBuilder application){
+        //returnapplication.sources(App.class);
+    //}
+    public static voidmain(String[] args) {
+        SpringApplication.run(App.class,args);
+    }
+}
+</code></pre><p>右键Run As  Java Application访问：<a href="#">http://127.0.0.1:8080/helloJsp</a>可以访问到：</p>
+<pre><code>helloJsp
+</code></pre><hr>
+<pre><code>Hello Angel Fromapplication
+</code></pre><p>特别说明：针对el表达式，类似${hello}这个对于servlet的版本是有限制的，2.4版本版本以下是不支持的，是无法进行识别的，请注意。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Spring-Boot//" class="article-tag-list-link color2">Spring Boot</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2015/08/01/Spring Boot_jsp/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
   
     <article id="post-Spring Boot_静态资源处理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -443,6 +634,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">springcloud</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">JAVA</a>
               </li>
              
               <li class="article-tag-list-item">
