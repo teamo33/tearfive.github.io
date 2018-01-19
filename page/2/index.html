@@ -157,6 +157,87 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-微服务分析（一）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/17/微服务分析（一）/">微服务分析（一）</a>
+    </h1>
+  
+
+        
+        <a href="/2018/01/17/微服务分析（一）/" class="archive-article-date">
+  	<time datetime="2018-01-17T05:12:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426</a>）</p>
+<h2 id="微服务架构的优势和不足"><a href="#微服务架构的优势和不足" class="headerlink" title="微服务架构的优势和不足"></a>微服务架构的优势和不足</h2><p><strong>一个应用系统里面的模块没有办法做到彻底解耦，要实现按组件单独部署是不可能的，相互之间仍有大量内部不可见的依赖导致模块间无法拆分</strong></p>
+<h4 id="单体应用本身带来的问题主要有哪些"><a href="#单体应用本身带来的问题主要有哪些" class="headerlink" title="单体应用本身带来的问题主要有哪些"></a>单体应用本身带来的问题主要有哪些</h4><p><strong>1.系统复杂：</strong>内部多个模块紧耦合，关联依赖复杂，牵一发而动全身<br><strong>2.运维复杂：</strong>变更或升级的影响分析困难，任何一个小修改都可能导致单体应用整体运行出现故障<br><strong>3.无法扩展：</strong>无法拆分部署，出现性能瓶颈后往往只能增加服务器或增加集群节点，但是DB问题难以解决</p>
+<h4 id="正是由于这些原因需要考虑引入微服务架构（实质仍然是单个应用本身的组件化和服务化）"><a href="#正是由于这些原因需要考虑引入微服务架构（实质仍然是单个应用本身的组件化和服务化）" class="headerlink" title="正是由于这些原因需要考虑引入微服务架构（实质仍然是单个应用本身的组件化和服务化）"></a>正是由于这些原因需要考虑引入微服务架构（实质仍然是单个应用本身的组件化和服务化）</h4><p><strong>一个微服务一般完成某个特定的功能，比如订单管理，客户管理。</strong><br><strong>每个微服务都是一个微型应用，有着自己的六边形架构，</strong>包括商业逻辑和各种接口，有的微服务通过暴露API被别的微服务或者应用客户端所用，有的微服务通过网页UI实现<br><strong>在运行时，每个实例通常是一个云虚拟机或者Docker容器</strong></p>
+<h4 id="微服务核心"><a href="#微服务核心" class="headerlink" title="微服务核心"></a>微服务核心</h4><h5 id="其一足够构成一个独立小应用（从DB到UI）"><a href="#其一足够构成一个独立小应用（从DB到UI）" class="headerlink" title="其一足够构成一个独立小应用（从DB到UI）"></a>其一足够构成一个独立小应用（从DB到UI）</h5><h5 id="其二微服务应用之间只能通过Service-API进行交互"><a href="#其二微服务应用之间只能通过Service-API进行交互" class="headerlink" title="其二微服务应用之间只能通过Service API进行交互"></a>其二微服务应用之间只能通过Service API进行交互</h5><h5 id="其三一般运行在云虚拟机或更轻的Docker容器上"><a href="#其三一般运行在云虚拟机或更轻的Docker容器上" class="headerlink" title="其三一般运行在云虚拟机或更轻的Docker容器上"></a>其三一般运行在云虚拟机或更轻的Docker容器上</h5><p><strong>API Gateway</strong><br>微服务架构里很重要的内容，其作用类似于传统业务内部的ESB服务总线，只是更加轻量和高性能来解决微服务的管控和治理问题</p>
+<p>而对于<strong>负载均衡，缓存，路由，访问控制，服务代理，监控，日志</strong>等都属于基本的服务管控内容，也是API Gateway需要考虑的核心能力</p>
+<p><strong>Scale Cube的3D模型</strong><br>描述的非常好，即通过微服务架构实施后扩展性的变化<br><strong>1.Y轴：</strong>本质是应用的分解，即将传统的单体应用分解为多个微服务应用<br><strong>2.X轴：</strong>水平弹性扩展能力，即通过负载均衡来实现水平弹性扩展，但DB问题无法解决<br><strong>3.Z轴：</strong>当单个微服务应用引入DB弹性扩展能力需要解决的时候，我们引入对数据库进行拆分和DaaS</p>
+<h4 id="简单总结微服务架构的不足"><a href="#简单总结微服务架构的不足" class="headerlink" title="简单总结微服务架构的不足"></a>简单总结微服务架构的不足</h4><p><strong>1.CAP原则：</strong>由于服务无状态和引入了分布式，较难解决一致性问题<br><strong>2.集成复杂：</strong>任何彻底的分解都将带来集成的复杂度，即模块在集成时候需要外部微服务模块更多的配合<br><strong>3.部署问题：</strong>稍大项目都涉及到上100个服务节点部署，还涉及到部署后的配置，扩展和监控问题</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SOA</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/01/17/微服务分析（一）/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-SOA与微服务" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -929,436 +1010,6 @@ public CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver() {
 
 
   
-    <article id="post-使用JWT保护你的spring boot应用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/11/使用JWT保护你的spring boot应用/">使用JWT保护你的springboot应用</a>
-    </h1>
-  
-
-        
-        <a href="/2016/01/11/使用JWT保护你的spring boot应用/" class="archive-article-date">
-  	<time datetime="2016-01-11T09:16:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-01-11</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>（本文为阅读笔记，具体原文参考<a href="https://segmentfault.com/a/1190000009231329" target="_blank" rel="noopener">https://segmentfault.com/a/1190000009231329</a>）</p>
-<h2 id="Spring-Boot"><a href="#Spring-Boot" class="headerlink" title="Spring Boot"></a>Spring Boot</h2><p>有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题，这当然是个好事儿，部署简单了很多。</p>
-<h2 id="创建Spring-Boot应用"><a href="#创建Spring-Boot应用" class="headerlink" title="创建Spring Boot应用"></a>创建Spring Boot应用</h2><p>有很多方法去创建Spring Boot项目，官方也推荐用：</p>
-<p><a href="http://start.spring.io/" target="_blank" rel="noopener">Spring Boot在线项目创建</a><br><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/cli-using-the-cli.html" target="_blank" rel="noopener">CLI 工具</a></p>
-<p>start.spring.io可以方便选择你要用的组件，命令行工具当然也可以。目前Spring Boot已经到了1.53，我是懒得去更新依赖，继续用1.52版本。虽然阿里也有了中央库的国内版本不知道是否稳定。如果你感兴趣，可以自己尝试下。你可以选Maven或者Gradle成为你项目的构建工具，Gradle优雅一些，使用了Groovy语言进行描述。</p>
-<p>打开start.spring.io，创建的项目只需要一个Dependency，也就是Web，然后下载项目，用IntellJ IDEA打开。我的Java版本是1.7。</p>
-<p>这里看下整个项目的pom.xml文件中的依赖部分:</p>
-<pre><code>&lt;dependencies&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
-    &lt;/dependency&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-        &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
-        &lt;scope&gt;test&lt;/scope&gt;
-    &lt;/dependency&gt;
-&lt;/dependencies&gt;
-</code></pre><p>所有Spring Boot相关的依赖都是以starter形式出现，这样你无需关心版本和相关的依赖，所以这样大大简化了开发过程。</p>
-<p>当你在pom文件中集成了spring-boot-maven-plugin插件后你可以使用Maven相关的命令来run你的应用。例如mvn spring-boot:run，这样会启动一个嵌入式的Tomcat，并运行在8080端口，直接访问你当然会获得一个Whitelabel Error Page，这说明Tomcat已经启动了。</p>
-<h2 id="创建一个Web-应用"><a href="#创建一个Web-应用" class="headerlink" title="创建一个Web 应用"></a>创建一个Web 应用</h2><p>这还是一篇关于Web安全的文章，但是也得先有个简单的HTTP请求响应。我们先弄一个可以返回JSON的Controller。修改程序的入口文件：</p>
-<pre><code>@SpringBootApplication
-@RestController
-@EnableAutoConfiguration
-public class DemoApplication {
-    // main函数，Spring Boot程序入口
-    public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
-    }
-    // 根目录映射 Get访问方式 直接返回一个字符串
-    @RequestMapping(&quot;/&quot;)
-    Map&lt;String, String&gt; hello() {
-      // 返回map会变成JSON key value方式
-      Map&lt;String,String&gt; map=new HashMap&lt;String,String&gt;();
-      map.put(&quot;content&quot;, &quot;hello freewolf~&quot;);
-      return map;
-    }
-}
-</code></pre><p>这里我尽量的写清楚，让不了解Spring Security的人通过这个例子可以了解这个东西，很多人都觉得它很复杂，而投向了Apache Shiro，其实这个并不难懂。知道主要的处理流程，和这个流程中哪些类都起了哪些作用就好了。</p>
-<p>Spring Boot对于开发人员最大的好处在于可以对Spring应用进行自动配置。Spring Boot会根据应用中声明的第三方依赖来自动配置Spring框架，而不需要进行显式的声明。Spring Boot推荐采用基于Java注解的配置方式，而不是传统的XML。只需要在主配置 Java 类上添加@EnableAutoConfiguration注解就可以启用自动配置。Spring Boot的自动配置功能是没有侵入性的，只是作为一种基本的默认实现。</p>
-<p>这个入口类我们添加@RestController和@EnableAutoConfiguration两个注解。<br>@RestController注解相当于@ResponseBody和@Controller合在一起的作用。</p>
-<p>run整个项目。访问<a href="#">http://localhost:8080/</a>就能看到这个JSON的输出。使用Chrome浏览器可以装JSON Formatter这个插件，显示更PL一些。</p>
-<pre><code>{
-  &quot;content&quot;: &quot;hello freewolf~&quot;
-}
-</code></pre><p>为了显示统一的JSON返回，这里建立一个JSONResult类进行，简单的处理。首先修改pom.xml，加入org.json相关依赖</p>
-<pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;org.json&lt;/groupId&gt;
-    &lt;artifactId&gt;json&lt;/artifactId&gt;
-&lt;/dependency&gt;
-</code></pre><p>然后在我们的代码中加入一个新的类，里面只有一个结果集处理方法，因为只是个Demo，所有这里都放在一个文件中。这个类只是让返回的JSON结果变为三部分：</p>
-<pre><code>status - 返回状态码 0 代表正常返回，其他都是错误
-message - 一般显示错误信息
-result - 结果集
-</code></pre><hr>
-<pre><code>class JSONResult{
-    public static String fillResultString(Integer status, String message, Object result){
-        JSONObject jsonObject = new JSONObject(){{
-	            put("status", status);
-	            put("message", message);
-	            put("result", result);
-	        }};
-        return jsonObject.toString();
-    }
-}
-</code></pre><p>然后我们引入一个新的@RestController并返回一些简单的结果，后面我们将对这些内容进行访问控制，这里用到了上面的结果集处理类。这里多放两个方法，后面我们来测试权限和角色的验证用。</p>
-<pre><code>@RestController
-class UserController {
-    // 路由映射到/users
-    @RequestMapping(value = &quot;/users&quot;, produces=&quot;application/json;charset=UTF-8&quot;)
-    public String usersList() {
-        ArrayList&lt;String&gt; users =  new ArrayList&lt;String&gt;(){{
-	            add("freewolf");
-	            add("tom");
-	            add("jerry");
-	        }};
-        return JSONResult.fillResultString(0, &quot;&quot;, users);
-    }
-    @RequestMapping(value = &quot;/hello&quot;, produces=&quot;application/json;charset=UTF-8&quot;)
-    public String hello() {
-        ArrayList&lt;String&gt; users =  new ArrayList&lt;String&gt;(){{ add("hello"); }};
-        return JSONResult.fillResultString(0, &quot;&quot;, users);
-    }
-    @RequestMapping(value = &quot;/world&quot;, produces=&quot;application/json;charset=UTF-8&quot;)
-    public String world() {
-        ArrayList&lt;String&gt; users =  new ArrayList&lt;String&gt;(){{ add("world"); }};
-        return JSONResult.fillResultString(0, &quot;&quot;, users);
-    }
-}
-</code></pre><p>重新run这个文件，访问<a href="#">http://localhost:8080/users</a>就看到了下面的结果:</p>
-<pre><code>{
-  &quot;result&quot;: [
-    &quot;freewolf&quot;,
-    &quot;tom&quot;,
-    &quot;jerry&quot;
-  ],
-  &quot;message&quot;: &quot;&quot;,
-  &quot;status&quot;: 0
-}
-</code></pre><p>如果你细心，你会发现这里的JSON返回时，Chrome的格式化插件好像并没有识别？这是为什么呢？我们借助curl分别看一下我们写的两个方法的Header信息.</p>
-<pre><code>curl -I http://127.0.0.1:8080/
-curl -I http://127.0.0.1:8080/users
-</code></pre><p>可以看到第一个方法hello，由于返回值是Map<string, string="">，Spring已经有相关的机制自动处理成JSON:</string,></p>
-<pre><code>Content-Type: application/json;charset=UTF-8
-</code></pre><p>第二个方法usersList由于返回时String，由于是@RestControler已经含有了@ResponseBody也就是直接返回内容，并不模板。所以就是：</p>
-<pre><code>Content-Type: text/plain;charset=UTF-8
-</code></pre><p>那怎么才能让它变成JSON呢，其实也很简单只需要补充一下相关注解：</p>
-<pre><code>@RequestMapping(value = &quot;/users&quot;, produces=&quot;application/json;charset=UTF-8&quot;)
-</code></pre><p>这样就好了。</p>
-<h1 id="使用JWT保护你的Spring-Boot应用"><a href="#使用JWT保护你的Spring-Boot应用" class="headerlink" title="使用JWT保护你的Spring Boot应用"></a>使用JWT保护你的Spring Boot应用</h1><p>终于我们开始介绍正题，这里我们会对/users进行访问控制，先通过申请一个JWT(JSON Web Token读jot)，然后通过这个访问/users，才能拿到数据。</p>
-<p>关于JWT,出门奔向以下内容，这些不在本文讨论范围内:</p>
-<p><a href="https://tools.ietf.org/html/rfc7519" target="_blank" rel="noopener">RFC7519</a><br><br><a href="https://jwt.io/" target="_blank" rel="noopener">JWT</a></p>
-<p>JWT很大程度上还是个新技术，通过使用HMAC(Hash-based Message Authentication Code)计算信息摘要，也可以用RSA公私钥中的私钥进行签名。这个根据业务场景进行选择。</p>
-<h2 id="添加Spring-Security"><a href="#添加Spring-Security" class="headerlink" title="添加Spring Security"></a>添加Spring Security</h2><p>根据上文我们说过我们要对/users进行访问控制，让用户在/login进行登录并获得Token。这里我们需要将spring-boot-starter-security加入pom.xml。加入后，我们的Spring Boot项目将需要提供身份验证，相关的pom.xml如下:</p>
-<pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;io.jsonwebtoken&lt;/groupId&gt;
-    &lt;artifactId&gt;jjwt&lt;/artifactId&gt;
-    &lt;version&gt;0.7.0&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre><p>至此我们之前所有的路由都需要身份验证。我们将引入一个安全设置类WebSecurityConfig，这个类需要从WebSecurityConfigurerAdapter类继承。</p>
-<pre><code>@Configuration
-@EnableWebSecurity
-class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    // 设置 HTTP 验证规则
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        // 关闭csrf验证
-        http.csrf().disable()
-                // 对请求进行认证
-                .authorizeRequests()
-                // 所有 / 的所有请求 都放行
-                .antMatchers(&quot;/&quot;).permitAll()
-                // 所有 /login 的POST请求 都放行
-                .antMatchers(HttpMethod.POST, &quot;/login&quot;).permitAll()
-                // 权限检查
-                .antMatchers(&quot;/hello&quot;).hasAuthority(&quot;AUTH_WRITE&quot;)
-                // 角色检查
-                .antMatchers(&quot;/world&quot;).hasRole(&quot;ADMIN&quot;)
-                // 所有请求需要身份认证
-                .anyRequest().authenticated()
-            .and()
-                // 添加一个过滤器 所有访问 /login 的请求交给 JWTLoginFilter 来处理 这个类处理所有的JWT相关内容
-                .addFilterBefore(new JWTLoginFilter(&quot;/login&quot;, authenticationManager()),
-                        UsernamePasswordAuthenticationFilter.class)
-                // 添加一个过滤器验证其他请求的Token是否合法
-                .addFilterBefore(new JWTAuthenticationFilter(),
-                        UsernamePasswordAuthenticationFilter.class);
-    }
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // 使用自定义身份验证组件
-        auth.authenticationProvider(new CustomAuthenticationProvider());
-    }
-}
-</code></pre><p>先放两个基本类，一个负责存储用户名密码，另一个是一个权限类型，负责存储权限和角色。</p>
-<pre><code>class AccountCredentials {
-    private String username;
-    private String password;
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-}
-class GrantedAuthorityImpl implements GrantedAuthority{
-    private String authority;
-    public GrantedAuthorityImpl(String authority) {
-        this.authority = authority;
-    }
-    public void setAuthority(String authority) {
-        this.authority = authority;
-    }
-    @Override
-    public String getAuthority() {
-        return this.authority;
-    }
-}
-</code></pre><p>在上面的安全设置类中，我们设置所有人都能访问/和POST方式访问/login，其他的任何路由都需要进行认证。然后将所有访问/login的请求，都交给JWTLoginFilter过滤器来处理。稍后我们会创建这个过滤器和其他这里需要的JWTAuthenticationFilter和CustomAuthenticationProvider两个类。</p>
-<p>先建立一个JWT生成，和验签的类</p>
-<pre><code>class TokenAuthenticationService {
-    static final long EXPIRATIONTIME = 432_000_000;     // 5天
-    static final String SECRET = &quot;P@ssw02d&quot;;            // JWT密码
-    static final String TOKEN_PREFIX = &quot;Bearer&quot;;        // Token前缀
-    static final String HEADER_STRING = &quot;Authorization&quot;;// 存放Token的Header Key
-  // JWT生成方法
-    static void addAuthentication(HttpServletResponse response, String username) {
-    // 生成JWT
-        String JWT = Jwts.builder()
-                // 保存权限（角色）
-                .claim(&quot;authorities&quot;, &quot;ROLE_ADMIN,AUTH_WRITE&quot;)
-                // 用户名写入标题
-                .setSubject(username)
-                // 有效期设置
-                        .setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
-                // 签名设置
-                        .signWith(SignatureAlgorithm.HS512, SECRET)
-                        .compact();
-        // 将 JWT 写入 body
-        try {
-            response.setContentType(&quot;application/json&quot;);
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getOutputStream().println(JSONResult.fillResultString(0, &quot;&quot;, JWT));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-  // JWT验证方法
-    static Authentication getAuthentication(HttpServletRequest request) {
-        // 从Header中拿到token
-        String token = request.getHeader(HEADER_STRING);
-        if (token != null) {
-            // 解析 Token
-            Claims claims = Jwts.parser()
-                    // 验签
-                    .setSigningKey(SECRET)
-                    // 去掉 Bearer
-                    .parseClaimsJws(token.replace(TOKEN_PREFIX, &quot;&quot;))
-                    .getBody();
-
-            // 拿用户名
-            String user = claims.getSubject();
-            // 得到 权限（角色）
-            List&lt;GrantedAuthority&gt; authorities =  AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get(&quot;authorities&quot;));
-            // 返回验证令牌
-            return user != null ?
-                    new UsernamePasswordAuthenticationToken(user, null, authorities) :
-                    null;
-        }
-        return null;
-    }
-}
-</code></pre><p>这个类就两个static方法，一个负责生成JWT，一个负责认证JWT最后生成验证令牌。注释已经写得很清楚了，这里不多说了。</p>
-<p>下面来看自定义验证组件，这里简单写了，这个类就是提供密码验证功能，在实际使用时换成自己相应的验证逻辑，从数据库中取出、比对、赋予用户相应权限。</p>
-<pre><code>// 自定义身份认证验证组件
-class CustomAuthenticationProvider implements AuthenticationProvider {
-    @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        // 获取认证的用户名 &amp; 密码
-        String name = authentication.getName();
-        String password = authentication.getCredentials().toString();
-        // 认证逻辑
-        if (name.equals(&quot;admin&quot;) &amp;&amp; password.equals(&quot;123456&quot;)) {
-            // 这里设置权限和角色
-            ArrayList&lt;GrantedAuthority&gt; authorities = new ArrayList&lt;&gt;();
-            authorities.add( new GrantedAuthorityImpl(&quot;ROLE_ADMIN&quot;) );
-            authorities.add( new GrantedAuthorityImpl(&quot;AUTH_WRITE&quot;) );
-            // 生成令牌
-            Authentication auth = new UsernamePasswordAuthenticationToken(name, password, authorities);
-            return auth;
-        }else {
-            throw new BadCredentialsException(&quot;密码错误~&quot;);
-        }
-    }
-    // 是否可以提供输入类型的认证服务
-    @Override
-    public boolean supports(Class&lt;?&gt; authentication) {
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
-    }
-}
-</code></pre><p>下面实现JWTLoginFilter 这个Filter比较简单，除了构造函数需要重写三个方法。</p>
-<blockquote>
-<p>attemptAuthentication - 登录时需要验证时候调用<br><br>successfulAuthentication - 验证成功后调用<br><br>unsuccessfulAuthentication - 验证失败后调用，这里直接灌入500错误返回，由于同一JSON返回，HTTP就都返回200了</p>
-</blockquote>
-<hr>
-<pre><code>class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
-    public JWTLoginFilter(String url, AuthenticationManager authManager) {
-        super(new AntPathRequestMatcher(url));
-        setAuthenticationManager(authManager);
-    }
-    @Override
-    public Authentication attemptAuthentication(
-            HttpServletRequest req, HttpServletResponse res)
-            throws AuthenticationException, IOException, ServletException {
-        // JSON反序列化成 AccountCredentials
-        AccountCredentials creds = new ObjectMapper().readValue(req.getInputStream(), AccountCredentials.class);
-        // 返回一个验证令牌
-        return getAuthenticationManager().authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        creds.getUsername(),
-                        creds.getPassword()
-                )
-        );
-    }
-    @Override
-    protected void successfulAuthentication(
-            HttpServletRequest req,
-            HttpServletResponse res, FilterChain chain,
-            Authentication auth) throws IOException, ServletException {
-        TokenAuthenticationService.addAuthentication(res, auth.getName());
-    }
-    @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        response.setContentType(&quot;application/json&quot;);
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.getOutputStream().println(JSONResult.fillResultString(500, &quot;Internal Server Error!!!&quot;, JSONObject.NULL));
-    }
-}
-</code></pre><p>再完成最后一个类JWTAuthenticationFilter，这也是个拦截器，它拦截所有需要JWT的请求，然后调用TokenAuthenticationService类的静态方法去做JWT验证。</p>
-<pre><code>class JWTAuthenticationFilter extends GenericFilterBean {
-    @Override
-    public void doFilter(ServletRequest request,
-                         ServletResponse response,
-                         FilterChain filterChain)
-            throws IOException, ServletException {
-        Authentication authentication = TokenAuthenticationService
-                .getAuthentication((HttpServletRequest)request);
-        SecurityContextHolder.getContext()
-                .setAuthentication(authentication);
-        filterChain.doFilter(request,response);
-    }
-}
-</code></pre><p>现在代码就写完了，整个Spring Security结合JWT基本就差不多了，下面我们来测试下，并说下整体流程。</p>
-<p>开始测试，先运行整个项目，这里介绍下过程：</p>
-<blockquote>
-<p>先程序启动 - main函数<br><br>注册验证组件 - WebSecurityConfig 类 configure(AuthenticationManagerBuilder auth)方法，这里我们注册了自定义验证组件<br><br>设置验证规则 - WebSecurityConfig 类 configure(HttpSecurity http)方法，这里设置了各种路由访问规则<br><br>初始化过滤组件 - JWTLoginFilter 和 JWTAuthenticationFilter 类会初始化<br></p>
-</blockquote>
-<p>首先测试获取Token，这里使用CURL命令行工具来测试。</p>
-<pre><code>curl -H &quot;Content-Type: application/json&quot; -X POST -d &apos;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;123456&quot;}&apos; 
-http://127.0.0.1:8080/login
-</code></pre><p>结果：</p>
-<pre><code>{
-  &quot;result&quot;: &quot;eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4sQVVUSF9XUklURSIsInN1YiI6ImFkbWluIiwiZXhwIjoxNDkzNzgyMjQwfQ.HNfV1CU2CdAnBTH682C5-KOfr2P71xr9PYLaLpDVhOw8KWWSJ0lBo0BCq4LoNwsK_Y3-W3avgbJb0jW9FNYDRQ&quot;,
-  &quot;message&quot;: &quot;&quot;,
-  &quot;status&quot;: 0
-}
-</code></pre><p>这里我们得到了相关的JWT，反Base64之后,就是下面的内容，标准JWT。</p>
-<pre><code>{&quot;alg&quot;:&quot;HS512&quot;}{&quot;authorities&quot;:&quot;ROLE_ADMIN,AUTH_WRITE&quot;,&quot;sub&quot;:&quot;admin&quot;,&quot;exp&quot;:1493782240}ͽ]BS`pS6~hCVH%
-ܬ)֝ଖoE5р
-</code></pre><p>整个过程如下：</p>
-<blockquote>
-<p>拿到传入JSON，解析用户名密码 - JWTLoginFilter 类 attemptAuthentication 方法<br><br>自定义身份认证验证组件，进行身份认证 - CustomAuthenticationProvider 类 authenticate 方法<br><br>验证成功 - JWTLoginFilter 类 successfulAuthentication 方法<br><br>生成JWT - TokenAuthenticationService 类 addAuthentication方法<br></p>
-</blockquote>
-<p>再测试一个访问资源的：</p>
-<pre><code>curl -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4sQVVUSF9XUklURSIsInN1YiI6ImFkbWluIiwiZXhwIjoxNDkzNzgyMjQwfQ.HNfV1CU2CdAnBTH682C5-KOfr2P71xr9PYLaLpDVhOw8KWWSJ0lBo0BCq4LoNwsK_Y3-W3avgbJb0jW9FNYDRQ&quot; 
-http://127.0.0.1:8080/users
-</code></pre><p>结果：</p>
-<pre><code>{
-  &quot;result&quot;:[&quot;freewolf&quot;,&quot;tom&quot;,&quot;jerry&quot;],
-  &quot;message&quot;:&quot;&quot;,
-  &quot;status&quot;:0
-}
-</code></pre><p>说明我们的Token生效可以正常访问。其他的结果您可以自己去测试。再回到处理流程：</p>
-<blockquote>
-<p>接到请求进行拦截 - JWTAuthenticationFilter 中的方法<br><br>验证JWT - TokenAuthenticationService 类 getAuthentication 方法<br><br>访问Controller<br></p>
-</blockquote>
-<p>这样本文的主要流程就结束了，本文主要介绍了，如何用Spring Security结合JWT保护你的Spring Boot应用。如何使用Role和Authority，这里多说一句其实在Spring Security中，对于GrantedAuthority接口实现类来说是不区分是Role还是Authority，二者区别就是如果是hasAuthority判断，就是判断整个字符串，判断hasRole时，系统自动加上ROLE_到判断的Role字符串上，也就是说hasRole(“CREATE”)和hasAuthority(‘ROLE_CREATE’)是相同的。利用这些可以搭建完整的RBAC体系。本文到此，你已经会用了本文介绍的知识点。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Spring Security</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/01/11/使用JWT保护你的spring boot应用/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -1470,6 +1121,10 @@ MathJax.Hub.Queue(function() {
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">SOA</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">design</a>
               </li>
              
               <li class="article-tag-list-item">
