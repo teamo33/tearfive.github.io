@@ -157,99 +157,231 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-SKU多维属性状态判断算法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-springcloud eureka 服务注册与发现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/19/SKU多维属性状态判断算法/">SKU多维属性状态判断算法</a>
+      <a class="article-title" href="/2018/01/12/springcloud eureka 服务注册与发现/">springcloud eureka 服务注册与发现</a>
     </h1>
   
 
         
-        <a href="/2018/01/19/SKU多维属性状态判断算法/" class="archive-article-date">
-  	<time datetime="2018-01-19T09:20:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-19</time>
+        <a href="/2018/01/12/springcloud eureka 服务注册与发现/" class="archive-article-date">
+  	<time datetime="2018-01-12T08:32:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-12</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>（本文为阅读笔记，具体原文参考<a href="http://mp.weixin.qq.com/s?__biz=MzIwNjQwMzUwMQ==&amp;mid=2247484853&amp;idx=1&amp;sn=bed59c1d83c3aeb4bf7881be8dbdd917&amp;chksm=97236777a054ee61fc3cef07eb4b164fa28e26917ce0a409d876964ad3c2ee3f90a000e29beb#rd" target="_blank" rel="noopener">前端如何展示商品属性：SKU多维属性状态判断算法的应用</a>）</p>
-<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a><center>问题描述</center></h2><p>这个问题来源于选择商品属性的场景。比如我们买衣服、鞋子这类物件，一般都需要我们选择合适的颜色、尺码等属性。如下图所示：<br><img src="\img\1.webp" alt=""><br>先了解一下<strong>SKU</strong>的学术概念吧：</p>
+        <p>（本文为阅读笔记，具体原文参考<a href="http://blog.csdn.net/liaokailin/article/details/51314001）" target="_blank" rel="noopener">http://blog.csdn.net/liaokailin/article/details/51314001）</a></p>
+<h1 id="spring-cloud-eureka"><a href="#spring-cloud-eureka" class="headerlink" title="spring cloud eureka"></a>spring cloud eureka</h1><p>eureka 用以服务发现、服务注册，比较流行的有consul</p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>eureka为netflix开源软件，分为三个部分：</p>
 <blockquote>
-<p>最小库存单元（stock keeping unit，SKU）是一个会计学名词，定义为库存管理中的最小可用单元<br>例如纺织品中的一个SKU通常表示规格、颜色、款式，而在连锁零售门店中有时称单品为一个SKU。<br>最小库存管理单元可以区分不同商品销售的最小单元<br>是科学管理商品采购、销售、物流和财务管理以及POS和MIS系统的数据统计的需求，通常对应一个管理信息系统的编码</p>
+<p>eureka服务:用以提供服务注册、发现，已一个war的形式提供<br><a href="http://search.maven.org/#search%7Cga%7C1%7Ceureka-server" target="_blank" rel="noopener">http://search.maven.org/#search%7Cga%7C1%7Ceureka-server</a><br>或者编译源码，将war拷贝进tomcat即可提供服务</p>
+<p>eureka-server: 相对client端的服务端，为客户端提供服务，通常情况下为一个<br>集群</p>
+<p>eureka-client:客户端，通过向eureka服务发现注册的可用的eureka-server，向后端发送请求</p>
 </blockquote>
-<p>简单的结合上面的实例来说：<strong>SKU</strong>就是你上购物网站买到的最终商品，对应的上图中已选择的属性是：颜色<strong>黑色</strong>-尺码<strong>37</strong>。<br>我先看看后端数据结构一般是这样的，一个线性数组，每个元素是一个描述当前<strong>SKU</strong>的<strong>map</strong>，比如：<br><img src="\img\2.webp" alt=""><br>前端展示的时候显然需要<strong>group</strong>一下，按不同的属性分组，目的就是让用户按属性的维度去选择<strong>group</strong>后的数据大概是这样的：<br><img src="\img\3.webp" alt=""><br>对应的在网页上大概是这样的<strong>UI</strong>：<br><img src="\img\4.webp" alt=""><br>这个时候，就会有一个问题，这些元子属性能组成的集合（用户的选择路径）<strong>远远大于</strong>真正可以组成的集合，比如上面的属性集合可以组合成一个<strong>笛卡尔积</strong>，即。可以组合成以下序列：<br><img src="\img\5.webp" alt=""><br>根据公式可以知道，<strong>一个由3个元素，每个元素是有3个元素的子集构成的集合，能组成的笛卡尔积一共有3的3次幂，也就是27种</strong>，然而源数据只可以形成3种组合。</p>
-<p>这种情况下最好能提前判断出来不可选的路径并置灰，告诉用户，否则会造成误解。</p>
-<h2 id="确定规则"><a href="#确定规则" class="headerlink" title="确定规则"></a><center>确定规则</center></h2><p>看下图，如果我们定义红色为当前选中的商品的属性，即当前选中商品为<strong>红-大-A</strong>，这个时候如何确认其它非已选属性是否可以组成可选路径？<br><img src="\img\6.webp" alt=""><br><strong>规则是这样的</strong>：假设当前用户想选<strong>白-大-A</strong>，刚好这个选择路径是不存在的，那么我们就把<strong>白</strong>置灰<br><img src="\img\7.webp" alt=""><br>以此类推，如果要确认<strong>蓝</strong>属性是否可用，需要查找<strong>蓝-大-A</strong>路径是否存在……</p>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a><center>解决方法</center></h2><p>根据上面的逻辑代码实现思路就有了：</p>
+<h1 id="spring-cloud-eureka-1"><a href="#spring-cloud-eureka-1" class="headerlink" title="spring cloud eureka"></a>spring cloud eureka</h1><p>spring cloud eureka 分为两部分</p>
 <blockquote>
-<p>遍历所有非已选元素：<strong>“白”,”蓝”,”中”,”小”,”B”,”C”</strong></p>
-<p>1)取：a)当前元素b)非当前元素所在的其它属性已选元素，形成一个路径<br>2)判断此路径是否存在，如果不存在将当前元素置灰<br>3)遍历所有属性行：<strong>“颜色”,”尺码”,”型号”</strong></p>
+<p>@EnableEurekaClient: 该注解表明应用既作为eureka实例又为eureka client 可以发现注册的服务<br>@EnableEurekaServer: 该注解表明应用为eureka服务，有可以联合多个服务作为集群，对外提供服务注册以及发现功能</p>
 </blockquote>
-<p>看来问题似乎已经解决了，然而，我们忽略了一个非常重要的问题：上例中虽然<strong>白</strong>元素置灰，但是实际上<strong>白</strong>是可以被点击的！因为用户可以选择<strong>白-中-B</strong>路径。</p>
-<p>如果用户点击了<strong>白</strong>情况就变得复杂了很多，我们假设用户<strong>只选择了一个</strong>元素<strong>白</strong>，此时如何判断其它未选元素是否可选？<br><img src="\img\8.webp" alt=""><br>即：如何确定<strong>“大”,”中”,”小”,”A”,”B”,”C”</strong>需要置灰？注意我们并不需要确认<strong>“红”，”蓝”</strong>是否可选，因为属性里面的元素都是<strong>单选</strong>，当前的属性里任何元素都可选的</p>
-<h2 id="缩小问题规模"><a href="#缩小问题规模" class="headerlink" title="缩小问题规模"></a><center>缩小问题规模</center></h2><p>我们先<strong>缩小问题范围</strong>：当前情况下（只有一个<strong>白</strong>已选）如何确定尺码<strong>“大”</strong>需要置灰？你可能会想到根据我们之间的逻辑，需要分别查找：</p>
-<blockquote>
-<p><strong>白-大-A</strong></p>
-<p><strong>白-大-B</strong></p>
-<p><strong>白-大-C</strong></p>
-</blockquote>
-<p>他们都不存在的时候把尺码<strong>大</strong>置灰，问题似乎也可以解决。其实这样是不对的，因为<strong>型号没有被选择过</strong>，所以只需要知道<strong>白-大</strong>是否可选即可</p>
-<p>同时还有一个问题，如果已选的个数不确定而且维度可以增加到不确定呢？<br><img src="\img\9.webp" alt=""><br>这种情况下如果还按之前的算法，即使实现也非常复杂。这时候就要考虑换一种思维方式。</p>
-<h2 id="调整思路"><a href="#调整思路" class="headerlink" title="调整思路"></a><center>调整思路</center></h2><p>之前我们都是反向思考，找出不可选应该置灰的元素。我们现在正向的考虑，如何确定属性是否可选。而且多维的情况下用户可以跳着选。比如：用户选了两个元素<strong>白，B</strong><br><img src="\img\10.webp" alt=""><br>我们再回过头来看下<strong>原始存在的数据：</strong><br><img src="\img\11.webp" alt=""><br>显然：如果第一条数据<strong>“红”,”大”,”A”</strong>存在，那么下面这些子组合<strong>肯定都存在：</strong></p>
-<blockquote>
-<p>红</p>
-<p>大</p>
-<p>A</p>
-<p>红-大</p>
-<p>红-A</p>
-<p>大-A</p>
-<p>红-大-A</p>
-</blockquote>
-<p>同理：如果第二条数据<strong>“白”,”中”,”B”</strong>存在，那么下面这些子组合<strong>肯定都存在：</strong></p>
-<blockquote>
-<p>白</p>
-<p>中</p>
-<p>B</p>
-<p>白-中</p>
-<p>白-B</p>
-<p>中-B</p>
-<p>白-中-B</p>
-</blockquote>
-<p>…</p>
-<p>我们提前把<strong>所有存在的路径中的子组合</strong>算出来，算法上叫取集合所有子集，数学上叫<strong>幂集</strong>，形成一个所有存在的路径表，算法如下：<br><img src="\img\12.webp" alt=""><br>有了这个存在的子集集合，再回头看之前的举例：<br><img src="\img\13.webp" alt=""></p>
-<blockquote>
-<p>如何确定<strong>红</strong>可选？只需要确定<strong>红-B</strong>可选</p>
-<p>如何确定<strong>中</strong>可选？需要确定<strong>白-中-B</strong>可选</p>
-<p>如何确定<strong>2G</strong>可选？需要确定<strong>白-B-2G</strong>可选</p>
-</blockquote>
-<p>算法描述如下：</p>
-<blockquote>
-<p>遍历所有非已选元素</p>
-<p>1)取：a)当前元素b)非当前元素所在的其它属性已选元素（<strong>如果当前属性中没已选元素，则跳过</strong>），形成一个路径。</p>
-<p>2)判断此路径是否存在（<strong>在所有存在的路径表中查询</strong>），如果不存在将当前元素置灰。</p>
-<p>3)遍历所有属性行。</p>
-</blockquote>
-<p>以最开始的后端数据为例，生成的所有可选路径表如下：注意路径用分割符号「-」分开是为了查找路径时方便，不用遍历。<br><img src="\img\14.webp" alt=""><br>为了更清楚的说明这个算法，再上一张图来解释下吧：<br><img src="\img\15.webp" alt=""><br>所以根据上面的逻辑得出，计算状态后的界面应该是这样的：<br><img src="\img\16.webp" alt=""><br>现在这种情况下如果用户点击尺码<strong>中</strong>应该怎么交互呢？</p>
-<h2 id="优化体验"><a href="#优化体验" class="headerlink" title="优化体验"></a><center>优化体验</center></h2><p>因为当前情况下路径<strong>红-中-A</strong>并不存在，如果点击<strong>中</strong>，那么除了尺码<strong>中</strong>之外其它的属性中<strong>至少有一个</strong>属性和<strong>中</strong>的路径搭配是不存在的</p>
-<p>交互方面需求是：如果不存在就高亮当前属性行，使用户必须选择到可以和<strong>中</strong>组合存在的属性。而且用户之间选择过的属性要做一次缓存</p>
-<p>所以当点击不存在的属性时交互流程是这样的：</p>
-<p>无论当前属性存不存在，先高亮（选中）当前属性；</p>
-<blockquote>
-<p>清除其它所有已选属性；</p>
-<p>更新当前状态（只选当前属性）下的其它属性可选状态；</p>
-<p>遍历非当前属性行的其它属性查找对应的在缓存中的已选属性；</p>
-<p>如果缓存中对应的属性存在（可选），则默认选中缓存属性并<strong>再次更新</strong>其它可选状态。不存在，则高亮当前属性行（深色背景）。</p>
-</blockquote>
-<p>这个过程的流程图大概是这样的，点进不存在的属性就会进入「单选流程」。<br><img src="\img\17.webp" alt=""><br>假设后端数据是这样的：<br><img src="\img\18.webp" alt=""><br><img src="\img\19.webp" alt=""><br>如果用户点击<strong>中</strong>。这个时候<strong>白-中</strong>是存在的，但是<strong>中-A</strong>并不存在，所以保留颜色<strong>白</strong>，高亮型号属性行：<br><img src="\img\20.webp" alt=""><br>由此可见和<strong>白-中</strong>能搭配存在型号只有<strong>B</strong>，而缓存的作用就是为了少让用户选一次颜色白</p>
-<p>到这里，基本上主要的功能就实现了。比如库存逻辑处理方式也和不存属性一样，就不再赘述。唯一需要注意的地方是求幂集的复杂度问题。</p>
-<h2 id="算法复杂度"><a href="#算法复杂度" class="headerlink" title="算法复杂度"></a><center>算法复杂度</center></h2><p>幂集算法的时间复杂度是<strong>O(2^n)</strong>，也就是说每条数据上面的属性（维度）越多，复杂度越高。<strong>SKU</strong>数据的多少并不重要，因为是常数级的线性增长，而维度是指数级的增长。<br><img src="\img\21.webp" alt=""><br><img src="\img\22.webp" alt=""><br>在<strong>Chrome</strong>里面简单跑了几个用例，可见这个算法非常低效，如果要使用这个算法，必须控制维度在合理范围内，而且不仅仅算法时间复杂度很高，生成最后的路径表也会非常大，相应的占用内存也很高。</p>
-<p>举个例子：如果有一个10维的SKU，那么最终生成的路径表会有2^10个（1024）key/value。</p>
-<p>最终<strong>demo</strong>可以查看这个：<a href="http://codepen.io/keelii/pen/RoOzgb" target="_blank" rel="noopener"><strong>SKU</strong>多维属性状态判断</a></p>
+<h1 id="client-端"><a href="#client-端" class="headerlink" title="client 端"></a>client 端</h1><p>pom.xml</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;parent&gt;
+        &lt;artifactId&gt;springcloud&lt;/artifactId&gt;
+        &lt;groupId&gt;com.lkl.springcloud&lt;/groupId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;/parent&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;artifactId&gt;eureka&lt;/artifactId&gt;
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-netflix&lt;/artifactId&gt;
+                &lt;version&gt;1.0.7.RELEASE&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;!--表示为web工程--&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;!--暴露各种指标--&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;
+</code></pre><p>启动应用 Application.java</p>
+<pre><code>package com.lkl.springcloud.eureka;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+/**
+ * Created by tearfive on 16/4/30.
+ */
+@SpringBootApplication
+@EnableEurekaClient
+@RestController
+@EnableAutoConfiguration
+public class Application {
+    @RequestMapping(&quot;/&quot;)
+    public String home() {
+        return &quot;Hello world&quot;;
+    }
+    public static void main(String[] args) {
+        new SpringApplicationBuilder(Application.class).web(true).run(args);
+    }
+}
+</code></pre><p>创建配置application.properties</p>
+<pre><code>server.port=9090
+spring.application.name=eureka.client
+#eureka.client.serviceUrl.defaultZone=http://120.76.145.187:8080/eureka-server-1.4.6/v2/
+eureka.client.serviceUrl.defaultZone=http://localhost:7070/eureka/
+eureka.instance.appname=eureka.client.01
+#eureka.client.registerWithEureka=true
+#eureka.client.fetchRegistry=true
+</code></pre><p>eureka.client.serviceUrl.defaultZone 配置eureka服务地址</p>
+<h1 id="server端"><a href="#server端" class="headerlink" title="server端"></a>server端</h1><p>pom.xml</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;parent&gt;
+        &lt;artifactId&gt;springcloud&lt;/artifactId&gt;
+        &lt;groupId&gt;com.lkl.springcloud&lt;/groupId&gt;
+        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+    &lt;/parent&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;artifactId&gt;eureka-server&lt;/artifactId&gt;
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-netflix&lt;/artifactId&gt;
+                &lt;version&gt;1.0.7.RELEASE&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;!--表示为web工程--&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;!--暴露各种指标--&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-eureka-server&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;
+</code></pre><p>启动应用Application.java</p>
+<pre><code>package com.lkl.springcloud.eureka;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+/**
+ * Created by tearfive on 16/4/30.
+ */
+@EnableEurekaServer
+@SpringBootApplication
+public class Application {
+    public static void main(String[] args) {
+        new SpringApplicationBuilder(Application.class).web(true).run(args);
+    }
+}
+</code></pre><p>配置application.yml</p>
+<pre><code>server:
+  port: 7070
+spring:
+  application:
+    name: server-01
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:7070/eureka/
+  instance:
+    metadataMap:
+      instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+</code></pre><p>spring.application.name表示应用名称，集群名称需要一致<br>defaultZone表示向自身注册，例子中有三个server节点构成集群，其余两个两个节点也向该端口注册<br>instanceId 表示eureka instance 标识，需要唯一，如果不配置，多个节点最终只会有一个生效</p>
+<p>同样的配置<a href="https://github.com/tearfive/eureka/tree/master/eureka-server-replicas">第二个节点</a>,<a href="https://github.com/tearfive/eureka/tree/master/eureka-server-replicas-two">第三个节点</a></p>
+<p>启动所有服务端应用<br>访问 <a href="#">http://localhost:7070</a> 可以查看eureka注册服务信息</p>
+<p>访问 <a href="#">http://localhost:7070/eureka/apps</a> 可以查看metadata</p>
+<h1 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h1><p>在客户端创建Component</p>
+<p>DiscoveryService.java</p>
+<pre><code>package com.lkl.springcloud.eureka;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
+/**
+ * Created by tearfive on 16/4/30.
+ */
+@Component
+@RestController
+public class DiscoveryService {
+    @Autowired
+    private DiscoveryClient discoveryClient;
+    @RequestMapping(&quot;/discovery&quot;)
+    public String doDiscoveryService(){
+        StringBuilder buf = new StringBuilder();
+        List&lt;String&gt; serviceIds = discoveryClient.getServices();
+        if(!CollectionUtils.isEmpty(serviceIds)){
+            for(String s : serviceIds){
+                System.out.println(&quot;serviceId:&quot; + s);
+                List&lt;ServiceInstance&gt; serviceInstances =  discoveryClient.getInstances(s);
+                if(!CollectionUtils.isEmpty(serviceInstances)){
+                    for(ServiceInstance si:serviceInstances){
+                        buf.append(&quot;[&quot;+si.getServiceId() +&quot; host=&quot; +si.getHost()+&quot; port=&quot;+si.getPort()+&quot; uri=&quot;+si.getUri()+&quot;]&quot;);
+                    }
+                }else{
+                    buf.append(&quot;no service.&quot;);
+                }
+            }
+        }
+        return buf.toString();
+    }
+}
+</code></pre><p>访问 <a href="#">http://localhost:9090/discovery</a> 实现服务发现。</p>
+<p>ok ~ it’s work ! more about is <a href="https://github.com/tearfive/eureka">here</a></p>
 
       
 
@@ -263,7 +395,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">design</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">springcloud</a>
         		</li>
       		
 		</ul>
@@ -275,7 +407,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/java//" class="article-tag-list-link color5">java</a>
+        			<a href="/categories/Spring-Boot//" class="article-tag-list-link color2">Spring Boot</a>
         		</li>
       		
 		</ul>
@@ -284,7 +416,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/19/SKU多维属性状态判断算法/">展开全文 >></a>
+          <a class="article-more-a" href="/2018/01/12/springcloud eureka 服务注册与发现/">展开全文 >></a>
         </p>
       
 
@@ -314,20 +446,846 @@
 
 
   
-    <article id="post-事务一致性" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-日志logback配置解析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/18/事务一致性/">事务一致性</a>
+      <a class="article-title" href="/2017/01/12/日志logback配置解析/">日志logback配置解析</a>
     </h1>
   
 
         
-        <a href="/2018/01/18/事务一致性/" class="archive-article-date">
-  	<time datetime="2018-01-18T08:39:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-18</time>
+        <a href="/2017/01/12/日志logback配置解析/" class="archive-article-date">
+  	<time datetime="2017-01-12T02:41:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>（本文为阅读笔记，具体原文参考<a href="http://blog.csdn.net/gebitan505/article/details/70142155?locationNum=1&amp;fps=1" target="_blank" rel="noopener">http://blog.csdn.net/gebitan505/article/details/70142155?locationNum=1&amp;fps=1</a>）</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>Spring Boot在所有内部日志中使用<a href="http://commons.apache.org/proper/commons-logging/" target="_blank" rel="noopener">Commons Logging</a>，但是默认配置也提供了对常用日志的支持，如：<a href="http://docs.oracle.com/javase/7/docs/api/java/util/logging/package-summary.html" target="_blank" rel="noopener">Java Util Logging</a>，<a href="http://logging.apache.org/log4j/" target="_blank" rel="noopener">Log4J</a>, <a href="https://logging.apache.org/log4j/2.x/" target="_blank" rel="noopener">Log4J2</a>和<a href="http://logback.qos.ch/" target="_blank" rel="noopener">Logback</a>。每种Logger都可以通过配置使用控制台或者文件输出日志内容。</p>
+<h1 id="默认日志Logback"><a href="#默认日志Logback" class="headerlink" title="默认日志Logback"></a>默认日志Logback</h1><p><a href="http://www.slf4j.org/" target="_blank" rel="noopener">SLF4J</a>——Simple Logging Facade For Java，它是一个针对于各类Java日志框架的统一Facade抽象。Java日志框架众多——常用的有java.util.logging, log4j, logback，commons-logging, Spring框架使用的是Jakarta Commons Logging API (JCL)。而SLF4J定义了统一的日志抽象接口，而真正的日志实现则是在运行时决定的——它提供了各类日志框架的binding。</p>
+<p><a href="https://logback.qos.ch/" target="_blank" rel="noopener">Logback</a>是log4j框架的作者开发的新一代日志框架，它效率更高、能够适应诸多的运行环境，同时天然支持SLF4J。</p>
+<p>默认情况下，Spring Boot会用Logback来记录日志，并用INFO级别输出到控制台。在运行应用程序和其他例子时，你应该已经看到很多INFO级别的日志了。</p>
+<p><img src="\img\sringboot7-1.png" alt=""></p>
+<p>从上图可以看到，日志输出内容元素具体如下：</p>
+<blockquote>
+<p>时间日期：精确到毫秒<br>日志级别：ERROR, WARN, INFO, DEBUG or TRACE<br>进程ID<br>分隔符：— 标识实际日志的开始<br>线程名：方括号括起来（可能会截断控制台输出）<br>Logger名：通常使用源代码的类名<br>日志内容</p>
+</blockquote>
+<h3 id="添加日志依赖"><a href="#添加日志依赖" class="headerlink" title="添加日志依赖"></a>添加日志依赖</h3><p>假如maven依赖中添加了spring-boot-starter-logging：</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-logging&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre><p>那么，我们的Spring Boot应用将自动使用logback作为应用日志框架，Spring Boot启动的时候，由org.springframework.boot.logging.Logging-Application-Listener根据情况初始化并使用。</p>
+<p>但是呢，实际开发中我们不需要直接添加该依赖，你会发现spring-boot-starter其中包含了 spring-boot-starter-logging，该依赖内容就是 Spring Boot 默认的日志框架 logback。而博主这次项目的例子是基于上一篇的，工程中有用到了Thymeleaf，而Thymeleaf依赖包含了spring-boot-starter，最终我只要引入Thymeleaf即可。</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre><p>具体可以看该图</p>
+<p><img src="\img\sringboot7-1.png" alt=""></p>
+<h3 id="默认配置属性支持"><a href="#默认配置属性支持" class="headerlink" title="默认配置属性支持"></a>默认配置属性支持</h3><p>Spring Boot为我们提供了很多默认的日志配置，所以，只要将spring-boot-starter-logging作为依赖加入到当前应用的classpath，则“开箱即用”。<br>下面介绍几种在application.properties就可以配置的日志相关属性。</p>
+<h3 id="控制台输出"><a href="#控制台输出" class="headerlink" title="控制台输出"></a>控制台输出</h3><p>日志级别从低到高分为TRACE &lt; DEBUG &lt; INFO &lt; WARN &lt; ERROR &lt; FATAL，如果设置为WARN，则低于WARN的信息都不会输出。<br>Spring Boot中默认配置ERROR、WARN和INFO级别的日志输出到控制台。您还可以通过启动您的应用程序–debug标志来启用“调试”模式（开发的时候推荐开启）,以下两种方式皆可：</p>
+<p>在运行命令后加入–debug标志，如：$ java -jar springTest.jar –debug<br>在application.properties中配置debug=true，该属性置为true的时候，核心Logger（包含嵌入式容器、hibernate、spring）会输出更多内容，但是你自己应用的日志并不会输出为DEBUG级别。</p>
+<h3 id="文件输出"><a href="#文件输出" class="headerlink" title="文件输出"></a>文件输出</h3><p>默认情况下，Spring Boot将日志输出到控制台，不会写到日志文件。如果要编写除控制台输出之外的日志文件，则需在application.properties中设置logging.file或logging.path属性。</p>
+<blockquote>
+<p>logging.file，设置文件，可以是绝对路径，也可以是相对路径。如：logging.file=my.log<br>logging.path，设置目录，会在该目录下创建spring.log文件，并写入日志内容，如：logging.path=/var/log</p>
+</blockquote>
+<p>如果只配置 logging.file，会在项目的当前路径下生成一个 xxx.log 日志文件。<br>如果只配置 logging.path，在 /var/log文件夹生成一个日志文件为 spring.log</p>
+<h4 id="注：二者不能同时使用，如若同时使用，则只有logging-file生效"><a href="#注：二者不能同时使用，如若同时使用，则只有logging-file生效" class="headerlink" title="注：二者不能同时使用，如若同时使用，则只有logging.file生效"></a>注：二者不能同时使用，如若同时使用，则只有logging.file生效</h4><p><strong>默认情况下，日志文件的大小达到10MB时会切分一次，产生新的日志文件，默认级别为：ERROR、WARN、INFO</strong></p>
+<h3 id="级别控制"><a href="#级别控制" class="headerlink" title="级别控制"></a>级别控制</h3><p>所有支持的日志记录系统都可以在Spring环境中设置记录级别（例如在application.properties中）<br>格式为：’logging.level.* = LEVEL’</p>
+<blockquote>
+<p>logging.level：日志级别控制前缀，*为包名或Logger名<br>LEVEL：选项TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF</p>
+</blockquote>
+<p>举例：</p>
+<blockquote>
+<p>logging.level.com.dudu=DEBUG：com.dudu包下所有class以DEBUG级别输出<br>logging.level.root=WARN：root日志以WARN级别输出</p>
+</blockquote>
+<h3 id="自定义日志配置"><a href="#自定义日志配置" class="headerlink" title="自定义日志配置"></a>自定义日志配置</h3><p>由于日志服务一般都在ApplicationContext创建前就初始化了，它并不是必须通过Spring的配置文件控制。因此通过系统属性和传统的Spring Boot外部配置文件依然可以很好的支持日志控制和管理。</p>
+<p>根据不同的日志系统，你可以按如下规则组织配置文件名，就能被正确加载：</p>
+<blockquote>
+<p>Logback：logback-spring.xml, logback-spring.groovy, logback.xml, logback.groovy<br>Log4j：log4j-spring.properties, log4j-spring.xml, log4j.properties, log4j.xml<br>Log4j2：log4j2-spring.xml, log4j2.xml<br>JDK (Java Util Logging)：logging.properties</p>
+</blockquote>
+<p><strong>Spring Boot官方推荐优先使用带有-spring的文件名作为你的日志配置（如使用logback-spring.xml，而不是logback.xml），命名为logback-spring.xml的日志配置文件，spring boot可以为它添加一些spring boot特有的配置项（下面会提到）。</strong></p>
+<p>上面是默认的命名规则，并且放在src/main/resources下面即可。</p>
+<p>如果你即想完全掌控日志配置，但又不想用logback.xml作为Logback配置的名字，可以在application.properties配置文件里面通过logging.config属性指定自定义的名字：</p>
+<pre><code>logging.config=classpath:logging-config.xml
+</code></pre><p>虽然一般并不需要改变配置文件的名字，但是如果你想针对不同运行时Profile使用不同的日<br>志配置，这个功能会很有用。</p>
+<p>下面我们来看看一个普通的logback-spring.xml例子</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;configuration  scan=&quot;true&quot; scanPeriod=&quot;60 seconds&quot; debug=&quot;false&quot;&gt;
+    &lt;contextName&gt;logback&lt;/contextName&gt;
+    &lt;property name=&quot;log.path&quot; value=&quot;/Users/tengjun/Documents/log&quot; /&gt;
+    &lt;!--输出到控制台--&gt;
+    &lt;appender name=&quot;console&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;
+       &lt;!-- &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
+            &lt;level&gt;ERROR&lt;/level&gt;
+        &lt;/filter&gt;--&gt;
+        &lt;encoder&gt;
+            &lt;pattern&gt;%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+    &lt;!--输出到文件--&gt;
+    &lt;appender name=&quot;file&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;
+        &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;
+            &lt;fileNamePattern&gt;${log.path}/logback.%d{yyyy-MM-dd}.log&lt;/fileNamePattern&gt;
+        &lt;/rollingPolicy&gt;
+        &lt;encoder&gt;
+            &lt;pattern&gt;%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+    &lt;root level=&quot;info&quot;&gt;
+        &lt;appender-ref ref=&quot;console&quot; /&gt;
+        &lt;appender-ref ref=&quot;file&quot; /&gt;
+    &lt;/root&gt;
+
+    &lt;!-- logback为java中的包 --&gt;
+    &lt;logger name=&quot;com.dudu.controller&quot;/&gt;
+    &lt;!--logback.LogbackDemo：类的全路径 --&gt;
+    &lt;logger name=&quot;com.dudu.controller.LearnController&quot; level=&quot;WARN&quot; additivity=&quot;false&quot;&gt;
+        &lt;appender-ref ref=&quot;console&quot;/&gt;
+    &lt;/logger&gt;
+&lt;/configuration&gt;
+</code></pre><h4 id="根节点-lt-configuration-gt-包含的属性"><a href="#根节点-lt-configuration-gt-包含的属性" class="headerlink" title="根节点&lt;configuration&gt;包含的属性"></a>根节点&lt;configuration&gt;包含的属性</h4><hr>
+<blockquote>
+<p>scan:当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。<br>scanPeriod:设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。<br>debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。</p>
+</blockquote>
+<p>根节点&lt;configuration&gt;的子节点：<br>&lt;configuration&gt;下面一共有2个属性，3个子节点，分别是：</p>
+<h4 id="属性一：设置上下文名称-lt-contextName-gt"><a href="#属性一：设置上下文名称-lt-contextName-gt" class="headerlink" title="属性一：设置上下文名称&lt;contextName&gt;"></a>属性一：设置上下文名称&lt;contextName&gt;</h4><hr>
+<p>每个logger都关联到logger上下文，默认上下文名称为“default”。但可以使用设置成其他名字，用于区分不同应用程序的记录。一旦设置，不能修改,可以通过%contextName来打印日志上下文名称。</p>
+<pre><code>&lt;contextName&gt;logback&lt;/contextName&gt;
+</code></pre><h4 id="属性二：设置变量-lt-property-gt"><a href="#属性二：设置变量-lt-property-gt" class="headerlink" title="属性二：设置变量&lt;property&gt;"></a>属性二：设置变量&lt;property&gt;</h4><hr>
+<p>用来定义变量值的标签， 有两个属性，name和value；其中name的值是变量的名称，value的值时变量定义的值。通过定义的值会被插入到logger上下文中。定义变量后，可以使“${}”来使用变量。</p>
+<pre><code>&lt;property name=&quot;log.path&quot; value=&quot;/Users/tengjun/Documents/log&quot; /&gt;
+</code></pre><h4 id="子节点一-lt-appender-gt"><a href="#子节点一-lt-appender-gt" class="headerlink" title="子节点一&lt;appender&gt;"></a>子节点一&lt;appender&gt;</h4><p>appender用来格式化日志输出节点，有俩个属性name和class，class用来指定哪种输出策略，常用就是控制台输出策略和文件输出策略。</p>
+<h5 id="控制台输出ConsoleAppender："><a href="#控制台输出ConsoleAppender：" class="headerlink" title="控制台输出ConsoleAppender："></a>控制台输出ConsoleAppender：</h5><pre><code>&lt;!--输出到控制台--&gt;
+&lt;appender name=&quot;console&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;
+    &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
+        &lt;level&gt;ERROR&lt;/level&gt;
+    &lt;/filter&gt;
+    &lt;encoder&gt;
+        &lt;pattern&gt;%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+    &lt;/encoder&gt;
+&lt;/appender&gt;
+</code></pre><p>&lt;encoder&gt;表示对日志进行编码：</p>
+<blockquote>
+<p>%d{HH: mm:ss.SSS}——日志输出时间<br>%thread——输出日志的进程名字，这在Web应用以及异步任务处理中很有用<br>%-5level——日志级别，并且使用5个字符靠左对齐<br>%logger{36}——日志输出者的名字<br>%msg——日志消息<br>%n——平台的换行符</p>
+</blockquote>
+<p>ThresholdFilter为系统定义的拦截器，例如我们用ThresholdFilter来过滤掉ERROR级别以下的日志不输出到文件中。如果不用记得注释掉，不然你控制台会发现没日志~</p>
+<h5 id="输出到文件RollingFileAppender"><a href="#输出到文件RollingFileAppender" class="headerlink" title="输出到文件RollingFileAppender"></a>输出到文件RollingFileAppender</h5><p>另一种常见的日志输出到文件，随着应用的运行时间越来越长，日志也会增长的越来越多，将他们输出到同一个文件并非一个好办法。RollingFileAppender用于切分文件日志：</p>
+<pre><code>&lt;!--输出到文件--&gt;
+&lt;appender name=&quot;file&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;
+    &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;
+        &lt;fileNamePattern&gt;${log.path}/logback.%d{yyyy-MM-dd}.log&lt;/fileNamePattern&gt;
+        &lt;maxHistory&gt;30&lt;/maxHistory&gt;
+        &lt;totalSizeCap&gt;1GB&lt;/totalSizeCap&gt;
+    &lt;/rollingPolicy&gt;
+    &lt;encoder&gt;
+        &lt;pattern&gt;%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+    &lt;/encoder&gt;
+&lt;/appender&gt;
+</code></pre><p>其中重要的是rollingPolicy的定义，上例中<filenamepattern>${log.path}/logback.%d{yyyy-MM-dd}.log</filenamepattern>定义了日志的切分方式——把每一天的日志归档到一个文件中，<maxhistory>30</maxhistory>表示只保留最近30天的日志，以防止日志填满整个磁盘空间。同理，可以使用%d{yyyy-MM-dd_HH-mm}来定义精确到分的日志切分方式。<totalsizecap>1GB</totalsizecap>用来指定日志文件的上限大小，例如设置为1GB的话，那么到了这个值，就会删除旧的日志。</p>
+<p>补:如果你想把日志直接放到当前项目下，把${log.path}/去掉即可。</p>
+<h4 id="子节点二-lt-root-gt"><a href="#子节点二-lt-root-gt" class="headerlink" title="子节点二&lt;root&gt;"></a>子节点二&lt;root&gt;</h4><p>root节点是必选节点，用来指定最基础的日志输出级别，只有一个level属性。</p>
+<blockquote>
+<p>level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，不能设置为INHERITED或者同义词NULL。<br>默认是DEBUG。</p>
+</blockquote>
+<p>可以包含零个或多个元素，标识这个appender将会添加到这个logger。</p>
+<pre><code>&lt;root level=&quot;debug&quot;&gt;
+    &lt;appender-ref ref=&quot;console&quot; /&gt;
+    &lt;appender-ref ref=&quot;file&quot; /&gt;
+&lt;/root&gt;
+</code></pre><h4 id="子节点三-lt-logger-gt"><a href="#子节点三-lt-logger-gt" class="headerlink" title="子节点三&lt;logger&gt;"></a>子节点三&lt;logger&gt;</h4><p>&lt;logger&gt;用来设置某一个包或者具体的某一个类的日志打印级别、以及指定&lt;appender&gt;。&lt;logger&gt;仅有一个name属性，一个可选的level和一个可选的addtivity属性。</p>
+<blockquote>
+<p>name:用来指定受此logger约束的某一个包或者具体的某一个类。<br>level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，还有一个特俗值INHERITED或者同义词NULL，代表强制执行上级的级别。如果未设置此属性，那么当前logger将会继承上级的级别。<br>addtivity:是否向上级logger传递打印信息。默认是true。</p>
+</blockquote>
+<p>logger在实际使用的时候有两种情况<br>先来看一看代码中如何使用</p>
+<pre><code>package com.dudu.controller;
+@Controller
+public class LearnController {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @RequestMapping(value = &quot;/login&quot;,method = RequestMethod.POST)
+    @ResponseBody
+    public Map&lt;String,Object&gt; login(HttpServletRequest request, HttpServletResponse response){
+        //日志级别从低到高分为TRACE &lt; DEBUG &lt; INFO &lt; WARN &lt; ERROR &lt; FATAL，如果设置为WARN，则低于WARN的信息都不会输出。
+        logger.trace(&quot;日志输出 trace&quot;);
+        logger.debug(&quot;日志输出 debug&quot;);
+        logger.info(&quot;日志输出 info&quot;);
+        logger.warn(&quot;日志输出 warn&quot;);
+        logger.error(&quot;日志输出 error&quot;);
+        Map&lt;String,Object&gt; map =new HashMap&lt;String,Object&gt;();
+        String userName=request.getParameter(&quot;userName&quot;);
+        String password=request.getParameter(&quot;password&quot;);
+        if(!userName.equals(&quot;&quot;) &amp;&amp; password!=&quot;&quot;){
+            User user =new User(userName,password);
+            request.getSession().setAttribute(&quot;user&quot;,user);
+            map.put(&quot;result&quot;,&quot;1&quot;);
+        }else{
+            map.put(&quot;result&quot;,&quot;0&quot;);
+        }
+        return map;
+    }
+}
+</code></pre><p>这是一个登录的判断的方法，我们引入日志，并且打印不同级别的日志，然后根据logback-spring.xml中的配置来看看打印了哪几种级别日志。</p>
+<h5 id="第一种：带有logger的配置，不指定级别，不指定appender"><a href="#第一种：带有logger的配置，不指定级别，不指定appender" class="headerlink" title="第一种：带有logger的配置，不指定级别，不指定appender"></a>第一种：带有logger的配置，不指定级别，不指定appender</h5><pre><code>&lt;logger name=&quot;com.dudu.controller&quot;/&gt;
+</code></pre><p>&lt;logger name=”com.dudu.controller” /&gt;将控制controller包下的所有类的日志的打印，但是并没用设置打印级别，所以继承他的上级的日志级别“info”；<br>没有设置addtivity，默认为true，将此logger的打印信息向上级传递；<br>没有设置appender，此logger本身不打印任何信息。<br>&lt;root level=”info”&gt;将root的打印级别设置为“info”，指定了名字为“console”的appender。</p>
+<p>当执行com.dudu.controller.LearnController类的login方法时，LearnController 在包com.dudu.controller中，所以首先执行<logger name="com.dudu.controller">，将级别为“info”及大于“info”的日志信息传递给root，本身并不打印；<br>root接到下级传递的信息，交给已经配置好的名为“console”的appender处理，“console”appender将信息打印到控制台；</logger></p>
+<p>打印结果如下：</p>
+<pre><code>16:00:17.407 logback [http-nio-8080-exec-8] INFO  com.dudu.controller.LearnController - 日志输出 info
+16:00:17.408 logback [http-nio-8080-exec-8] WARN  com.dudu.controller.LearnController - 日志输出 warn
+16:00:17.408 logback [http-nio-8080-exec-8] ERROR com.dudu.controller.LearnController - 日志输出 error
+</code></pre><p>第二种：带有多个logger的配置，指定级别，指定appender</p>
+<pre><code>&lt;!--logback.LogbackDemo：类的全路径 --&gt;
+&lt;logger name=&quot;com.dudu.controller.LearnController&quot; level=&quot;WARN&quot; additivity=&quot;false&quot;&gt;
+    &lt;appender-ref ref=&quot;console&quot;/&gt;
+&lt;/logger&gt;
+</code></pre><p>控制com.dudu.controller.LearnController类的日志打印，打印级别为“WARN”;<br>additivity属性为false，表示此logger的打印信息不再向上级传递;<br>指定了名字为“console”的appender;</p>
+<p>这时候执行com.dudu.controller.LearnController类的login方法时，先执行<logger name="com.dudu.controller.LearnController" level="WARN" additivity="false">,<br>将级别为“WARN”及大于“WARN”的日志信息交给此logger指定的名为“console”的appender处理，在控制台中打出日志，不再向上级root传递打印信息。<br>打印结果如下：</logger></p>
+<pre><code>16:00:17.408 logback [http-nio-8080-exec-8] WARN  com.dudu.controller.LearnController - 日志输出 warn
+16:00:17.408 logback [http-nio-8080-exec-8] ERROR com.dudu.controller.LearnController - 日志输出 error
+</code></pre><p>当然如果你把additivity=”false”改成additivity=”true”的话，就会打印两次，因为打印信息向上级传递，logger本身打印一次，root接到后又打印一次。</p>
+<p>注：使用mybatis的时候，sql语句是debug下才会打印，而这里我们只配置了info，所以想要查看sql语句的话，有以下两种操作：</p>
+<p>第一种把&lt;root level=”info”&gt;改成<root level="DEBUG">这样就会打印sql，不过这样日志那边会出现很多其他消息。<br>第二种就是单独给dao下目录配置debug模式，代码如下，这样配置sql语句会打印，其他还是正常info级别：</root></p>
+<pre><code>&lt;logger name=&quot;com.dudu.dao&quot; level=&quot;DEBUG&quot; additivity=&quot;false&quot;&gt;
+    &lt;appender-ref ref=&quot;console&quot; /&gt;
+&lt;/logger&gt;
+</code></pre><h3 id="多环境日志输出"><a href="#多环境日志输出" class="headerlink" title="多环境日志输出"></a>多环境日志输出</h3><p>据不同环境（prod:生产环境，test:测试环境，dev:开发环境）来定义不同的日志输出，在 logback-spring.xml中使用 springProfile 节点来定义，方法如下：</p>
+<pre><code>文件名称不是logback.xml，想使用spring扩展profile支持，要以logback-spring.xml命名
+</code></pre><hr>
+<pre><code>&lt;!-- 测试环境+开发环境. 多个使用逗号隔开. --&gt;
+&lt;springProfile name=&quot;test,dev&quot;&gt;
+    &lt;logger name=&quot;com.dudu.controller&quot; level=&quot;info&quot; /&gt;
+&lt;/springProfile&gt;
+&lt;!-- 生产环境. --&gt;
+&lt;springProfile name=&quot;prod&quot;&gt;
+    &lt;logger name=&quot;com.dudu.controller&quot; level=&quot;ERROR&quot; /&gt;
+&lt;/springProfile&gt;
+</code></pre><p>可以启动服务的时候指定 profile （如不指定使用默认），如指定prod 的方式为：<br>java -jar xxx.jar –spring.profiles.active=prod</p>
+<p>总结<br>到此为止终于介绍完日志框架了，平时使用的时候推荐用自定义logback-spring.xml来配置，代码中使用日志也很简单，类里面添加private Logger logger = LoggerFactory.getLogger(this.getClass());即可。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Spring-Boot//" class="article-tag-list-link color2">Spring Boot</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/01/12/日志logback配置解析/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-自定义@CurrentUser获取当前登录用户" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/01/自定义@CurrentUser获取当前登录用户/">自定义@CurrentUser获取当前登录用户</a>
+    </h1>
+  
+
+        
+        <a href="/2016/08/01/自定义@CurrentUser获取当前登录用户/" class="archive-article-date">
+  	<time datetime="2016-08-01T12:23:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-08-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>（本文为阅读笔记，具体原文参考<a href="https://www.jianshu.com/p/01a6a61d9e02" target="_blank" rel="noopener">https://www.jianshu.com/p/01a6a61d9e02</a>）</p>
+<h1 id="定义-CurrenUser注解"><a href="#定义-CurrenUser注解" class="headerlink" title="定义 @CurrenUser注解"></a>定义 @CurrenUser注解</h1><pre><code>/**
+ * 在Controller的方法参数中使用此注解，该方法在映射时会注入当前登录的User对象
+ */
+@Target(ElementType.PARAMETER)//可用在方法的参数上
+@Retention(RetentionPolicy.RUNTIME)//运行时有效
+public @interface CurrentUser {
+}
+</code></pre><h1 id="添加测试方法"><a href="#添加测试方法" class="headerlink" title="添加测试方法"></a>添加测试方法</h1><p>在 userApi.java 中添加临时测试用的，测试完记得删掉。</p>
+<pre><code>@GetMapping(&quot;/test&quot;)
+@LoginRequired
+public Object testCurrentUser(@CurrentUser User user) {
+    return user;
+}
+</code></pre><p>不要忘了添加 @LoginRequired 这个注解（上节添加的），要获取当前登录用户嘛，肯定得要求用户登录。重启项目访问 /api/user/test测试下。</p>
+<p><img src="\img\3907956-5d831a4f4501a5b8.png" alt=""></p>
+<p>记得填写 token（访问登录接口获取）。全是null，很遗憾现在还不能返回我们想要的用户信息。</p>
+<h1 id="添加参数解析器"><a href="#添加参数解析器" class="headerlink" title="添加参数解析器"></a>添加参数解析器</h1><p>要想 @CurrentUser 起作用，需要编写一个配套解析器，做法是实现 spring 提供的 HandlerMethodArgumentResolver 接口。<br>新增 CurrentUserMethodArgumentResolver.java</p>
+<pre><code>/**
+ *  增加方法注入，将含有 @CurrentUser 注解的方法参数注入当前登录用户
+ */
+public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentResolver {
+    @Override
+    public boolean supportsParameter(MethodParameter parameter) {
+        return parameter.getParameterType().isAssignableFrom(User.class)
+                &amp;&amp; parameter.hasParameterAnnotation(CurrentUser.class);
+    }
+    @Override
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+        User user = (User) webRequest.getAttribute(&quot;currentUser&quot;, RequestAttributes.SCOPE_REQUEST);
+        if (user != null) {
+            return user;
+        }
+        throw new MissingServletRequestPartException(&quot;currentUser&quot;);
+    }
+}
+</code></pre><p>User user = (User) webRequest.getAttribute(“currentUser”, RequestAttributes.SCOPE_REQUEST) 这一句是从 request 作用域中取出名为 currentUser 的属性。currentUser 是什么呢？在上节编写的登录拦截器中，最后有这么一句 request.setAttribute(“currentUser”, user)，所以 currentUser 是 token 验证通过之后查询到的当前用户。</p>
+<h1 id="配置参数解析器"><a href="#配置参数解析器" class="headerlink" title="配置参数解析器"></a>配置参数解析器</h1><p>在 WebMvcConfigurer.java 中 Override addArgumentResolvers 方法</p>
+<pre><code>@Override
+public void addArgumentResolvers(List&lt;HandlerMethodArgumentResolver&gt; argumentResolvers) {
+    argumentResolvers.add(currentUserMethodArgumentResolver());
+    super.addArgumentResolvers(argumentResolvers);
+}
+@Bean
+public CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver() {
+    return new CurrentUserMethodArgumentResolver();
+}
+</code></pre><h1 id="再次测试"><a href="#再次测试" class="headerlink" title="再次测试"></a>再次测试</h1><p>我是用 “张三” 这个用户登录获取的 token，正确地返回了张三的信息。</p>
+<p><img src="\img\3907956-1dda70c8a9342adf.png" alt=""></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/java//" class="article-tag-list-link color5">java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/08/01/自定义@CurrentUser获取当前登录用户/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-使用JWT保护你的spring boot应用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/11/使用JWT保护你的spring boot应用/">使用JWT保护你的springboot应用</a>
+    </h1>
+  
+
+        
+        <a href="/2016/01/11/使用JWT保护你的spring boot应用/" class="archive-article-date">
+  	<time datetime="2016-01-11T09:16:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-01-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>（本文为阅读笔记，具体原文参考<a href="https://segmentfault.com/a/1190000009231329" target="_blank" rel="noopener">https://segmentfault.com/a/1190000009231329</a>）</p>
+<h2 id="Spring-Boot"><a href="#Spring-Boot" class="headerlink" title="Spring Boot"></a>Spring Boot</h2><p>有了Spring Boot这样的神器，可以很简单的使用强大的Spring框架。你需要关心的事儿只是创建应用，不必再配置了，“Just run!”，这可是Josh Long每次演讲必说的，他的另一句必须说的就是“make jar not war”，这意味着，不用太关心是Tomcat还是Jetty或者Undertow了。专心解决逻辑问题，这当然是个好事儿，部署简单了很多。</p>
+<h2 id="创建Spring-Boot应用"><a href="#创建Spring-Boot应用" class="headerlink" title="创建Spring Boot应用"></a>创建Spring Boot应用</h2><p>有很多方法去创建Spring Boot项目，官方也推荐用：</p>
+<p><a href="http://start.spring.io/" target="_blank" rel="noopener">Spring Boot在线项目创建</a><br><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/cli-using-the-cli.html" target="_blank" rel="noopener">CLI 工具</a></p>
+<p>start.spring.io可以方便选择你要用的组件，命令行工具当然也可以。目前Spring Boot已经到了1.53，我是懒得去更新依赖，继续用1.52版本。虽然阿里也有了中央库的国内版本不知道是否稳定。如果你感兴趣，可以自己尝试下。你可以选Maven或者Gradle成为你项目的构建工具，Gradle优雅一些，使用了Groovy语言进行描述。</p>
+<p>打开start.spring.io，创建的项目只需要一个Dependency，也就是Web，然后下载项目，用IntellJ IDEA打开。我的Java版本是1.7。</p>
+<p>这里看下整个项目的pom.xml文件中的依赖部分:</p>
+<pre><code>&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre><p>所有Spring Boot相关的依赖都是以starter形式出现，这样你无需关心版本和相关的依赖，所以这样大大简化了开发过程。</p>
+<p>当你在pom文件中集成了spring-boot-maven-plugin插件后你可以使用Maven相关的命令来run你的应用。例如mvn spring-boot:run，这样会启动一个嵌入式的Tomcat，并运行在8080端口，直接访问你当然会获得一个Whitelabel Error Page，这说明Tomcat已经启动了。</p>
+<h2 id="创建一个Web-应用"><a href="#创建一个Web-应用" class="headerlink" title="创建一个Web 应用"></a>创建一个Web 应用</h2><p>这还是一篇关于Web安全的文章，但是也得先有个简单的HTTP请求响应。我们先弄一个可以返回JSON的Controller。修改程序的入口文件：</p>
+<pre><code>@SpringBootApplication
+@RestController
+@EnableAutoConfiguration
+public class DemoApplication {
+    // main函数，Spring Boot程序入口
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+    // 根目录映射 Get访问方式 直接返回一个字符串
+    @RequestMapping(&quot;/&quot;)
+    Map&lt;String, String&gt; hello() {
+      // 返回map会变成JSON key value方式
+      Map&lt;String,String&gt; map=new HashMap&lt;String,String&gt;();
+      map.put(&quot;content&quot;, &quot;hello freewolf~&quot;);
+      return map;
+    }
+}
+</code></pre><p>这里我尽量的写清楚，让不了解Spring Security的人通过这个例子可以了解这个东西，很多人都觉得它很复杂，而投向了Apache Shiro，其实这个并不难懂。知道主要的处理流程，和这个流程中哪些类都起了哪些作用就好了。</p>
+<p>Spring Boot对于开发人员最大的好处在于可以对Spring应用进行自动配置。Spring Boot会根据应用中声明的第三方依赖来自动配置Spring框架，而不需要进行显式的声明。Spring Boot推荐采用基于Java注解的配置方式，而不是传统的XML。只需要在主配置 Java 类上添加@EnableAutoConfiguration注解就可以启用自动配置。Spring Boot的自动配置功能是没有侵入性的，只是作为一种基本的默认实现。</p>
+<p>这个入口类我们添加@RestController和@EnableAutoConfiguration两个注解。<br>@RestController注解相当于@ResponseBody和@Controller合在一起的作用。</p>
+<p>run整个项目。访问<a href="#">http://localhost:8080/</a>就能看到这个JSON的输出。使用Chrome浏览器可以装JSON Formatter这个插件，显示更PL一些。</p>
+<pre><code>{
+  &quot;content&quot;: &quot;hello freewolf~&quot;
+}
+</code></pre><p>为了显示统一的JSON返回，这里建立一个JSONResult类进行，简单的处理。首先修改pom.xml，加入org.json相关依赖</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.json&lt;/groupId&gt;
+    &lt;artifactId&gt;json&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre><p>然后在我们的代码中加入一个新的类，里面只有一个结果集处理方法，因为只是个Demo，所有这里都放在一个文件中。这个类只是让返回的JSON结果变为三部分：</p>
+<pre><code>status - 返回状态码 0 代表正常返回，其他都是错误
+message - 一般显示错误信息
+result - 结果集
+</code></pre><hr>
+<pre><code>class JSONResult{
+    public static String fillResultString(Integer status, String message, Object result){
+        JSONObject jsonObject = new JSONObject(){{
+	            put("status", status);
+	            put("message", message);
+	            put("result", result);
+	        }};
+        return jsonObject.toString();
+    }
+}
+</code></pre><p>然后我们引入一个新的@RestController并返回一些简单的结果，后面我们将对这些内容进行访问控制，这里用到了上面的结果集处理类。这里多放两个方法，后面我们来测试权限和角色的验证用。</p>
+<pre><code>@RestController
+class UserController {
+    // 路由映射到/users
+    @RequestMapping(value = &quot;/users&quot;, produces=&quot;application/json;charset=UTF-8&quot;)
+    public String usersList() {
+        ArrayList&lt;String&gt; users =  new ArrayList&lt;String&gt;(){{
+	            add("freewolf");
+	            add("tom");
+	            add("jerry");
+	        }};
+        return JSONResult.fillResultString(0, &quot;&quot;, users);
+    }
+    @RequestMapping(value = &quot;/hello&quot;, produces=&quot;application/json;charset=UTF-8&quot;)
+    public String hello() {
+        ArrayList&lt;String&gt; users =  new ArrayList&lt;String&gt;(){{ add("hello"); }};
+        return JSONResult.fillResultString(0, &quot;&quot;, users);
+    }
+    @RequestMapping(value = &quot;/world&quot;, produces=&quot;application/json;charset=UTF-8&quot;)
+    public String world() {
+        ArrayList&lt;String&gt; users =  new ArrayList&lt;String&gt;(){{ add("world"); }};
+        return JSONResult.fillResultString(0, &quot;&quot;, users);
+    }
+}
+</code></pre><p>重新run这个文件，访问<a href="#">http://localhost:8080/users</a>就看到了下面的结果:</p>
+<pre><code>{
+  &quot;result&quot;: [
+    &quot;freewolf&quot;,
+    &quot;tom&quot;,
+    &quot;jerry&quot;
+  ],
+  &quot;message&quot;: &quot;&quot;,
+  &quot;status&quot;: 0
+}
+</code></pre><p>如果你细心，你会发现这里的JSON返回时，Chrome的格式化插件好像并没有识别？这是为什么呢？我们借助curl分别看一下我们写的两个方法的Header信息.</p>
+<pre><code>curl -I http://127.0.0.1:8080/
+curl -I http://127.0.0.1:8080/users
+</code></pre><p>可以看到第一个方法hello，由于返回值是Map<string, string="">，Spring已经有相关的机制自动处理成JSON:</string,></p>
+<pre><code>Content-Type: application/json;charset=UTF-8
+</code></pre><p>第二个方法usersList由于返回时String，由于是@RestControler已经含有了@ResponseBody也就是直接返回内容，并不模板。所以就是：</p>
+<pre><code>Content-Type: text/plain;charset=UTF-8
+</code></pre><p>那怎么才能让它变成JSON呢，其实也很简单只需要补充一下相关注解：</p>
+<pre><code>@RequestMapping(value = &quot;/users&quot;, produces=&quot;application/json;charset=UTF-8&quot;)
+</code></pre><p>这样就好了。</p>
+<h1 id="使用JWT保护你的Spring-Boot应用"><a href="#使用JWT保护你的Spring-Boot应用" class="headerlink" title="使用JWT保护你的Spring Boot应用"></a>使用JWT保护你的Spring Boot应用</h1><p>终于我们开始介绍正题，这里我们会对/users进行访问控制，先通过申请一个JWT(JSON Web Token读jot)，然后通过这个访问/users，才能拿到数据。</p>
+<p>关于JWT,出门奔向以下内容，这些不在本文讨论范围内:</p>
+<p><a href="https://tools.ietf.org/html/rfc7519" target="_blank" rel="noopener">RFC7519</a><br><br><a href="https://jwt.io/" target="_blank" rel="noopener">JWT</a></p>
+<p>JWT很大程度上还是个新技术，通过使用HMAC(Hash-based Message Authentication Code)计算信息摘要，也可以用RSA公私钥中的私钥进行签名。这个根据业务场景进行选择。</p>
+<h2 id="添加Spring-Security"><a href="#添加Spring-Security" class="headerlink" title="添加Spring Security"></a>添加Spring Security</h2><p>根据上文我们说过我们要对/users进行访问控制，让用户在/login进行登录并获得Token。这里我们需要将spring-boot-starter-security加入pom.xml。加入后，我们的Spring Boot项目将需要提供身份验证，相关的pom.xml如下:</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.jsonwebtoken&lt;/groupId&gt;
+    &lt;artifactId&gt;jjwt&lt;/artifactId&gt;
+    &lt;version&gt;0.7.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre><p>至此我们之前所有的路由都需要身份验证。我们将引入一个安全设置类WebSecurityConfig，这个类需要从WebSecurityConfigurerAdapter类继承。</p>
+<pre><code>@Configuration
+@EnableWebSecurity
+class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    // 设置 HTTP 验证规则
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // 关闭csrf验证
+        http.csrf().disable()
+                // 对请求进行认证
+                .authorizeRequests()
+                // 所有 / 的所有请求 都放行
+                .antMatchers(&quot;/&quot;).permitAll()
+                // 所有 /login 的POST请求 都放行
+                .antMatchers(HttpMethod.POST, &quot;/login&quot;).permitAll()
+                // 权限检查
+                .antMatchers(&quot;/hello&quot;).hasAuthority(&quot;AUTH_WRITE&quot;)
+                // 角色检查
+                .antMatchers(&quot;/world&quot;).hasRole(&quot;ADMIN&quot;)
+                // 所有请求需要身份认证
+                .anyRequest().authenticated()
+            .and()
+                // 添加一个过滤器 所有访问 /login 的请求交给 JWTLoginFilter 来处理 这个类处理所有的JWT相关内容
+                .addFilterBefore(new JWTLoginFilter(&quot;/login&quot;, authenticationManager()),
+                        UsernamePasswordAuthenticationFilter.class)
+                // 添加一个过滤器验证其他请求的Token是否合法
+                .addFilterBefore(new JWTAuthenticationFilter(),
+                        UsernamePasswordAuthenticationFilter.class);
+    }
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        // 使用自定义身份验证组件
+        auth.authenticationProvider(new CustomAuthenticationProvider());
+    }
+}
+</code></pre><p>先放两个基本类，一个负责存储用户名密码，另一个是一个权限类型，负责存储权限和角色。</p>
+<pre><code>class AccountCredentials {
+    private String username;
+    private String password;
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}
+class GrantedAuthorityImpl implements GrantedAuthority{
+    private String authority;
+    public GrantedAuthorityImpl(String authority) {
+        this.authority = authority;
+    }
+    public void setAuthority(String authority) {
+        this.authority = authority;
+    }
+    @Override
+    public String getAuthority() {
+        return this.authority;
+    }
+}
+</code></pre><p>在上面的安全设置类中，我们设置所有人都能访问/和POST方式访问/login，其他的任何路由都需要进行认证。然后将所有访问/login的请求，都交给JWTLoginFilter过滤器来处理。稍后我们会创建这个过滤器和其他这里需要的JWTAuthenticationFilter和CustomAuthenticationProvider两个类。</p>
+<p>先建立一个JWT生成，和验签的类</p>
+<pre><code>class TokenAuthenticationService {
+    static final long EXPIRATIONTIME = 432_000_000;     // 5天
+    static final String SECRET = &quot;P@ssw02d&quot;;            // JWT密码
+    static final String TOKEN_PREFIX = &quot;Bearer&quot;;        // Token前缀
+    static final String HEADER_STRING = &quot;Authorization&quot;;// 存放Token的Header Key
+  // JWT生成方法
+    static void addAuthentication(HttpServletResponse response, String username) {
+    // 生成JWT
+        String JWT = Jwts.builder()
+                // 保存权限（角色）
+                .claim(&quot;authorities&quot;, &quot;ROLE_ADMIN,AUTH_WRITE&quot;)
+                // 用户名写入标题
+                .setSubject(username)
+                // 有效期设置
+                        .setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
+                // 签名设置
+                        .signWith(SignatureAlgorithm.HS512, SECRET)
+                        .compact();
+        // 将 JWT 写入 body
+        try {
+            response.setContentType(&quot;application/json&quot;);
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getOutputStream().println(JSONResult.fillResultString(0, &quot;&quot;, JWT));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+  // JWT验证方法
+    static Authentication getAuthentication(HttpServletRequest request) {
+        // 从Header中拿到token
+        String token = request.getHeader(HEADER_STRING);
+        if (token != null) {
+            // 解析 Token
+            Claims claims = Jwts.parser()
+                    // 验签
+                    .setSigningKey(SECRET)
+                    // 去掉 Bearer
+                    .parseClaimsJws(token.replace(TOKEN_PREFIX, &quot;&quot;))
+                    .getBody();
+
+            // 拿用户名
+            String user = claims.getSubject();
+            // 得到 权限（角色）
+            List&lt;GrantedAuthority&gt; authorities =  AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get(&quot;authorities&quot;));
+            // 返回验证令牌
+            return user != null ?
+                    new UsernamePasswordAuthenticationToken(user, null, authorities) :
+                    null;
+        }
+        return null;
+    }
+}
+</code></pre><p>这个类就两个static方法，一个负责生成JWT，一个负责认证JWT最后生成验证令牌。注释已经写得很清楚了，这里不多说了。</p>
+<p>下面来看自定义验证组件，这里简单写了，这个类就是提供密码验证功能，在实际使用时换成自己相应的验证逻辑，从数据库中取出、比对、赋予用户相应权限。</p>
+<pre><code>// 自定义身份认证验证组件
+class CustomAuthenticationProvider implements AuthenticationProvider {
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        // 获取认证的用户名 &amp; 密码
+        String name = authentication.getName();
+        String password = authentication.getCredentials().toString();
+        // 认证逻辑
+        if (name.equals(&quot;admin&quot;) &amp;&amp; password.equals(&quot;123456&quot;)) {
+            // 这里设置权限和角色
+            ArrayList&lt;GrantedAuthority&gt; authorities = new ArrayList&lt;&gt;();
+            authorities.add( new GrantedAuthorityImpl(&quot;ROLE_ADMIN&quot;) );
+            authorities.add( new GrantedAuthorityImpl(&quot;AUTH_WRITE&quot;) );
+            // 生成令牌
+            Authentication auth = new UsernamePasswordAuthenticationToken(name, password, authorities);
+            return auth;
+        }else {
+            throw new BadCredentialsException(&quot;密码错误~&quot;);
+        }
+    }
+    // 是否可以提供输入类型的认证服务
+    @Override
+    public boolean supports(Class&lt;?&gt; authentication) {
+        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+    }
+}
+</code></pre><p>下面实现JWTLoginFilter 这个Filter比较简单，除了构造函数需要重写三个方法。</p>
+<blockquote>
+<p>attemptAuthentication - 登录时需要验证时候调用<br><br>successfulAuthentication - 验证成功后调用<br><br>unsuccessfulAuthentication - 验证失败后调用，这里直接灌入500错误返回，由于同一JSON返回，HTTP就都返回200了</p>
+</blockquote>
+<hr>
+<pre><code>class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
+    public JWTLoginFilter(String url, AuthenticationManager authManager) {
+        super(new AntPathRequestMatcher(url));
+        setAuthenticationManager(authManager);
+    }
+    @Override
+    public Authentication attemptAuthentication(
+            HttpServletRequest req, HttpServletResponse res)
+            throws AuthenticationException, IOException, ServletException {
+        // JSON反序列化成 AccountCredentials
+        AccountCredentials creds = new ObjectMapper().readValue(req.getInputStream(), AccountCredentials.class);
+        // 返回一个验证令牌
+        return getAuthenticationManager().authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        creds.getUsername(),
+                        creds.getPassword()
+                )
+        );
+    }
+    @Override
+    protected void successfulAuthentication(
+            HttpServletRequest req,
+            HttpServletResponse res, FilterChain chain,
+            Authentication auth) throws IOException, ServletException {
+        TokenAuthenticationService.addAuthentication(res, auth.getName());
+    }
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        response.setContentType(&quot;application/json&quot;);
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getOutputStream().println(JSONResult.fillResultString(500, &quot;Internal Server Error!!!&quot;, JSONObject.NULL));
+    }
+}
+</code></pre><p>再完成最后一个类JWTAuthenticationFilter，这也是个拦截器，它拦截所有需要JWT的请求，然后调用TokenAuthenticationService类的静态方法去做JWT验证。</p>
+<pre><code>class JWTAuthenticationFilter extends GenericFilterBean {
+    @Override
+    public void doFilter(ServletRequest request,
+                         ServletResponse response,
+                         FilterChain filterChain)
+            throws IOException, ServletException {
+        Authentication authentication = TokenAuthenticationService
+                .getAuthentication((HttpServletRequest)request);
+        SecurityContextHolder.getContext()
+                .setAuthentication(authentication);
+        filterChain.doFilter(request,response);
+    }
+}
+</code></pre><p>现在代码就写完了，整个Spring Security结合JWT基本就差不多了，下面我们来测试下，并说下整体流程。</p>
+<p>开始测试，先运行整个项目，这里介绍下过程：</p>
+<blockquote>
+<p>先程序启动 - main函数<br><br>注册验证组件 - WebSecurityConfig 类 configure(AuthenticationManagerBuilder auth)方法，这里我们注册了自定义验证组件<br><br>设置验证规则 - WebSecurityConfig 类 configure(HttpSecurity http)方法，这里设置了各种路由访问规则<br><br>初始化过滤组件 - JWTLoginFilter 和 JWTAuthenticationFilter 类会初始化<br></p>
+</blockquote>
+<p>首先测试获取Token，这里使用CURL命令行工具来测试。</p>
+<pre><code>curl -H &quot;Content-Type: application/json&quot; -X POST -d &apos;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;123456&quot;}&apos; 
+http://127.0.0.1:8080/login
+</code></pre><p>结果：</p>
+<pre><code>{
+  &quot;result&quot;: &quot;eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4sQVVUSF9XUklURSIsInN1YiI6ImFkbWluIiwiZXhwIjoxNDkzNzgyMjQwfQ.HNfV1CU2CdAnBTH682C5-KOfr2P71xr9PYLaLpDVhOw8KWWSJ0lBo0BCq4LoNwsK_Y3-W3avgbJb0jW9FNYDRQ&quot;,
+  &quot;message&quot;: &quot;&quot;,
+  &quot;status&quot;: 0
+}
+</code></pre><p>这里我们得到了相关的JWT，反Base64之后,就是下面的内容，标准JWT。</p>
+<pre><code>{&quot;alg&quot;:&quot;HS512&quot;}{&quot;authorities&quot;:&quot;ROLE_ADMIN,AUTH_WRITE&quot;,&quot;sub&quot;:&quot;admin&quot;,&quot;exp&quot;:1493782240}ͽ]BS`pS6~hCVH%
+ܬ)֝ଖoE5р
+</code></pre><p>整个过程如下：</p>
+<blockquote>
+<p>拿到传入JSON，解析用户名密码 - JWTLoginFilter 类 attemptAuthentication 方法<br><br>自定义身份认证验证组件，进行身份认证 - CustomAuthenticationProvider 类 authenticate 方法<br><br>验证成功 - JWTLoginFilter 类 successfulAuthentication 方法<br><br>生成JWT - TokenAuthenticationService 类 addAuthentication方法<br></p>
+</blockquote>
+<p>再测试一个访问资源的：</p>
+<pre><code>curl -H &quot;Content-Type: application/json&quot; -H &quot;Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4sQVVUSF9XUklURSIsInN1YiI6ImFkbWluIiwiZXhwIjoxNDkzNzgyMjQwfQ.HNfV1CU2CdAnBTH682C5-KOfr2P71xr9PYLaLpDVhOw8KWWSJ0lBo0BCq4LoNwsK_Y3-W3avgbJb0jW9FNYDRQ&quot; 
+http://127.0.0.1:8080/users
+</code></pre><p>结果：</p>
+<pre><code>{
+  &quot;result&quot;:[&quot;freewolf&quot;,&quot;tom&quot;,&quot;jerry&quot;],
+  &quot;message&quot;:&quot;&quot;,
+  &quot;status&quot;:0
+}
+</code></pre><p>说明我们的Token生效可以正常访问。其他的结果您可以自己去测试。再回到处理流程：</p>
+<blockquote>
+<p>接到请求进行拦截 - JWTAuthenticationFilter 中的方法<br><br>验证JWT - TokenAuthenticationService 类 getAuthentication 方法<br><br>访问Controller<br></p>
+</blockquote>
+<p>这样本文的主要流程就结束了，本文主要介绍了，如何用Spring Security结合JWT保护你的Spring Boot应用。如何使用Role和Authority，这里多说一句其实在Spring Security中，对于GrantedAuthority接口实现类来说是不区分是Role还是Authority，二者区别就是如果是hasAuthority判断，就是判断整个字符串，判断hasRole时，系统自动加上ROLE_到判断的Role字符串上，也就是说hasRole(“CREATE”)和hasAuthority(‘ROLE_CREATE’)是相同的。利用这些可以搭建完整的RBAC体系。本文到此，你已经会用了本文介绍的知识点。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Spring Security</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/01/11/使用JWT保护你的spring boot应用/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Spring Boot_jsp" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/01/Spring Boot_jsp/">Spring Boot 添加JSP支持</a>
+    </h1>
+  
+
+        
+        <a href="/2015/08/01/Spring Boot_jsp/" class="archive-article-date">
+  	<time datetime="2015-08-01T13:19:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-08-01</time>
 </a>
         
       </header>
@@ -335,36 +1293,124 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><a href="#">转载</a></p>
-<h1 id="分布式事务-最终一致性"><a href="#分布式事务-最终一致性" class="headerlink" title="分布式事务-最终一致性"></a>分布式事务-最终一致性</h1><div align="center"><img width="45%" src="\img\cap.jpg"></div>
-
-<p>CAP定理有一个缺陷，这个缺陷可以帮助我们部分摆脱<strong>分布式困境</strong> 。<br>总的来说，CAP定理本身是完备的，但它并没有描述一个分布式系统何时产生分区，以及分区会持续多长时间。<br>理论其实只限制：在分区发生的一瞬间 ，<strong>系统只能在一致性（C）和可用性（A）之间二选一。</strong><br>因此，<strong>分布式系统完全可以在没有出现分区时保证C和A，</strong>而在出现分区后，放弃一些A或者C然后通过人工操作消除分区，让系统恢复到分区前的状况。<br>这样说太复杂了。用说人话的方式就是：</p>
-<pre><code>※ 当没有故障时，系统正常处理请求并且返回一致的结果。
-
-※ 出现故障后，首先把所有请求切换到正常机器，故障机器下线。
-
-※ 接着人工恢复故障机器上的数据，保证数据一致性。
-
-※ 最后让机器重新上线，恢复系统正常容量。
-</code></pre><p>这就是带热备的数据库集群在故障恢复时的做法。</p>
-<p>这里的思路是，既然CAP特性在一个时间点不可能同时满足，那我们可以在这个时间点暂时放弃A或者C，然后在另一个时间点再设法恢复。只要恢复的速度足够快，用户就能够忍受暂时的不一致或者不可用。</p>
-<blockquote>
-<p>“Twitter 只是暂时不可用，最终会恢复可用。”</p>
-</blockquote>
-<p>沿着这个思路，业界产生了一些理论，其中最著名的是BASE。</p>
-<h2 id="BASE-最终一致性"><a href="#BASE-最终一致性" class="headerlink" title="BASE, 最终一致性"></a>BASE, 最终一致性</h2><p>这个理论由<strong>B</strong>asically,<strong>A</strong>vailable,<strong>S</strong>oft state,<strong>E</strong>ventual consistency组成。核心的概念是<strong>Eventual consistency</strong>——最终一致性。它局部的放弃了CAP理论中的“完全”一致性，提供了更好的可用性和分区容忍度。</p>
-<h4 id="Basically-Available"><a href="#Basically-Available" class="headerlink" title="Basically Available"></a>Basically Available</h4><p>基本可用, 或者说部分可用。由于分布式系统的节点故障是常见的，业务必须接受这种不可用，并且做出选择：是访问另一个节点忍受数据的临时不一致，还是等待节点恢复并忍受业务上的部分不可用。</p>
-<h4 id="Soft-state"><a href="#Soft-state" class="headerlink" title="Soft state"></a>Soft state</h4><p>把所有节点的数据 (数据 = 状态) 都看作是缓存（Cache）。适当的调整业务，使业务可以忍受数据的临时不一致，并保证这种不一致是无害的，可以被最终用户理解。</p>
-<h4 id="Eventual-consistency"><a href="#Eventual-consistency" class="headerlink" title="Eventual consistency"></a>Eventual consistency</h4><p>放弃在任何时刻、从任何节点都能读到完全一致的数据。允许数据的临时不一致，并通过异步复制、重试和合并消除数据的临时不一致。</p>
-<p><strong>注意</strong>在分布式系统中，写入和读取可能发生在不同的节点上。最终一致带来的问题是，业务在写入后立即读取，很可能读不到刚刚写入的数据。因此需要一个附加约束：</p>
-<h4 id="RYW-Read-Your-Writes-consistency"><a href="#RYW-Read-Your-Writes-consistency" class="headerlink" title="RYW  ( Read-Your-Writes )  consistency"></a>RYW  ( Read-Your-Writes )  consistency</h4><p>RYW consistency 是最终一致性的补充，它保证业务在会话中一定能读到上一次写入的数据。会话可以看作是一次连接，或者是同一个 HTTP Session。<br>例如：用户刚刚创建了一个订单，在提交后他可以立刻查看这个订单，这就是 RYW 一致性。</p>
-<h2 id="ACID-与-BASE"><a href="#ACID-与-BASE" class="headerlink" title="ACID 与 BASE"></a>ACID 与 BASE</h2><p>BASE这个缩写有些拼凑的痕迹。那是因为作者认为它的含义与ACID恰好相反。</p>
-<p>在英文词典里，ACID 代表<strong>酸</strong>（Acid），而BASE代表<strong>碱</strong>（Base）。就像这两个单词在化学中的含义一样——<strong>ACID与BASE位于CAP理论的两端，</strong>代表了分布式系统的两种选择。</p>
-<p>传统数据库用ACID保护业务数据的一致性。它明确的要求：事务必须保证数据从上一个一致性状态进入下一个一致性状态，事务的结束和数据的一致性之间没有时差。</p>
-<p>从CAP定理我们可以知道：正是ACID要求的这种“<strong>强</strong>”一致性，使得事务系统只能选择C-A或者C-P。第一个选择实际上是单机的传统数据库<br>第二个选择是后面将要介绍的强一致性的数据复制集群。</p>
-<p>而BASE代表了另一种选择：<strong>放弃一致性</strong>来保证分布式系统的高可用。与ACID的做法相反：业务需要接受和处理数据的不一致，并且保证这些不一致不会破坏业务约束——这需要设计者对可能产生的数据不一致和业务约束非常了解，并且带来了更高的复杂度。</p>
-<p>选择<strong>高可用</strong>的价值在于：很多场景下系统不可用就意味着对外停止服务，对用户的影响和商业风险远远比“系统仍然可用但是要过一会才能看到数据”来得严重。在一些场景下，用户或许根本不在乎过一会才能看到数据，例如：银行跨行转账。但是，如果银行告诉用户无法进行跨行转账，那么就会有很多用户质疑或投诉银行的服务了。</p>
-<p>上面的CAP拼图里还剩下一个区域。前面讨论过的ACID理论占据了C-A区域，代表根本无法容忍分区的传统单机数据库。本文介绍的BASE理论位于A-P区域，代表部分放弃一致性、追求高可用的现代业务系统。</p>
-<p>因此在这幅拼图里还剩下C-P：能够在分布式环境下<strong>保证数据一致性</strong>的理论。</p>
+<h4 id="创建Maven-web-project"><a href="#创建Maven-web-project" class="headerlink" title="创建Maven web project"></a>创建Maven web project</h4><p>使用Eclipse新建一个Maven Web Project ，项目取名为：spring-boot-jsp</p>
+<h4 id="在pom-xml文件添加依赖"><a href="#在pom-xml文件添加依赖" class="headerlink" title="在pom.xml文件添加依赖"></a>在pom.xml文件添加依赖</h4><pre><code>&lt;parent&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+    &lt;version&gt;1.3.3.RELEASE&lt;/version&gt;
+&lt;/parent&gt;
+</code></pre><p>依赖包：</p>
+<pre><code>&lt;!-- web支持: 1、webmvc; 2、restful; 3、jackjson支持; 4、aop ........ --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;!-- servlet依赖. --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+    &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+&lt;!--JSTL（JSP Standard TagLibrary，JSP标准标签库)是一个不断完善的开放源代码的JSP标签库，
+    是由apache的jakarta小组来维护的。JSTL只能运行在支持JSP1.2和Servlet2.3规范的容器上，
+    如tomcat 4.x。在JSP2.0中也是作为标准支持的。不然报异常信息：
+    javax.servlet.ServletException:Circular view path [/helloJsp]: 
+    would dispatch back to the current handler URL[/helloJsp] again.
+    Check your ViewResolver setup!
+    (Hint: This may be the resultof an unspecified view, 
+    due to default view name generation.)
+ --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+    &lt;artifactId&gt;jstl&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;!-- tomcat的支持.--&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
+&lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+    &lt;groupId&gt;org.apache.tomcat.embed&lt;/groupId&gt;
+    &lt;artifactId&gt;tomcat-embed-jasper&lt;/artifactId&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre><p>Jdk编译版本：</p>
+<pre><code>&lt;build&gt;
+      &lt;finalName&gt;spring-boot-jsp&lt;/finalName&gt;
+      &lt;plugins&gt;
+             &lt;plugin&gt;
+                    &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                    &lt;configuration&gt;
+                          &lt;source&gt;1.7&lt;/source&gt;
+                          &lt;target&gt;1.7&lt;/target&gt;
+                    &lt;/configuration&gt;
+             &lt;/plugin&gt;
+      &lt;/plugins&gt;
+&lt;/build&gt;
+</code></pre><h4 id="application-properties配置"><a href="#application-properties配置" class="headerlink" title="application.properties配置"></a>application.properties配置</h4><p>上面说了spring-boot 不推荐JSP，想使用JSP需要配置application.properties。<br>添加src/main/resources/application.properties内容：</p>
+<pre><code>#页面默认前缀目录
+spring.mvc.view.prefix=/WEB-INF/jsp/
+#响应页面默认后缀
+spring.mvc.view.suffix=.jsp
+#自定义属性，可以在Controller中读取
+application.hello=HelloAngel From application
+</code></pre><h4 id="编写测试Controller"><a href="#编写测试Controller" class="headerlink" title="编写测试Controller"></a>编写测试Controller</h4><p>编写类：com.kfit.jsp.controller.HelloController：</p>
+<pre><code>package com.kfit.jsp.controller;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+/**
+ *测试
+ * @tearfive(QQ:415896243)
+ * @version v.0.1
+ */
+@Controller
+public class HelloController {
+    //从 application.properties 中读取配置，如取不到默认值为HelloShanhy
+    @Value(&quot;${application.hello:Hello Angel}&quot;)
+    private String hello;
+    @RequestMapping(&quot;/helloJsp&quot;)
+    public StringhelloJsp(Map&lt;String,Object&gt; map){
+        System.out.println(&quot;HelloController.helloJsp().hello=&quot;+hello);
+        map.put(&quot;hello&quot;,hello);
+        return&quot;helloJsp&quot;;
+    }
+}
+</code></pre><h4 id="编写JSP页面"><a href="#编写JSP页面" class="headerlink" title="编写JSP页面"></a>编写JSP页面</h4><p>在 src/main 下面创建 webapp/WEB-INF/jsp 目录用来存放我们的jsp页面：helloJsp.jsp</p>
+<pre><code>&lt;%@page language=&quot;java&quot;contentType=&quot;text/html;charset=UTF-8&quot;pageEncoding=&quot;UTF-8&quot;%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;metahttp-equiv=&quot;Content-Type&quot;content=&quot;text/html; charset=UTF-8&quot;&gt;
+        &lt;title&gt;Insert title here&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        helloJsp
+        &lt;hr/&gt;
+        ${hello}
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><h4 id="编写启动类"><a href="#编写启动类" class="headerlink" title="编写启动类"></a>编写启动类</h4><p>编写App.java启动类：</p>
+<pre><code>package com.kfit.jsp;
+import org.springframework.boot.SpringApplication;
+importorg.springframework.boot.autoconfigure.SpringBootApplication;
+importorg.springframework.boot.context.web.SpringBootServletInitializer;
+@SpringBootApplication
+public class App extends SpringBootServletInitializer {
+    //@Override
+    //protectedSpringApplicationBuilder configure(SpringApplicationBuilder application){
+        //returnapplication.sources(App.class);
+    //}
+    public static voidmain(String[] args) {
+        SpringApplication.run(App.class,args);
+    }
+}
+</code></pre><p>右键Run As  Java Application访问：<a href="#">http://127.0.0.1:8080/helloJsp</a>可以访问到：</p>
+<pre><code>helloJsp
+</code></pre><hr>
+<pre><code>Hello Angel Fromapplication
+</code></pre><p>特别说明：针对el表达式，类似${hello}这个对于servlet的版本是有限制的，2.4版本版本以下是不支持的，是无法进行识别的，请注意。</p>
 
       
 
@@ -379,7 +1425,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/java//" class="article-tag-list-link color5">java</a>
+        			<a href="/categories/Spring-Boot//" class="article-tag-list-link color2">Spring Boot</a>
         		</li>
       		
 		</ul>
@@ -388,314 +1434,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/18/事务一致性/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-微服务分析（四）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/18/微服务分析（四）/">微服务分析（四）</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/18/微服务分析（四）/" class="archive-article-date">
-  	<time datetime="2018-01-18T06:34:39.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-18</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426</a>）</p>
-<h2 id="服务发现的可行方案以及实践案例"><a href="#服务发现的可行方案以及实践案例" class="headerlink" title="服务发现的可行方案以及实践案例"></a>服务发现的可行方案以及实践案例</h2><p>看似简单的服务注册和服务目录库管理为何会变得复杂<br><strong>其主要原因还是在结合了云端PaaS和docker容器部署后，对于微服务模块部署完成后提供出来的ip地址是在动态变化的</strong><br>包括模块在进行动态集群扩展的时候也需要动态接入新的服务提供ip地址<br>正是由于这个原因引入了服务管理及管理的困难度</p>
-<h4 id="现分开描述两种服务发现模式，即客户端发现模式和服务端发现模式"><a href="#现分开描述两种服务发现模式，即客户端发现模式和服务端发现模式" class="headerlink" title="现分开描述两种服务发现模式，即客户端发现模式和服务端发现模式"></a>现分开描述两种服务发现模式，即客户端发现模式和服务端发现模式</h4><p><strong>客户端发现模式</strong></p>
-<blockquote>
-<p>使用客户端发现模式时，客户端决定相应服务实例的网络位置，并且对请求负载均衡。<br>客户端查询服务注册表，后者是一个可用服务实例的数据库；<br>然后使用负载均衡算法从中选择一个实例，并发出请求。<br>客户端从注册服务中查询，其中是所有可用服务实例的库。<br>客户端使用负载均衡算法从多个服务实例中选择出一个，然后发出请求</p>
-</blockquote>
-<p><img src="\img\client.png" alt=""></p>
-<p><strong>注：这是类似dubbo实现机制一样的两阶段模式，即任何一个服务的消费都需要分两步进行</strong></p>
-<h6 id="第一步是访问服务注册库（更多的而是API-Gateway提供）返回一个已经动态均衡后的服务科研地址"><a href="#第一步是访问服务注册库（更多的而是API-Gateway提供）返回一个已经动态均衡后的服务科研地址" class="headerlink" title="第一步是访问服务注册库（更多的而是API Gateway提供）返回一个已经动态均衡后的服务科研地址"></a>第一步是访问服务注册库（更多的而是API Gateway提供）返回一个已经动态均衡后的服务科研地址</h6><h6 id="第二步是客户端和该地址直接建立连接进行服务消费和访问"><a href="#第二步是客户端和该地址直接建立连接进行服务消费和访问" class="headerlink" title="第二步是客户端和该地址直接建立连接进行服务消费和访问"></a>第二步是客户端和该地址直接建立连接进行服务消费和访问</h6><p><strong>这种模式的实现由两个重点：</strong></p>
-<blockquote>
-<p>其一是动态负载均衡算法<br>其二是服务网关需要对原始服务提供点进行实时的心跳检测以确定服务提供的科研性</p>
-</blockquote>
-<h6 id="Netflix-OSS是客户端发现模式的绝佳实例。"><a href="#Netflix-OSS是客户端发现模式的绝佳实例。" class="headerlink" title="Netflix OSS是客户端发现模式的绝佳实例。"></a>Netflix OSS是客户端发现模式的绝佳实例。</h6><blockquote>
-<p>Netflix eureka是一个服务注册表，为服务实例注册管理和查询可用实例提供了rest API接口。<br>Netflix ribbon是IPC客户端，与eureka一起实现对请求的负载均衡</p>
-</blockquote>
-<p><strong>缺点：底层的ip虽然动态提供出去了，但是最终仍然暴露了服务消费方，再需要进一步做安全和防火墙隔离的场景下显然是不满足要求的</strong></p>
-<p><strong>服务端发现模式</strong></p>
-<blockquote>
-<p>客户端通过负载均衡器对某个服务提出请求<br>负载均衡器查询服务注册表，并将请求转发到可用的服务实例<br>如同客户端发现，服务实例在服务注册表中注册或注销，即在服务注册库前新增一个load balancer节点。<br><strong>注：这两个节点感觉是可以合并到API Gateway的能力中的</strong></p>
-</blockquote>
-<p><img src="\img\server.png" alt=""></p>
-<p>服务端发现模式兼具优缺点</p>
-<blockquote>
-<p>最大的优点是客户端无需关注发现的细节，只需要简单的负载均衡发送请求<br>这减少了编程语言框架需要完成的发现逻辑，某些部署环境自带这一功能<br>这种模式也有缺点，除非负载均衡器由部署环境提供否则会成为一个需要配置和管理的系统组件</p>
-</blockquote>
-<p><strong>服务注册表</strong></p>
-<blockquote>
-<p>服务注册需要高可用而且随时更新，客户端缓存从服务注册表中获取到网络地址<br>然而，这些消息最终会过时，客户端也就无法发现服务实例<br>因此，服务注册表会包含若干服务端，使用复杂协议保持一致性</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>首先可以看到服务注册表本身不是单点，否则存在单点故障<br>当服务注册表有多台服务器的时候需要考虑服务注册库信息在多台机器上的实时同步和一致<br>我们操作和配置服务注册信息的时候往往只会在一个统一的服务管控端完成</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>其次如果服务注册服务器宕机是否一定影响到服务本身的消费和调用<br>如果考虑更高的整体架构可用性，还可以设计对于服务注册库信息在客户端进行缓存<br>当服务注册无法访问的时候可以临时读取本地缓存的服务注册库信息并发起服务访问请求</p>
-</blockquote>
-<p><strong>对于服务注册表最常用的实现仍然是基于zookeeper进行的</strong></p>
-<p><strong>etcd</strong>            高可用，分布式，一致性的键值存储，用于共享配置和服务发现<br><strong>consul</strong>            发现和配置的服务，提供API实现客户端注册和发现服务<br><strong>Apache zookeeper</strong>被分布式应用广泛使用的高性能协调服务</p>
-<p><strong>如前所述，服务实例必须在注册表中注册和注销。注册和注销有两种不同的方法。</strong></p>
-<blockquote>
-<p>方法一是服务实例自己注册。也叫自注册模式（self-registration pattern）<br>另一种是采用管理服务实例注册的其他系统组件，即第三方注册模式</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>虽然方法一把服务实例和服务注册表耦合，必须在每个编程语言和框架内实现注册代码<br>但是在自己实现完整的微服务架构中，考虑到PaaS平台下微服务模块的动态部署和扩展<br>采用方法一相对更容易实现<br>但是方法一仍然不能代替服务注册库本身应该具有的服务节点的心跳检测能力</p>
-</blockquote>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SOA</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/18/微服务分析（四）/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-微服务分析（三）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/18/微服务分析（三）/">微服务分析（三）</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/18/微服务分析（三）/" class="archive-article-date">
-  	<time datetime="2018-01-18T03:12:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-18</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426</a>）</p>
-<h2 id="微服务架构中的进程间通信"><a href="#微服务架构中的进程间通信" class="headerlink" title="微服务架构中的进程间通信"></a>微服务架构中的进程间通信</h2><p>基于微服务的分布式应用是运行在多态机器上的，一般来说，每个服务实例都是一个进程，因此，服务之间的交互必须通过进程间通信（IPC）来实现</p>
-<h4 id="对于微服务架构的交互模式有两个维度"><a href="#对于微服务架构的交互模式有两个维度" class="headerlink" title="对于微服务架构的交互模式有两个维度"></a>对于微服务架构的交互模式有两个维度</h4><p><strong>一对一：</strong>每个客户端请求有一个服务实例来响应<br><strong>一对多：</strong>每个客户端请求有多个服务实例来响应</p>
-<p><strong>同步模式：</strong>客户端请求需要服务器即时响应，甚至可能由于等待而阻塞<br><strong>异步模式：</strong>客户端请求不会阻塞进程，服务端的响应可是是非即时的</p>
-<p>对于同步模式往往只能是一对一，而且还需要等待同步引起阻塞，而对于异步模块往往采用消息机制来实现，同时配合消息中间件可以进一步实现消息的发布订阅。<strong>而对于EDA事件驱动架构要看到其本质也是异步消息中间件和消息的发布订阅</strong></p>
-<p>异步消息机制可以做到最大化的解耦，对于数据CURD的场景可以看到是比较容易通过异步消息机制实现的，但是会进一步引入事务一致性问题，即在采用异步消息机制后往往通过<strong>BASE事务最终一致性</strong>来解决事务层面的问题。而对于查询功能可以看到是比较难通过异步消息API实现的，可以考虑两方面的问题来解决</p>
-<p><strong>其一是服务网关需要具有数据缓存能力，已解决无法从源端获取数据的场景。</strong><br><strong>其二是前端开发框架本身需要支持异步调用和数据装载模式，</strong>特别是对于数据查功能在用户来看在前端的感受仍然需要实时同步的，即通过异步方式返回了查询数据后可以动态刷新前端展示页面</p>
-<p><strong>服务版本的问题：</strong>这是不可避免要遇到的问题，特别是对于RestAPI调用，由于json格式本身无schema返回更加容易忽视了对服务版本的管理和控制。要知道对于json数据格式变化仍然会导致restAPI调用后处理失败。因此服务版本仍然采用大小版本控制比较好</p>
-<blockquote>
-<p>对于小版本变更则直接对原有服务进行覆盖的同时对所有受影响的服务消费端进行升级；<br>对于大版本升级则本质是增加一个新服务，而对旧版本服务逐步迁移和替代</p>
-</blockquote>
-<p><strong>处理局部失败：</strong>之前提到netflix的服务解决方案，对于失败问题的解决要注意常用的仍然是<strong>服务超时设置，断路器机制，流量控制，缓存数据或默认值返回等，</strong>不论采用哪种失败处理策略，都需要考虑应该尽量减少服务调用失败或超时对最终用户造成的影响</p>
-<h4 id="基于请求-响应的同步IPC"><a href="#基于请求-响应的同步IPC" class="headerlink" title="基于请求/响应的同步IPC"></a>基于请求/响应的同步IPC</h4><blockquote>
-<p>使用同步的，基于请求/响应的IPC机制的时候，客户端向服务端发送请求，服务端处理请求并返回响应。一些客户端会由于等待服务端响应而阻塞<br>而另外一些客户端可能使用异步的基于事件驱动的客户端代码，这些代码可能通过future或者rx observeable封装<br>然而，与消息机制不同，客户端需要响应及时返回</p>
-</blockquote>
-<p>这个模式有很多可选的协议，<strong>但是常见的两个协议是rest和thrift</strong></p>
-<p>thrift能够选择传输协议，包括tcp和HTTP，原始tcp比http更高效，然而http对于防火墙，浏览器和使用者来说更友好。</p>
-<p><strong>由此可见互联网openAPI平台和微服务架构实现中仍然是大量以采用restAPI接口为主</strong></p>
-<p><strong>对于消息格式的选择</strong></p>
-<blockquote>
-<p>在使用restAPI接口的的时候，更多的是采用了json消息格式而非项目里<br>对于soap web则更多的采用xml消息格式<br>如果采用thrift还可以采用二进制消息格式以提升性能</p>
-</blockquote>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SOA</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/18/微服务分析（三）/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-微服务分析（二）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/17/微服务分析（二）/">微服务分析（二）</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/17/微服务分析（二）/" class="archive-article-date">
-  	<time datetime="2018-01-17T05:43:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426</a>）</p>
-<h2 id="使用API网关构建微服务"><a href="#使用API网关构建微服务" class="headerlink" title="使用API网关构建微服务"></a>使用API网关构建微服务</h2><p>引入一个简单的场景，以一个亚马逊购物网站的手机APP订单查看界面来举例<br>如果是一个单体应该，那么所有的界面需要获取信息都通过单体应用统一一个地址提供多个Service API获取，但是转变为微服务架构后可以看到对于会员管理，商品管理，订单管理，财务结算管理等都已经拆分为不同的微服务模块，需要从不同的服务地址调用不同的微服务模块提供的Service API来返回数据</p>
-<h4 id="对于客户端和微服务模块间点对点直接通讯有三个问题"><a href="#对于客户端和微服务模块间点对点直接通讯有三个问题" class="headerlink" title="对于客户端和微服务模块间点对点直接通讯有三个问题"></a>对于客户端和微服务模块间点对点直接通讯有三个问题</h4><p><strong>1. 问题一：</strong>客户端需求和每个微服务暴露的细粒度API不匹配<br><strong>2. 问题二：</strong>部分服务使用的协议对web并不友好，如二进制RPC或AMQP消息等<br><strong>3. 问题三：</strong>使得微服务难以重构，如服务拆分或服务组合的场景</p>
-<h4 id="从传统的ESB能力对上面三个问题作一个说明"><a href="#从传统的ESB能力对上面三个问题作一个说明" class="headerlink" title="从传统的ESB能力对上面三个问题作一个说明"></a>从传统的ESB能力对上面三个问题作一个说明</h4><p><strong>第一可能涉及到细粒度的API组合，类似组合无法做</strong><br><strong>第二可能存在协议转换的问题需要解决</strong><br><strong>第三服务透明的问题，需要对客户端提供一个统一的服务目录以使底层服务透明</strong></p>
-<p>由于以上问题引入API网关的概念，在此强调<strong>API网关即是微服务架构里面的轻量级服务总线，解决服务监控和治理相关问题</strong></p>
-<blockquote>
-<p>API网关是一个服务器，也可以说是进入系统的唯一节点，这与面向对象设计模式的Facade模式很像<br>API网关封装内系统的架构，并且提供API给各个客户端，它还可以具有授权，监控，负载均衡，缓存，请求分片和管理，静态响应处理等功能</p>
-<p>API网关负责服务请求路由，组合及协议转换。客户端的所有请求都首先经过API网关，然后由它将请求路由到合适的微服务。<br>API网关经常会通过调用多个微服务并合并结果来处理一个请求。它可以在web协议（HTTP与websocket）与内部使用的非web友好协议之间转换</p>
-<p>API网关还能为每个客户端提供一个定制的API。通常，它会向移动客户端暴露一个粗粒度的API.以产品详情的场景为例，API网关可以提供一个端点（/productdetails?productid=xxx），它使移动客户端可以通过一个请求获取所有的产品详情。Api网关通过调用各个服务（产品信息，推荐，评论等）并合并结果来处理请求</p>
-</blockquote>
-<h2 id="API网关的优点和缺点"><a href="#API网关的优点和缺点" class="headerlink" title="API网关的优点和缺点"></a>API网关的优点和缺点</h2><p>对于API网关的优点，类似传统ESB企业服务总线的优点，即实现服务透明，同时对于服务运行过程中的日志，安全，路由，缓存等问题进行统一配置和处理，而不需要每个微服务API实现时都去考虑，如开源的dubbo服务总线及可以看做是一个API网关的实现</p>
-<p>API网关和ESB的重要区别在于API网关更加轻量和高性能，不需要考虑太多遗留系统和诸多协议的适配，其次也不要考虑服务集成过程中的大量数据转换和映射，为了提升服务网关的性能，一般API网关在实现过程中不会详细记录数据传输日志，或者dubbo架构数据传输根本就不经过API网关<br><strong><br>API网关的最大优点是封装了应用程序的内部结构</strong></p>
-<p>客户端只需要同网关交互，而不必调用特定的服务。API网关也有不足之处，增加了一个我们必须开发，部署和维护的高可用组件，还有一个风险，API网关变成了开发瓶颈<br><strong>简单来说，在期望中的去中心化和全分布式架构中，网关又成了一个中心点或瓶颈点，由于这个原因我们在网关设计的时候必须考虑即使API Gateway宕机也不要影响服务的调用和运行</strong></p>
-<h2 id="API网关的设计和开发"><a href="#API网关的设计和开发" class="headerlink" title="API网关的设计和开发"></a>API网关的设计和开发</h2><p><strong>API网关构建需要支持异步、I/O非阻塞的平台，有多种不同的技术可以实现一个可扩展的API网关</strong><br><strong>JVM上基于NIO的框架</strong>，比如netty,vertx,spring reactor或Jboss undertow中的一种<br><strong>非JVM上选Node.js</strong>，基于Chrome JavaScript引擎构建</p>
-<p><strong>另一个方案是NGINX plus</strong>,NGINX plus提供了一个成熟的，可扩展的，高性能的web服务器和一个易于部署的，可配置可编程的反向代理<br>NGINX plus可以管理身份验证，访问控制，负载均衡，缓存响应，并提供应用程序可感知的健康检查和监控</p>
-<p><strong>对于API网关需要实现底层多个细粒度的API组合的场景，推荐采用响应式编程模型而不是传统的异步回调方法组合代码。原因是采用回调方式导致代码混乱，很难控制API组合本身可能存在并行和先后调用的错乱</strong></p>
-<p>基于微服务的应用是一个分布式系统，必须使用一种进程间的通信机制</p>
-<h6 id="一种是使用异步的、基于消息传递的机制，诸如JMS或AMQP消息代理，没有代理的zeromq，服务间直接通讯"><a href="#一种是使用异步的、基于消息传递的机制，诸如JMS或AMQP消息代理，没有代理的zeromq，服务间直接通讯" class="headerlink" title="一种是使用异步的、基于消息传递的机制，诸如JMS或AMQP消息代理，没有代理的zeromq，服务间直接通讯"></a>一种是使用异步的、基于消息传递的机制，诸如JMS或AMQP消息代理，没有代理的zeromq，服务间直接通讯</h6><h6 id="另一种是HTTP或thrift这样的同步机制，通常一个系统会同时使用异步和同步两种类型，甚至使用同一种类型的多种实现"><a href="#另一种是HTTP或thrift这样的同步机制，通常一个系统会同时使用异步和同步两种类型，甚至使用同一种类型的多种实现" class="headerlink" title="另一种是HTTP或thrift这样的同步机制，通常一个系统会同时使用异步和同步两种类型，甚至使用同一种类型的多种实现"></a>另一种是HTTP或thrift这样的同步机制，通常一个系统会同时使用异步和同步两种类型，甚至使用同一种类型的多种实现</h6><h6 id="总之API网关需要支持多种通信机制"><a href="#总之API网关需要支持多种通信机制" class="headerlink" title="总之API网关需要支持多种通信机制"></a>总之API网关需要支持多种通信机制</h6><p><strong>注：如果服务是同步调用可以看到微服务模块之间是没有彻底解耦的，如果A依赖B提供的API，如果B提供的服务不可用将直接影响A不可用。除非同步服务调用在API网关层或客户端做了相应的缓存。因此，在微服务上建议选择异步方式进行</strong></p>
-<p>对于多数基于微服务的应用程序而言，实现API网关，将其作为系统的唯一入口很有必要，API网关负责请求路由，组合及协议转换，为每个应用程序客户端提供一个定制的API。API网关还可以通过返回缓存数据或默认数据屏蔽后端服务失败</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SOA</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/17/微服务分析（二）/">展开全文 >></a>
+          <a class="article-more-a" href="/2015/08/01/Spring Boot_jsp/">展开全文 >></a>
         </p>
       
 
@@ -727,7 +1466,7 @@
   
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
   
 
@@ -833,14 +1572,6 @@ MathJax.Hub.Queue(function() {
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SOA</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">design</a>
-              </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">springcloud</a>

@@ -157,806 +157,146 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-微服务分析（一）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-Spring Boot_静态资源处理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/17/微服务分析（一）/">微服务分析（一）</a>
+      <a class="article-title" href="/2015/07/01/Spring Boot_静态资源处理/">Spring Boot 静态资源处理</a>
     </h1>
   
 
         
-        <a href="/2018/01/17/微服务分析（一）/" class="archive-article-date">
-  	<time datetime="2018-01-17T05:12:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-17</time>
+        <a href="/2015/07/01/Spring Boot_静态资源处理/" class="archive-article-date">
+  	<time datetime="2015-07-01T14:37:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-07-01</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426</a>）</p>
-<h2 id="微服务架构的优势和不足"><a href="#微服务架构的优势和不足" class="headerlink" title="微服务架构的优势和不足"></a>微服务架构的优势和不足</h2><p><strong>一个应用系统里面的模块没有办法做到彻底解耦，要实现按组件单独部署是不可能的，相互之间仍有大量内部不可见的依赖导致模块间无法拆分</strong></p>
-<h4 id="单体应用本身带来的问题主要有哪些"><a href="#单体应用本身带来的问题主要有哪些" class="headerlink" title="单体应用本身带来的问题主要有哪些"></a>单体应用本身带来的问题主要有哪些</h4><p><strong>1.系统复杂：</strong>内部多个模块紧耦合，关联依赖复杂，牵一发而动全身<br><strong>2.运维复杂：</strong>变更或升级的影响分析困难，任何一个小修改都可能导致单体应用整体运行出现故障<br><strong>3.无法扩展：</strong>无法拆分部署，出现性能瓶颈后往往只能增加服务器或增加集群节点，但是DB问题难以解决</p>
-<h4 id="正是由于这些原因需要考虑引入微服务架构（实质仍然是单个应用本身的组件化和服务化）"><a href="#正是由于这些原因需要考虑引入微服务架构（实质仍然是单个应用本身的组件化和服务化）" class="headerlink" title="正是由于这些原因需要考虑引入微服务架构（实质仍然是单个应用本身的组件化和服务化）"></a>正是由于这些原因需要考虑引入微服务架构（实质仍然是单个应用本身的组件化和服务化）</h4><p><strong>一个微服务一般完成某个特定的功能，比如订单管理，客户管理。</strong><br><strong>每个微服务都是一个微型应用，有着自己的六边形架构，</strong>包括商业逻辑和各种接口，有的微服务通过暴露API被别的微服务或者应用客户端所用，有的微服务通过网页UI实现<br><strong>在运行时，每个实例通常是一个云虚拟机或者Docker容器</strong></p>
-<h4 id="微服务核心"><a href="#微服务核心" class="headerlink" title="微服务核心"></a>微服务核心</h4><h5 id="其一足够构成一个独立小应用（从DB到UI）"><a href="#其一足够构成一个独立小应用（从DB到UI）" class="headerlink" title="其一足够构成一个独立小应用（从DB到UI）"></a>其一足够构成一个独立小应用（从DB到UI）</h5><h5 id="其二微服务应用之间只能通过Service-API进行交互"><a href="#其二微服务应用之间只能通过Service-API进行交互" class="headerlink" title="其二微服务应用之间只能通过Service API进行交互"></a>其二微服务应用之间只能通过Service API进行交互</h5><h5 id="其三一般运行在云虚拟机或更轻的Docker容器上"><a href="#其三一般运行在云虚拟机或更轻的Docker容器上" class="headerlink" title="其三一般运行在云虚拟机或更轻的Docker容器上"></a>其三一般运行在云虚拟机或更轻的Docker容器上</h5><p><strong>API Gateway</strong><br>微服务架构里很重要的内容，其作用类似于传统业务内部的ESB服务总线，只是更加轻量和高性能来解决微服务的管控和治理问题</p>
-<p>而对于<strong>负载均衡，缓存，路由，访问控制，服务代理，监控，日志</strong>等都属于基本的服务管控内容，也是API Gateway需要考虑的核心能力</p>
-<p><strong>Scale Cube的3D模型</strong><br>描述的非常好，即通过微服务架构实施后扩展性的变化<br><strong>1.Y轴：</strong>本质是应用的分解，即将传统的单体应用分解为多个微服务应用<br><strong>2.X轴：</strong>水平弹性扩展能力，即通过负载均衡来实现水平弹性扩展，但DB问题无法解决<br><strong>3.Z轴：</strong>当单个微服务应用引入DB弹性扩展能力需要解决的时候，我们引入对数据库进行拆分和DaaS</p>
-<h4 id="简单总结微服务架构的不足"><a href="#简单总结微服务架构的不足" class="headerlink" title="简单总结微服务架构的不足"></a>简单总结微服务架构的不足</h4><p><strong>1.CAP原则：</strong>由于服务无状态和引入了分布式，较难解决一致性问题<br><strong>2.集成复杂：</strong>任何彻底的分解都将带来集成的复杂度，即模块在集成时候需要外部微服务模块更多的配合<br><strong>3.部署问题：</strong>稍大项目都涉及到上100个服务节点部署，还涉及到部署后的配置，扩展和监控问题</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SOA</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/17/微服务分析（一）/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-SOA与微服务" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/16/SOA与微服务/">SOA与微服务</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/16/SOA与微服务/" class="archive-article-date">
-  	<time datetime="2018-01-16T09:35:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-16</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>（本文为阅读笔记，具体原文参考<a href="https://www.zhihu.com/question/37808426" target="_blank" rel="noopener">https://www.zhihu.com/question/37808426</a>）</p>
-<h3 id="微服务架构重点"><a href="#微服务架构重点" class="headerlink" title="微服务架构重点"></a>微服务架构重点</h3><p><strong>业务系统需要彻底的组件化和服务化</strong></p>
-<p>原有的单个业务系统会拆分为多个可以独立开发，设计，运行和运维的小应用<br>这些小应用通过服务完成交互和集成，每个小应用从前端web UI，控制层，逻辑层，数据库访问，数据库都完全是独立的一套<br>每个小应用除了完成自身本身的业务功能外，重点就是还需要消费外部其他应用暴露的服务，同时也将自身的能力朝外部发布为服务</p>
-<h3 id="一句话区别SOA和微服务"><a href="#一句话区别SOA和微服务" class="headerlink" title="一句话区别SOA和微服务"></a>一句话区别SOA和微服务</h3><p><strong>即微服务不再强调传统SOA架构里面比较重的ESB企业服务总线，同时SOA的思想进入到耽搁业务系统内部实现真正的组件化</strong></p>
-<h3 id="对微服务架构的一些定义和阐述"><a href="#对微服务架构的一些定义和阐述" class="headerlink" title="对微服务架构的一些定义和阐述"></a>对微服务架构的一些定义和阐述</h3><blockquote>
-<p>微服务可以在自己的程序中运行，并通过轻量级设备与HTTP型API进行沟通<br>在服务公开中，许多服务都可以被内部独立进程所限制，如果其中任何一个服务需要增加某个功能，那么必须缩小进程范围<br>在微服务架构中，只需要在特定的某种服务中增加所需功能，而不影响整体进程</p>
-<p>微服务不需要像普通服务那样成为一种独立的功能或者独立的资源，定义中称，微服务是需要与有业务能力相匹配，是完全正确的，不幸的是，仍然意味着，如果能力模型粒度的设计师错误的，那么，必须付出很多代价<br>在决定将所有组件组合到一起时，开发人员需要非常确信这些组件都会有所改变，并且大规模变化。服务粒度越粗，久越难以符合规定原则。服务粒度越细，就越能灵活的降低变化和负载所带来的的影响。然而，利弊之间的权衡过程是非常复杂的，我们要在配置和资金模型的基础上考虑到基础设施的成本问题</p>
-</blockquote>
-<h3 id="强调以下几点"><a href="#强调以下几点" class="headerlink" title="强调以下几点"></a>强调以下几点</h3><p><strong>首先，对于应用本省暴露出来的服务</strong>，是和应用一起部署的，即服务本身并不单独部署，服务本身就是业务组件已有的接口能力发布和暴露出来的。这些接口我们可以根据和外部其他组件协同的需要将其发布为微服务，而如果不需要对外协同我们完全可以走内部api接口访问模式提高效率</p>
-<p><strong>其次，微服务架构本身来源于互联网的思路</strong>，因此组件对外发布的服务器强调了采用HTTP rest API的方式来进行<br>组件朝外部暴露的能力需要发布为微服务，其本身也是一种封装后的粗粒度服务，而不是将组件内部的业务规则和逻辑，组件本身的底层数据库CURD操作全部朝外部发布</p>
-<p><strong>再次，微服务的基本思想在于考虑围绕着业务领域组件来创建应用</strong>，这些就应用可独立的进行开发，管理和加速，在分散的组件中使用微服务云架构和平台式部署，管理和服务功能交付变的更加简单</p>
-<p>前面这些问题思考清楚后就是考虑所有暴露的微服务是否需要一个统一的服务管控和治理平台，按这个架构思路，虽然单个服务的实现和发布仍然是在组件内部完成，但是这些组件暴露的服务本身的调用情况，<strong>服务本身的安全，日志，流量控制等仍是需要一个统一的SOA服务管理平台来完成</strong></p>
-<p>由于微服务尽量都是HTTP API的方式暴露出去的，因此这种服务管理不需要像传统企业内部的ESB服务总线那么重，但是<strong>最基本的服务注册，服务代理，服务发布，服务简单的路由，安全访问和授权，服务调用消息和日志记录</strong>这些功能还是需要具备</p>
-<p>对于这种服务管控平台，核心需要讨论的就是服务每次调用本身的消息传递，输入和输出日志是否需要记录，当前有两种做法<br>一种是不记录，管理平台只负责服务注册和目录发布，安全授权，实际的服务访问仍然是两个组件之间的点对点对接完成，这种方式下的架构下获取更高的性能，同时服务管理平台也不容易成为大并发服务访问下的单点瓶颈；<br>另外一种就是完全记录，在这种方式下就需要考虑服务管理平台本身是否集群化不是，高并发下及性能问题；<br>而个人建议最好的方式还是<strong>SOA服务管理平台应该提供两种管理能力，同时仅仅对核心需要log日志的服务日志记录，而其他服务只提供服务目录和访问控制即可</strong></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SOA</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/16/SOA与微服务/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-springcloud eureka 服务注册与发现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/01/12/springcloud eureka 服务注册与发现/">springcloud eureka 服务注册与发现</a>
-    </h1>
-  
-
-        
-        <a href="/2018/01/12/springcloud eureka 服务注册与发现/" class="archive-article-date">
-  	<time datetime="2018-01-12T08:32:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-01-12</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>（本文为阅读笔记，具体原文参考<a href="http://blog.csdn.net/liaokailin/article/details/51314001）" target="_blank" rel="noopener">http://blog.csdn.net/liaokailin/article/details/51314001）</a></p>
-<h1 id="spring-cloud-eureka"><a href="#spring-cloud-eureka" class="headerlink" title="spring cloud eureka"></a>spring cloud eureka</h1><p>eureka 用以服务发现、服务注册，比较流行的有consul</p>
-<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>eureka为netflix开源软件，分为三个部分：</p>
-<blockquote>
-<p>eureka服务:用以提供服务注册、发现，已一个war的形式提供<br><a href="http://search.maven.org/#search%7Cga%7C1%7Ceureka-server" target="_blank" rel="noopener">http://search.maven.org/#search%7Cga%7C1%7Ceureka-server</a><br>或者编译源码，将war拷贝进tomcat即可提供服务</p>
-<p>eureka-server: 相对client端的服务端，为客户端提供服务，通常情况下为一个<br>集群</p>
-<p>eureka-client:客户端，通过向eureka服务发现注册的可用的eureka-server，向后端发送请求</p>
-</blockquote>
-<h1 id="spring-cloud-eureka-1"><a href="#spring-cloud-eureka-1" class="headerlink" title="spring cloud eureka"></a>spring cloud eureka</h1><p>spring cloud eureka 分为两部分</p>
-<blockquote>
-<p>@EnableEurekaClient: 该注解表明应用既作为eureka实例又为eureka client 可以发现注册的服务<br>@EnableEurekaServer: 该注解表明应用为eureka服务，有可以联合多个服务作为集群，对外提供服务注册以及发现功能</p>
-</blockquote>
-<h1 id="client-端"><a href="#client-端" class="headerlink" title="client 端"></a>client 端</h1><p>pom.xml</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-    &lt;parent&gt;
-        &lt;artifactId&gt;springcloud&lt;/artifactId&gt;
-        &lt;groupId&gt;com.lkl.springcloud&lt;/groupId&gt;
-        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-    &lt;/parent&gt;
-    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-    &lt;artifactId&gt;eureka&lt;/artifactId&gt;
-    &lt;dependencyManagement&gt;
-        &lt;dependencies&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-                &lt;artifactId&gt;spring-cloud-netflix&lt;/artifactId&gt;
-                &lt;version&gt;1.0.7.RELEASE&lt;/version&gt;
-                &lt;type&gt;pom&lt;/type&gt;
-                &lt;scope&gt;import&lt;/scope&gt;
-            &lt;/dependency&gt;
-        &lt;/dependencies&gt;
-    &lt;/dependencyManagement&gt;
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
-        &lt;/dependency&gt;
-        &lt;!--表示为web工程--&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
-        &lt;/dependency&gt;
-        &lt;!--暴露各种指标--&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-&lt;/project&gt;
-</code></pre><p>启动应用 Application.java</p>
-<pre><code>package com.lkl.springcloud.eureka;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-/**
- * Created by tearfive on 16/4/30.
- */
-@SpringBootApplication
-@EnableEurekaClient
-@RestController
-@EnableAutoConfiguration
-public class Application {
-    @RequestMapping(&quot;/&quot;)
-    public String home() {
-        return &quot;Hello world&quot;;
-    }
-    public static void main(String[] args) {
-        new SpringApplicationBuilder(Application.class).web(true).run(args);
-    }
-}
-</code></pre><p>创建配置application.properties</p>
-<pre><code>server.port=9090
-spring.application.name=eureka.client
-#eureka.client.serviceUrl.defaultZone=http://120.76.145.187:8080/eureka-server-1.4.6/v2/
-eureka.client.serviceUrl.defaultZone=http://localhost:7070/eureka/
-eureka.instance.appname=eureka.client.01
-#eureka.client.registerWithEureka=true
-#eureka.client.fetchRegistry=true
-</code></pre><p>eureka.client.serviceUrl.defaultZone 配置eureka服务地址</p>
-<h1 id="server端"><a href="#server端" class="headerlink" title="server端"></a>server端</h1><p>pom.xml</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
-         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
-    &lt;parent&gt;
-        &lt;artifactId&gt;springcloud&lt;/artifactId&gt;
-        &lt;groupId&gt;com.lkl.springcloud&lt;/groupId&gt;
-        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-    &lt;/parent&gt;
-    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
-    &lt;artifactId&gt;eureka-server&lt;/artifactId&gt;
-    &lt;dependencyManagement&gt;
-        &lt;dependencies&gt;
-            &lt;dependency&gt;
-                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-                &lt;artifactId&gt;spring-cloud-netflix&lt;/artifactId&gt;
-                &lt;version&gt;1.0.7.RELEASE&lt;/version&gt;
-                &lt;type&gt;pom&lt;/type&gt;
-                &lt;scope&gt;import&lt;/scope&gt;
-            &lt;/dependency&gt;
-        &lt;/dependencies&gt;
-    &lt;/dependencyManagement&gt;
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
-        &lt;/dependency&gt;
-        &lt;!--表示为web工程--&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
-        &lt;/dependency&gt;
-        &lt;!--暴露各种指标--&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
-        &lt;/dependency&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-cloud-starter-eureka-server&lt;/artifactId&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-&lt;/project&gt;
-</code></pre><p>启动应用Application.java</p>
-<pre><code>package com.lkl.springcloud.eureka;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
-/**
- * Created by tearfive on 16/4/30.
- */
-@EnableEurekaServer
-@SpringBootApplication
-public class Application {
-    public static void main(String[] args) {
-        new SpringApplicationBuilder(Application.class).web(true).run(args);
-    }
-}
-</code></pre><p>配置application.yml</p>
-<pre><code>server:
-  port: 7070
-spring:
-  application:
-    name: server-01
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:7070/eureka/
-  instance:
-    metadataMap:
-      instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-</code></pre><p>spring.application.name表示应用名称，集群名称需要一致<br>defaultZone表示向自身注册，例子中有三个server节点构成集群，其余两个两个节点也向该端口注册<br>instanceId 表示eureka instance 标识，需要唯一，如果不配置，多个节点最终只会有一个生效</p>
-<p>同样的配置<a href="https://github.com/tearfive/eureka/tree/master/eureka-server-replicas">第二个节点</a>,<a href="https://github.com/tearfive/eureka/tree/master/eureka-server-replicas-two">第三个节点</a></p>
-<p>启动所有服务端应用<br>访问 <a href="#">http://localhost:7070</a> 可以查看eureka注册服务信息</p>
-<p>访问 <a href="#">http://localhost:7070/eureka/apps</a> 可以查看metadata</p>
-<h1 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h1><p>在客户端创建Component</p>
-<p>DiscoveryService.java</p>
-<pre><code>package com.lkl.springcloud.eureka;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
-/**
- * Created by tearfive on 16/4/30.
- */
-@Component
-@RestController
-public class DiscoveryService {
-    @Autowired
-    private DiscoveryClient discoveryClient;
-    @RequestMapping(&quot;/discovery&quot;)
-    public String doDiscoveryService(){
-        StringBuilder buf = new StringBuilder();
-        List&lt;String&gt; serviceIds = discoveryClient.getServices();
-        if(!CollectionUtils.isEmpty(serviceIds)){
-            for(String s : serviceIds){
-                System.out.println(&quot;serviceId:&quot; + s);
-                List&lt;ServiceInstance&gt; serviceInstances =  discoveryClient.getInstances(s);
-                if(!CollectionUtils.isEmpty(serviceInstances)){
-                    for(ServiceInstance si:serviceInstances){
-                        buf.append(&quot;[&quot;+si.getServiceId() +&quot; host=&quot; +si.getHost()+&quot; port=&quot;+si.getPort()+&quot; uri=&quot;+si.getUri()+&quot;]&quot;);
-                    }
-                }else{
-                    buf.append(&quot;no service.&quot;);
-                }
-            }
-        }
-        return buf.toString();
-    }
-}
-</code></pre><p>访问 <a href="#">http://localhost:9090/discovery</a> 实现服务发现。</p>
-<p>ok ~ it’s work ! more about is <a href="https://github.com/tearfive/eureka">here</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">springcloud</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spring-Boot//" class="article-tag-list-link color2">Spring Boot</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/01/12/springcloud eureka 服务注册与发现/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-日志logback配置解析" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/12/日志logback配置解析/">日志logback配置解析</a>
-    </h1>
-  
-
-        
-        <a href="/2017/01/12/日志logback配置解析/" class="archive-article-date">
-  	<time datetime="2017-01-12T02:41:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-01-12</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>（本文为阅读笔记，具体原文参考<a href="http://blog.csdn.net/gebitan505/article/details/70142155?locationNum=1&amp;fps=1" target="_blank" rel="noopener">http://blog.csdn.net/gebitan505/article/details/70142155?locationNum=1&amp;fps=1</a>）</p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>Spring Boot在所有内部日志中使用<a href="http://commons.apache.org/proper/commons-logging/" target="_blank" rel="noopener">Commons Logging</a>，但是默认配置也提供了对常用日志的支持，如：<a href="http://docs.oracle.com/javase/7/docs/api/java/util/logging/package-summary.html" target="_blank" rel="noopener">Java Util Logging</a>，<a href="http://logging.apache.org/log4j/" target="_blank" rel="noopener">Log4J</a>, <a href="https://logging.apache.org/log4j/2.x/" target="_blank" rel="noopener">Log4J2</a>和<a href="http://logback.qos.ch/" target="_blank" rel="noopener">Logback</a>。每种Logger都可以通过配置使用控制台或者文件输出日志内容。</p>
-<h1 id="默认日志Logback"><a href="#默认日志Logback" class="headerlink" title="默认日志Logback"></a>默认日志Logback</h1><p><a href="http://www.slf4j.org/" target="_blank" rel="noopener">SLF4J</a>——Simple Logging Facade For Java，它是一个针对于各类Java日志框架的统一Facade抽象。Java日志框架众多——常用的有java.util.logging, log4j, logback，commons-logging, Spring框架使用的是Jakarta Commons Logging API (JCL)。而SLF4J定义了统一的日志抽象接口，而真正的日志实现则是在运行时决定的——它提供了各类日志框架的binding。</p>
-<p><a href="https://logback.qos.ch/" target="_blank" rel="noopener">Logback</a>是log4j框架的作者开发的新一代日志框架，它效率更高、能够适应诸多的运行环境，同时天然支持SLF4J。</p>
-<p>默认情况下，Spring Boot会用Logback来记录日志，并用INFO级别输出到控制台。在运行应用程序和其他例子时，你应该已经看到很多INFO级别的日志了。</p>
-<p><img src="\img\sringboot7-1.png" alt=""></p>
-<p>从上图可以看到，日志输出内容元素具体如下：</p>
-<blockquote>
-<p>时间日期：精确到毫秒<br>日志级别：ERROR, WARN, INFO, DEBUG or TRACE<br>进程ID<br>分隔符：— 标识实际日志的开始<br>线程名：方括号括起来（可能会截断控制台输出）<br>Logger名：通常使用源代码的类名<br>日志内容</p>
-</blockquote>
-<h3 id="添加日志依赖"><a href="#添加日志依赖" class="headerlink" title="添加日志依赖"></a>添加日志依赖</h3><p>假如maven依赖中添加了spring-boot-starter-logging：</p>
-<pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-logging&lt;/artifactId&gt;
-&lt;/dependency&gt;
-</code></pre><p>那么，我们的Spring Boot应用将自动使用logback作为应用日志框架，Spring Boot启动的时候，由org.springframework.boot.logging.Logging-Application-Listener根据情况初始化并使用。</p>
-<p>但是呢，实际开发中我们不需要直接添加该依赖，你会发现spring-boot-starter其中包含了 spring-boot-starter-logging，该依赖内容就是 Spring Boot 默认的日志框架 logback。而博主这次项目的例子是基于上一篇的，工程中有用到了Thymeleaf，而Thymeleaf依赖包含了spring-boot-starter，最终我只要引入Thymeleaf即可。</p>
-<pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
-&lt;/dependency&gt;
-</code></pre><p>具体可以看该图</p>
-<p><img src="\img\sringboot7-1.png" alt=""></p>
-<h3 id="默认配置属性支持"><a href="#默认配置属性支持" class="headerlink" title="默认配置属性支持"></a>默认配置属性支持</h3><p>Spring Boot为我们提供了很多默认的日志配置，所以，只要将spring-boot-starter-logging作为依赖加入到当前应用的classpath，则“开箱即用”。<br>下面介绍几种在application.properties就可以配置的日志相关属性。</p>
-<h3 id="控制台输出"><a href="#控制台输出" class="headerlink" title="控制台输出"></a>控制台输出</h3><p>日志级别从低到高分为TRACE &lt; DEBUG &lt; INFO &lt; WARN &lt; ERROR &lt; FATAL，如果设置为WARN，则低于WARN的信息都不会输出。<br>Spring Boot中默认配置ERROR、WARN和INFO级别的日志输出到控制台。您还可以通过启动您的应用程序–debug标志来启用“调试”模式（开发的时候推荐开启）,以下两种方式皆可：</p>
-<p>在运行命令后加入–debug标志，如：$ java -jar springTest.jar –debug<br>在application.properties中配置debug=true，该属性置为true的时候，核心Logger（包含嵌入式容器、hibernate、spring）会输出更多内容，但是你自己应用的日志并不会输出为DEBUG级别。</p>
-<h3 id="文件输出"><a href="#文件输出" class="headerlink" title="文件输出"></a>文件输出</h3><p>默认情况下，Spring Boot将日志输出到控制台，不会写到日志文件。如果要编写除控制台输出之外的日志文件，则需在application.properties中设置logging.file或logging.path属性。</p>
-<blockquote>
-<p>logging.file，设置文件，可以是绝对路径，也可以是相对路径。如：logging.file=my.log<br>logging.path，设置目录，会在该目录下创建spring.log文件，并写入日志内容，如：logging.path=/var/log</p>
-</blockquote>
-<p>如果只配置 logging.file，会在项目的当前路径下生成一个 xxx.log 日志文件。<br>如果只配置 logging.path，在 /var/log文件夹生成一个日志文件为 spring.log</p>
-<h4 id="注：二者不能同时使用，如若同时使用，则只有logging-file生效"><a href="#注：二者不能同时使用，如若同时使用，则只有logging-file生效" class="headerlink" title="注：二者不能同时使用，如若同时使用，则只有logging.file生效"></a>注：二者不能同时使用，如若同时使用，则只有logging.file生效</h4><p><strong>默认情况下，日志文件的大小达到10MB时会切分一次，产生新的日志文件，默认级别为：ERROR、WARN、INFO</strong></p>
-<h3 id="级别控制"><a href="#级别控制" class="headerlink" title="级别控制"></a>级别控制</h3><p>所有支持的日志记录系统都可以在Spring环境中设置记录级别（例如在application.properties中）<br>格式为：’logging.level.* = LEVEL’</p>
-<blockquote>
-<p>logging.level：日志级别控制前缀，*为包名或Logger名<br>LEVEL：选项TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF</p>
-</blockquote>
-<p>举例：</p>
-<blockquote>
-<p>logging.level.com.dudu=DEBUG：com.dudu包下所有class以DEBUG级别输出<br>logging.level.root=WARN：root日志以WARN级别输出</p>
-</blockquote>
-<h3 id="自定义日志配置"><a href="#自定义日志配置" class="headerlink" title="自定义日志配置"></a>自定义日志配置</h3><p>由于日志服务一般都在ApplicationContext创建前就初始化了，它并不是必须通过Spring的配置文件控制。因此通过系统属性和传统的Spring Boot外部配置文件依然可以很好的支持日志控制和管理。</p>
-<p>根据不同的日志系统，你可以按如下规则组织配置文件名，就能被正确加载：</p>
-<blockquote>
-<p>Logback：logback-spring.xml, logback-spring.groovy, logback.xml, logback.groovy<br>Log4j：log4j-spring.properties, log4j-spring.xml, log4j.properties, log4j.xml<br>Log4j2：log4j2-spring.xml, log4j2.xml<br>JDK (Java Util Logging)：logging.properties</p>
-</blockquote>
-<p><strong>Spring Boot官方推荐优先使用带有-spring的文件名作为你的日志配置（如使用logback-spring.xml，而不是logback.xml），命名为logback-spring.xml的日志配置文件，spring boot可以为它添加一些spring boot特有的配置项（下面会提到）。</strong></p>
-<p>上面是默认的命名规则，并且放在src/main/resources下面即可。</p>
-<p>如果你即想完全掌控日志配置，但又不想用logback.xml作为Logback配置的名字，可以在application.properties配置文件里面通过logging.config属性指定自定义的名字：</p>
-<pre><code>logging.config=classpath:logging-config.xml
-</code></pre><p>虽然一般并不需要改变配置文件的名字，但是如果你想针对不同运行时Profile使用不同的日<br>志配置，这个功能会很有用。</p>
-<p>下面我们来看看一个普通的logback-spring.xml例子</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;configuration  scan=&quot;true&quot; scanPeriod=&quot;60 seconds&quot; debug=&quot;false&quot;&gt;
-    &lt;contextName&gt;logback&lt;/contextName&gt;
-    &lt;property name=&quot;log.path&quot; value=&quot;/Users/tengjun/Documents/log&quot; /&gt;
-    &lt;!--输出到控制台--&gt;
-    &lt;appender name=&quot;console&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;
-       &lt;!-- &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
-            &lt;level&gt;ERROR&lt;/level&gt;
-        &lt;/filter&gt;--&gt;
-        &lt;encoder&gt;
-            &lt;pattern&gt;%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
-        &lt;/encoder&gt;
-    &lt;/appender&gt;
-    &lt;!--输出到文件--&gt;
-    &lt;appender name=&quot;file&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;
-        &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;
-            &lt;fileNamePattern&gt;${log.path}/logback.%d{yyyy-MM-dd}.log&lt;/fileNamePattern&gt;
-        &lt;/rollingPolicy&gt;
-        &lt;encoder&gt;
-            &lt;pattern&gt;%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
-        &lt;/encoder&gt;
-    &lt;/appender&gt;
-    &lt;root level=&quot;info&quot;&gt;
-        &lt;appender-ref ref=&quot;console&quot; /&gt;
-        &lt;appender-ref ref=&quot;file&quot; /&gt;
-    &lt;/root&gt;
-
-    &lt;!-- logback为java中的包 --&gt;
-    &lt;logger name=&quot;com.dudu.controller&quot;/&gt;
-    &lt;!--logback.LogbackDemo：类的全路径 --&gt;
-    &lt;logger name=&quot;com.dudu.controller.LearnController&quot; level=&quot;WARN&quot; additivity=&quot;false&quot;&gt;
-        &lt;appender-ref ref=&quot;console&quot;/&gt;
-    &lt;/logger&gt;
-&lt;/configuration&gt;
-</code></pre><h4 id="根节点-lt-configuration-gt-包含的属性"><a href="#根节点-lt-configuration-gt-包含的属性" class="headerlink" title="根节点&lt;configuration&gt;包含的属性"></a>根节点&lt;configuration&gt;包含的属性</h4><hr>
-<blockquote>
-<p>scan:当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。<br>scanPeriod:设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。<br>debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。</p>
-</blockquote>
-<p>根节点&lt;configuration&gt;的子节点：<br>&lt;configuration&gt;下面一共有2个属性，3个子节点，分别是：</p>
-<h4 id="属性一：设置上下文名称-lt-contextName-gt"><a href="#属性一：设置上下文名称-lt-contextName-gt" class="headerlink" title="属性一：设置上下文名称&lt;contextName&gt;"></a>属性一：设置上下文名称&lt;contextName&gt;</h4><hr>
-<p>每个logger都关联到logger上下文，默认上下文名称为“default”。但可以使用设置成其他名字，用于区分不同应用程序的记录。一旦设置，不能修改,可以通过%contextName来打印日志上下文名称。</p>
-<pre><code>&lt;contextName&gt;logback&lt;/contextName&gt;
-</code></pre><h4 id="属性二：设置变量-lt-property-gt"><a href="#属性二：设置变量-lt-property-gt" class="headerlink" title="属性二：设置变量&lt;property&gt;"></a>属性二：设置变量&lt;property&gt;</h4><hr>
-<p>用来定义变量值的标签， 有两个属性，name和value；其中name的值是变量的名称，value的值时变量定义的值。通过定义的值会被插入到logger上下文中。定义变量后，可以使“${}”来使用变量。</p>
-<pre><code>&lt;property name=&quot;log.path&quot; value=&quot;/Users/tengjun/Documents/log&quot; /&gt;
-</code></pre><h4 id="子节点一-lt-appender-gt"><a href="#子节点一-lt-appender-gt" class="headerlink" title="子节点一&lt;appender&gt;"></a>子节点一&lt;appender&gt;</h4><p>appender用来格式化日志输出节点，有俩个属性name和class，class用来指定哪种输出策略，常用就是控制台输出策略和文件输出策略。</p>
-<h5 id="控制台输出ConsoleAppender："><a href="#控制台输出ConsoleAppender：" class="headerlink" title="控制台输出ConsoleAppender："></a>控制台输出ConsoleAppender：</h5><pre><code>&lt;!--输出到控制台--&gt;
-&lt;appender name=&quot;console&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;
-    &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
-        &lt;level&gt;ERROR&lt;/level&gt;
-    &lt;/filter&gt;
-    &lt;encoder&gt;
-        &lt;pattern&gt;%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
-    &lt;/encoder&gt;
-&lt;/appender&gt;
-</code></pre><p>&lt;encoder&gt;表示对日志进行编码：</p>
-<blockquote>
-<p>%d{HH: mm:ss.SSS}——日志输出时间<br>%thread——输出日志的进程名字，这在Web应用以及异步任务处理中很有用<br>%-5level——日志级别，并且使用5个字符靠左对齐<br>%logger{36}——日志输出者的名字<br>%msg——日志消息<br>%n——平台的换行符</p>
-</blockquote>
-<p>ThresholdFilter为系统定义的拦截器，例如我们用ThresholdFilter来过滤掉ERROR级别以下的日志不输出到文件中。如果不用记得注释掉，不然你控制台会发现没日志~</p>
-<h5 id="输出到文件RollingFileAppender"><a href="#输出到文件RollingFileAppender" class="headerlink" title="输出到文件RollingFileAppender"></a>输出到文件RollingFileAppender</h5><p>另一种常见的日志输出到文件，随着应用的运行时间越来越长，日志也会增长的越来越多，将他们输出到同一个文件并非一个好办法。RollingFileAppender用于切分文件日志：</p>
-<pre><code>&lt;!--输出到文件--&gt;
-&lt;appender name=&quot;file&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;
-    &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;
-        &lt;fileNamePattern&gt;${log.path}/logback.%d{yyyy-MM-dd}.log&lt;/fileNamePattern&gt;
-        &lt;maxHistory&gt;30&lt;/maxHistory&gt;
-        &lt;totalSizeCap&gt;1GB&lt;/totalSizeCap&gt;
-    &lt;/rollingPolicy&gt;
-    &lt;encoder&gt;
-        &lt;pattern&gt;%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
-    &lt;/encoder&gt;
-&lt;/appender&gt;
-</code></pre><p>其中重要的是rollingPolicy的定义，上例中<filenamepattern>${log.path}/logback.%d{yyyy-MM-dd}.log</filenamepattern>定义了日志的切分方式——把每一天的日志归档到一个文件中，<maxhistory>30</maxhistory>表示只保留最近30天的日志，以防止日志填满整个磁盘空间。同理，可以使用%d{yyyy-MM-dd_HH-mm}来定义精确到分的日志切分方式。<totalsizecap>1GB</totalsizecap>用来指定日志文件的上限大小，例如设置为1GB的话，那么到了这个值，就会删除旧的日志。</p>
-<p>补:如果你想把日志直接放到当前项目下，把${log.path}/去掉即可。</p>
-<h4 id="子节点二-lt-root-gt"><a href="#子节点二-lt-root-gt" class="headerlink" title="子节点二&lt;root&gt;"></a>子节点二&lt;root&gt;</h4><p>root节点是必选节点，用来指定最基础的日志输出级别，只有一个level属性。</p>
-<blockquote>
-<p>level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，不能设置为INHERITED或者同义词NULL。<br>默认是DEBUG。</p>
-</blockquote>
-<p>可以包含零个或多个元素，标识这个appender将会添加到这个logger。</p>
-<pre><code>&lt;root level=&quot;debug&quot;&gt;
-    &lt;appender-ref ref=&quot;console&quot; /&gt;
-    &lt;appender-ref ref=&quot;file&quot; /&gt;
-&lt;/root&gt;
-</code></pre><h4 id="子节点三-lt-logger-gt"><a href="#子节点三-lt-logger-gt" class="headerlink" title="子节点三&lt;logger&gt;"></a>子节点三&lt;logger&gt;</h4><p>&lt;logger&gt;用来设置某一个包或者具体的某一个类的日志打印级别、以及指定&lt;appender&gt;。&lt;logger&gt;仅有一个name属性，一个可选的level和一个可选的addtivity属性。</p>
-<blockquote>
-<p>name:用来指定受此logger约束的某一个包或者具体的某一个类。<br>level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，还有一个特俗值INHERITED或者同义词NULL，代表强制执行上级的级别。如果未设置此属性，那么当前logger将会继承上级的级别。<br>addtivity:是否向上级logger传递打印信息。默认是true。</p>
-</blockquote>
-<p>logger在实际使用的时候有两种情况<br>先来看一看代码中如何使用</p>
-<pre><code>package com.dudu.controller;
-@Controller
-public class LearnController {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    @RequestMapping(value = &quot;/login&quot;,method = RequestMethod.POST)
-    @ResponseBody
-    public Map&lt;String,Object&gt; login(HttpServletRequest request, HttpServletResponse response){
-        //日志级别从低到高分为TRACE &lt; DEBUG &lt; INFO &lt; WARN &lt; ERROR &lt; FATAL，如果设置为WARN，则低于WARN的信息都不会输出。
-        logger.trace(&quot;日志输出 trace&quot;);
-        logger.debug(&quot;日志输出 debug&quot;);
-        logger.info(&quot;日志输出 info&quot;);
-        logger.warn(&quot;日志输出 warn&quot;);
-        logger.error(&quot;日志输出 error&quot;);
-        Map&lt;String,Object&gt; map =new HashMap&lt;String,Object&gt;();
-        String userName=request.getParameter(&quot;userName&quot;);
-        String password=request.getParameter(&quot;password&quot;);
-        if(!userName.equals(&quot;&quot;) &amp;&amp; password!=&quot;&quot;){
-            User user =new User(userName,password);
-            request.getSession().setAttribute(&quot;user&quot;,user);
-            map.put(&quot;result&quot;,&quot;1&quot;);
-        }else{
-            map.put(&quot;result&quot;,&quot;0&quot;);
-        }
-        return map;
-    }
-}
-</code></pre><p>这是一个登录的判断的方法，我们引入日志，并且打印不同级别的日志，然后根据logback-spring.xml中的配置来看看打印了哪几种级别日志。</p>
-<h5 id="第一种：带有logger的配置，不指定级别，不指定appender"><a href="#第一种：带有logger的配置，不指定级别，不指定appender" class="headerlink" title="第一种：带有logger的配置，不指定级别，不指定appender"></a>第一种：带有logger的配置，不指定级别，不指定appender</h5><pre><code>&lt;logger name=&quot;com.dudu.controller&quot;/&gt;
-</code></pre><p>&lt;logger name=”com.dudu.controller” /&gt;将控制controller包下的所有类的日志的打印，但是并没用设置打印级别，所以继承他的上级的日志级别“info”；<br>没有设置addtivity，默认为true，将此logger的打印信息向上级传递；<br>没有设置appender，此logger本身不打印任何信息。<br>&lt;root level=”info”&gt;将root的打印级别设置为“info”，指定了名字为“console”的appender。</p>
-<p>当执行com.dudu.controller.LearnController类的login方法时，LearnController 在包com.dudu.controller中，所以首先执行<logger name="com.dudu.controller">，将级别为“info”及大于“info”的日志信息传递给root，本身并不打印；<br>root接到下级传递的信息，交给已经配置好的名为“console”的appender处理，“console”appender将信息打印到控制台；</logger></p>
-<p>打印结果如下：</p>
-<pre><code>16:00:17.407 logback [http-nio-8080-exec-8] INFO  com.dudu.controller.LearnController - 日志输出 info
-16:00:17.408 logback [http-nio-8080-exec-8] WARN  com.dudu.controller.LearnController - 日志输出 warn
-16:00:17.408 logback [http-nio-8080-exec-8] ERROR com.dudu.controller.LearnController - 日志输出 error
-</code></pre><p>第二种：带有多个logger的配置，指定级别，指定appender</p>
-<pre><code>&lt;!--logback.LogbackDemo：类的全路径 --&gt;
-&lt;logger name=&quot;com.dudu.controller.LearnController&quot; level=&quot;WARN&quot; additivity=&quot;false&quot;&gt;
-    &lt;appender-ref ref=&quot;console&quot;/&gt;
-&lt;/logger&gt;
-</code></pre><p>控制com.dudu.controller.LearnController类的日志打印，打印级别为“WARN”;<br>additivity属性为false，表示此logger的打印信息不再向上级传递;<br>指定了名字为“console”的appender;</p>
-<p>这时候执行com.dudu.controller.LearnController类的login方法时，先执行<logger name="com.dudu.controller.LearnController" level="WARN" additivity="false">,<br>将级别为“WARN”及大于“WARN”的日志信息交给此logger指定的名为“console”的appender处理，在控制台中打出日志，不再向上级root传递打印信息。<br>打印结果如下：</logger></p>
-<pre><code>16:00:17.408 logback [http-nio-8080-exec-8] WARN  com.dudu.controller.LearnController - 日志输出 warn
-16:00:17.408 logback [http-nio-8080-exec-8] ERROR com.dudu.controller.LearnController - 日志输出 error
-</code></pre><p>当然如果你把additivity=”false”改成additivity=”true”的话，就会打印两次，因为打印信息向上级传递，logger本身打印一次，root接到后又打印一次。</p>
-<p>注：使用mybatis的时候，sql语句是debug下才会打印，而这里我们只配置了info，所以想要查看sql语句的话，有以下两种操作：</p>
-<p>第一种把&lt;root level=”info”&gt;改成<root level="DEBUG">这样就会打印sql，不过这样日志那边会出现很多其他消息。<br>第二种就是单独给dao下目录配置debug模式，代码如下，这样配置sql语句会打印，其他还是正常info级别：</root></p>
-<pre><code>&lt;logger name=&quot;com.dudu.dao&quot; level=&quot;DEBUG&quot; additivity=&quot;false&quot;&gt;
-    &lt;appender-ref ref=&quot;console&quot; /&gt;
-&lt;/logger&gt;
-</code></pre><h3 id="多环境日志输出"><a href="#多环境日志输出" class="headerlink" title="多环境日志输出"></a>多环境日志输出</h3><p>据不同环境（prod:生产环境，test:测试环境，dev:开发环境）来定义不同的日志输出，在 logback-spring.xml中使用 springProfile 节点来定义，方法如下：</p>
-<pre><code>文件名称不是logback.xml，想使用spring扩展profile支持，要以logback-spring.xml命名
-</code></pre><hr>
-<pre><code>&lt;!-- 测试环境+开发环境. 多个使用逗号隔开. --&gt;
-&lt;springProfile name=&quot;test,dev&quot;&gt;
-    &lt;logger name=&quot;com.dudu.controller&quot; level=&quot;info&quot; /&gt;
-&lt;/springProfile&gt;
-&lt;!-- 生产环境. --&gt;
-&lt;springProfile name=&quot;prod&quot;&gt;
-    &lt;logger name=&quot;com.dudu.controller&quot; level=&quot;ERROR&quot; /&gt;
-&lt;/springProfile&gt;
-</code></pre><p>可以启动服务的时候指定 profile （如不指定使用默认），如指定prod 的方式为：<br>java -jar xxx.jar –spring.profiles.active=prod</p>
-<p>总结<br>到此为止终于介绍完日志框架了，平时使用的时候推荐用自定义logback-spring.xml来配置，代码中使用日志也很简单，类里面添加private Logger logger = LoggerFactory.getLogger(this.getClass());即可。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Spring-Boot//" class="article-tag-list-link color2">Spring Boot</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/01/12/日志logback配置解析/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-自定义@CurrentUser获取当前登录用户" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/01/自定义@CurrentUser获取当前登录用户/">自定义@CurrentUser获取当前登录用户</a>
-    </h1>
-  
-
-        
-        <a href="/2016/08/01/自定义@CurrentUser获取当前登录用户/" class="archive-article-date">
-  	<time datetime="2016-08-01T12:23:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-08-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>（本文为阅读笔记，具体原文参考<a href="https://www.jianshu.com/p/01a6a61d9e02" target="_blank" rel="noopener">https://www.jianshu.com/p/01a6a61d9e02</a>）</p>
-<h1 id="定义-CurrenUser注解"><a href="#定义-CurrenUser注解" class="headerlink" title="定义 @CurrenUser注解"></a>定义 @CurrenUser注解</h1><pre><code>/**
- * 在Controller的方法参数中使用此注解，该方法在映射时会注入当前登录的User对象
- */
-@Target(ElementType.PARAMETER)//可用在方法的参数上
-@Retention(RetentionPolicy.RUNTIME)//运行时有效
-public @interface CurrentUser {
-}
-</code></pre><h1 id="添加测试方法"><a href="#添加测试方法" class="headerlink" title="添加测试方法"></a>添加测试方法</h1><p>在 userApi.java 中添加临时测试用的，测试完记得删掉。</p>
-<pre><code>@GetMapping(&quot;/test&quot;)
-@LoginRequired
-public Object testCurrentUser(@CurrentUser User user) {
-    return user;
-}
-</code></pre><p>不要忘了添加 @LoginRequired 这个注解（上节添加的），要获取当前登录用户嘛，肯定得要求用户登录。重启项目访问 /api/user/test测试下。</p>
-<p><img src="\img\3907956-5d831a4f4501a5b8.png" alt=""></p>
-<p>记得填写 token（访问登录接口获取）。全是null，很遗憾现在还不能返回我们想要的用户信息。</p>
-<h1 id="添加参数解析器"><a href="#添加参数解析器" class="headerlink" title="添加参数解析器"></a>添加参数解析器</h1><p>要想 @CurrentUser 起作用，需要编写一个配套解析器，做法是实现 spring 提供的 HandlerMethodArgumentResolver 接口。<br>新增 CurrentUserMethodArgumentResolver.java</p>
-<pre><code>/**
- *  增加方法注入，将含有 @CurrentUser 注解的方法参数注入当前登录用户
- */
-public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentResolver {
-    @Override
-    public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().isAssignableFrom(User.class)
-                &amp;&amp; parameter.hasParameterAnnotation(CurrentUser.class);
-    }
-    @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        User user = (User) webRequest.getAttribute(&quot;currentUser&quot;, RequestAttributes.SCOPE_REQUEST);
-        if (user != null) {
-            return user;
-        }
-        throw new MissingServletRequestPartException(&quot;currentUser&quot;);
-    }
-}
-</code></pre><p>User user = (User) webRequest.getAttribute(“currentUser”, RequestAttributes.SCOPE_REQUEST) 这一句是从 request 作用域中取出名为 currentUser 的属性。currentUser 是什么呢？在上节编写的登录拦截器中，最后有这么一句 request.setAttribute(“currentUser”, user)，所以 currentUser 是 token 验证通过之后查询到的当前用户。</p>
-<h1 id="配置参数解析器"><a href="#配置参数解析器" class="headerlink" title="配置参数解析器"></a>配置参数解析器</h1><p>在 WebMvcConfigurer.java 中 Override addArgumentResolvers 方法</p>
+        <p>（本文为阅读笔记，具体原文参考<a href="http://blog.csdn.net/isea533/article/details/50412212）" target="_blank" rel="noopener">http://blog.csdn.net/isea533/article/details/50412212）</a></p>
+<h1 id="静态资源处理"><a href="#静态资源处理" class="headerlink" title="静态资源处理"></a>静态资源处理</h1><p>Spring Boot 默认的处理方式就已经足够了，默认情况下Spring Boot 使用WebMvcAutoConfiguration中配置的各种属性。</p>
+<p>建议使用Spring Boot 默认处理方式，需要自己配置的地方可以通过配置文件修改。</p>
+<p>但是如果你想完全控制Spring MVC，你可以在@Configuration注解的配置类上增加@EnableWebMvc，增加该注解以后WebMvcAutoConfiguration中配置就不会生效，你需要自己来配置需要的每一项。这种情况下的配置方法建议参考WebMvcAutoConfiguration类。</p>
+<p>本文以下内容针对Spring Boot 默认的处理方式，部分配置通过在application.yml配置文件中设置。</p>
+<h1 id="配置资源映射"><a href="#配置资源映射" class="headerlink" title="配置资源映射"></a>配置资源映射</h1><p>Spring Boot默认配置的/..映射到/static（或/public,/resources,/META-INF/resources）,/webjars/..会映射到classpath:/META-INF/resources/webjars/。</p>
+<p>注意：上面的/static等目录都是在classpath:下面。</p>
+<p>如果你想增加如/mystatic/ **映射到classpath:/mystatic/，你可以让你的配置类继承WebMvcConfigurerAdapter，然后重写如下方法：</p>
 <pre><code>@Override
-public void addArgumentResolvers(List&lt;HandlerMethodArgumentResolver&gt; argumentResolvers) {
-    argumentResolvers.add(currentUserMethodArgumentResolver());
-    super.addArgumentResolvers(argumentResolvers);
+public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    registry.addResourceHandler(&quot;/mystatic/**&quot;)
+        .addResourceLocations(&quot;classpath:/mystatic/&quot;);
 }
-@Bean
-public CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver() {
-    return new CurrentUserMethodArgumentResolver();
+</code></pre><p>这种方式会在默认的基础上增加/mystatic/ **映射到classpath:/mystatic/，不会影响默认的方式，可以同时使用。</p>
+<p>静态资源映射还有一个配置选项，为了简单这里用.properties方式书写：</p>
+<pre><code>spring.mvc.static-path-pattern=/** # Path pattern used for static resources.
+</code></pre><p>这个配置会影响默认的/.. ,例如修改为/static/..后，只能映射如/static/js/sample.js这样的请求（修改前是/js/sample.js）。这个配置只能写一个值，不像大多数可以配置多个用逗号隔开的。</p>
+<h1 id="使用注意"><a href="#使用注意" class="headerlink" title="使用注意"></a>使用注意</h1><p>例如有如下目录结构：</p>
+<pre><code>└─resources
+    │  application.yml
+    │
+    ├─static
+    │  ├─css
+    │  │      index.css
+    │  │
+    │  └─js
+    │          index.js
+    │
+    └─templates
+            index.ftl
+</code></pre><p>在index.ftl中该如何引用上面的静态资源呢？<br>如下写法：</p>
+<pre><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/css/index.css&quot;&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;/js/index.js&quot;&gt;&lt;/script&gt;
+</code></pre><p>注意：默认配置的/ **映射到/static（或/public ，/resources，/META-INF/resources）</p>
+<p>当请求/css/index.css的时候，Spring MVC 会在/static/目录下面找到。</p>
+<p>如果配置为/static/css/index.css，那么上面配置的几个目录下面都没有/static目录，因此会找不到资源文件！</p>
+<p>所以写静态资源位置的时候，不要带上映射的目录名（如/static/，/public/ ，/resources/，/META-INF/resources/）！</p>
+<h1 id="使用WebJars"><a href="#使用WebJars" class="headerlink" title="使用WebJars"></a>使用WebJars</h1><p>WebJars：<a href="http://www.webjars.org/" target="_blank" rel="noopener">http://www.webjars.org/</a></p>
+<p>例如使用jquery，添加依赖：</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.webjars&lt;/groupId&gt;
+    &lt;artifactId&gt;jquery&lt;/artifactId&gt;
+    &lt;version&gt;1.11.3&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre><p>然后可以如下使用：</p>
+<pre><code>&lt;script type=&quot;text/javascript&quot; src=&quot;/webjars/jquery/1.11.3/jquery.js&quot;&gt;&lt;/script&gt;
+</code></pre><p>你可能注意到href中的1.11.3版本号了，如果仅仅这么使用，那么当我们切换版本号的时候还要手动修改href，怪麻烦的，我们可以用如下方式解决。</p>
+<p>先在pom.xml中添加依赖：</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.webjars&lt;/groupId&gt;
+    &lt;artifactId&gt;webjars-locator&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre><p>增加一个WebJarController：</p>
+<pre><code>@Controller
+public class WebJarController {
+    private final WebJarAssetLocator assetLocator = new WebJarAssetLocator();
+    @ResponseBody
+    @RequestMapping(&quot;/webjarslocator/{webjar}/**&quot;)
+    public ResponseEntity locateWebjarAsset(@PathVariable String webjar, HttpServletRequest request) {
+        try {
+            String mvcPrefix = &quot;/webjarslocator/&quot; + webjar + &quot;/&quot;;
+            String mvcPath = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+            String fullPath = assetLocator.getFullPath(webjar, mvcPath.substring(mvcPrefix.length()));
+            return new ResponseEntity(new ClassPathResource(fullPath), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity&lt;&gt;(HttpStatus.NOT_FOUND);
+        }
+    }
 }
-</code></pre><h1 id="再次测试"><a href="#再次测试" class="headerlink" title="再次测试"></a>再次测试</h1><p>我是用 “张三” 这个用户登录获取的 token，正确地返回了张三的信息。</p>
-<p><img src="\img\3907956-1dda70c8a9342adf.png" alt=""></p>
+</code></pre><p>然后使用的时候按照如下方式：</p>
+<pre><code>&lt;script type=&quot;text/javascript&quot; src=&quot;/webjarslocator/jquery/jquery.js&quot;&gt;&lt;/script&gt;
+</code></pre><p>注意：这里不需要在写版本号了，但是注意写url的时候，只是在原来url基础上去掉了版本号，其他的都不能少！</p>
+<h1 id="静态资源版本管理"><a href="#静态资源版本管理" class="headerlink" title="静态资源版本管理"></a>静态资源版本管理</h1><p>Spring MVC 提供了静态资源版本映射的功能。</p>
+<p>用途：当我们资源内容发生变化时，由于浏览器缓存，用户本地的静态资源还是旧的资源，为了防止这种情况导致的问题，我们可能会手动在请求url的时候加个版本号或者其他方式。</p>
+<p>版本号如：</p>
+<pre><code>&lt;script type=&quot;text/javascript&quot; src=&quot;/js/sample.js?v=1.0.1&quot;&gt;&lt;/script&gt;
+</code></pre><p>Spring MVC 提供的功能可以很容易的帮助我们解决类似问题。</p>
+<p>Spring MVC 有两种解决方式。</p>
+<p>注意：下面的配置方式针对freemarker模板方式，其他的配置方式可以参考。</p>
+<h1 id="资源名-md5-方式"><a href="#资源名-md5-方式" class="headerlink" title="资源名-md5 方式"></a>资源名-md5 方式</h1><p>例如：</p>
+<pre><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/css/index-2b371326aa93ce4b611853a309b69b29.css&quot;&gt;
+</code></pre><p>Spring 会自动读取资源md5，然后添加到index.css的名字后面，因此当资源内容发生变化的时候，文件名发生变化，就会更新本地资源。</p>
+<p>配置方式：</p>
+<p>在application.properties中做如下配置：</p>
+<pre><code>spring.resources.chain.strategy.content.enabled=true
+spring.resources.chain.strategy.content.paths=/**
+</code></pre><p>这样配置后，所有/ **请求的静态资源都会被处理为上面例子的样子。</p>
+<p>到这儿还没完，我们在写资源url的时候还要特殊处理。</p>
+<p>首先增加如下配置：</p>
+<pre><code>@ControllerAdvice
+public class ControllerConfig {
+    @Autowired
+    ResourceUrlProvider resourceUrlProvider;
+    @ModelAttribute(&quot;urls&quot;)
+    public ResourceUrlProvider urls() {
+        return this.resourceUrlProvider;
+    }
+}
+</code></pre><p>然后在页面写的时候用下面的写法：</p>
+<pre><code>&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;${urls.getForLookupPath(&apos;/css/index.css&apos;)}&quot;&gt;
+</code></pre><p>使用urls.getForLookupPath(‘/css/index.css’)来得到处理后的资源名。</p>
+<h1 id="版本号-方式"><a href="#版本号-方式" class="headerlink" title="版本号 方式"></a>版本号 方式</h1><p>在application.properties中做如下配置：</p>
+<pre><code>spring.resources.chain.strategy.fixed.enabled=true
+spring.resources.chain.strategy.fixed.paths=/js/**,/v1.0.0/**
+spring.resources.chain.strategy.fixed.version=v1.0.0
+</code></pre><p>这里配置需要特别注意，将version的值配置在paths中。原因我们在讲Spring MVC 处理逻辑的时候说。</p>
+<p>在页面写的时候，写法如下：</p>
+<pre><code>script type=&quot;text/javascript&quot; src=&quot;${urls.getForLookupPath(&apos;/js/index.js&apos;)}&quot;&gt;&lt;/script&gt;
+</code></pre><p>注意，这里仍然使用了urls.getForLookupPath，urls配置方式见上一种方式。</p>
+<p>在请求的实际页面中，会显示为：</p>
+<pre><code>&lt;script type=&quot;text/javascript&quot; src=&quot;/v1.0.0/js/index.js&quot;&gt;&lt;/script&gt;
+</code></pre><p>可以看到这里的地址是/v1.0.0/js/index.js。</p>
+<h1 id="静态资源版本管理-处理过程"><a href="#静态资源版本管理-处理过程" class="headerlink" title="静态资源版本管理 处理过程"></a>静态资源版本管理 处理过程</h1><p>在Freemarker模板首先会调用urls.getForLookupPath方法，返回一个/v1.0.0/js/index.js或/css/index-2b371326aa93ce4b611853a309b69b29.css。</p>
+<p>这时页面上的内容就是处理后的资源地址。</p>
+<p>这之后浏览器发起请求。</p>
+<p>这里分开说。</p>
+<h3 id="第一种md5方式"><a href="#第一种md5方式" class="headerlink" title="第一种md5方式"></a>第一种md5方式</h3><p>请求/css/index-2b371326aa93ce4b611853a309b69b29.css，我们md5配置的paths=/ **，所以Spring MVC 会尝试url中是否包含-，如果包含会去掉后面这部分，然后去映射的目录（如/static/）查找/css/index.css文件，如果能找到就返回。</p>
+<h3 id="第二种版本方式"><a href="#第二种版本方式" class="headerlink" title="第二种版本方式"></a>第二种版本方式</h3><p>请求/v1.0.0/js/index.js。</p>
+<p>如果我们paths中没有配置/v1.0.0，那么上面这个请求地址就不会按版本方式来处理，因此会找不到上面的资源。</p>
+<p>如果配置了/v1.0.0，Spring 就会将/v1.0.0去掉再去找/js/index.js，最终会在/static/下面找到。</p>
 
       
 
@@ -971,7 +311,7 @@ public CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver() {
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="/categories/java//" class="article-tag-list-link color5">java</a>
+        			<a href="/categories/Spring-Boot//" class="article-tag-list-link color2">Spring Boot</a>
         		</li>
       		
 		</ul>
@@ -980,7 +320,7 @@ public CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver() {
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2016/08/01/自定义@CurrentUser获取当前登录用户/">展开全文 >></a>
+          <a class="article-more-a" href="/2015/07/01/Spring Boot_静态资源处理/">展开全文 >></a>
         </p>
       
 
@@ -1012,7 +352,7 @@ public CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver() {
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
     </nav>
   
 
@@ -1118,14 +458,6 @@ MathJax.Hub.Queue(function() {
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SOA</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">design</a>
-              </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">springcloud</a>
